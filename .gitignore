@@ -1,0 +1,36 @@
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+*.iml
+.vscode/
+.fleet/
+
+# --- Node / Vite / SvelteKit ---
+node_modules/
+/build/
+/.svelte-kit/
+/package/
+.vite/
+*.tsbuildinfo
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- Env files ---
+.env
+.env.*
+!.env.example
+
+# --- Tauri (Rust) ---
+/src-tauri/target/
+/src-tauri/gen/schemas/
+*.local.*
+
+# --- Installer artifacts (scripts/build-installer.mjs) ---
+/dist/
