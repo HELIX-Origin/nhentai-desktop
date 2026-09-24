@@ -1,6 +1,6 @@
 # Rule: Frontend (Svelte 5 · SvelteKit SPA · TypeScript)
 
-## Stack notes
+## 🏗️ Stack notes
 
 - SvelteKit in **SPA mode**: `adapter-static` with `fallback: "index.html"`,
   `export const ssr = false` in `+layout.ts`. No server routes, no SSR.
@@ -8,7 +8,7 @@
   reactivity (`let x = $state` everywhere; no `onMount` when `$effect` + runes suffice).
 - TypeScript `strict`. No `any` unless unavoidable and then justify in code review.
 
-## Structure
+## 🏗️ Structure
 
 ```
 src/lib/
@@ -22,7 +22,7 @@ src/lib/
 - `$lib/...` alias is available; relative imports only within a feature folder when it
   helps readability. Prefer `$lib/` from route/component files.
 
-## State & data flow
+## 🔄 State & data flow
 
 - All app state lives in `src/lib/stores/` as exported runes or small classes of runes:
   `favorites`, `history`, `blacklist`, `settings`.
@@ -32,7 +32,7 @@ src/lib/
   unless the store *is* the natural contract (e.g. a `FavoritesButton`).
 - Data fetching happens in views/route modules, never inside presentational components.
 
-## Styling
+## 🎨 Styling
 
 - **Plain CSS** with design tokens as CSS custom properties (see `src/lib/styles/tokens.css`).
   No framework (no Tailwind), no CSS-in-JS.
@@ -42,13 +42,13 @@ src/lib/
 - Dark + light via `[data-theme]` on `<html>`; default follows `prefers-color-scheme`.
 - Scoped styles per component with BEM-lite class names (`gallery-card__title`).
 
-## Accessibility
+## ♿ Accessibility
 
 - Native controls first (`<button>`, `<input>`, `<select>`), real labels, visible focus
   rings via tokens, `prefers-reduced-motion` honored.
 - The filter bar and reader must be fully keyboard-operable.
 
-## Verification (frontend)
+## ✅ Verification (frontend)
 
 - Run `npm run check` (svelte-kit sync + svelte-check). Zero errors.
 - Pure logic (query building, blacklist matching) lives in `src/lib/util/` so it can be

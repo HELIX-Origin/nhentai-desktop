@@ -1,13 +1,13 @@
 # Rule: Security & API Etiquette
 
-## Secrets & credentials
+## 🔑 Secrets & credentials
 
 - No secrets anywhere in the repo: no API keys, tokens, passwords, or personal config in
   code, docs, or commit history. This app is secret-free by design — keep it that way.
 - Code that would *need* a secret is a design smell here; stop and ask.
 - `.env` / local config is never committed. If added later, ensure `.gitignore` covers it.
 
-## The webview's attack surface
+## 🔒 The webview's attack surface
 
 - **No arbitrary remote `fetch` from the frontend.** All nhentai API traffic goes through
   Rust commands. The frontend only ever talks to Tauri (`invoke`).
@@ -23,7 +23,7 @@
   text interpolation — safe by default; never `{@html trusted}` with API data unless a
   task explicitly sanitizes first).
 
-## nhentai API etiquette
+## 🤝 nhentai API etiquette
 
 - We are guests of a public API. Rules:
   1. Throttle: ≥250 ms between API calls (shared, backend-enforced).
@@ -35,7 +35,7 @@
 - If a user action would generate heavy traffic (e.g. downloading a series of galleries),
   surface it and pace it. Never "emptied the catalog" silently.
 
-## External links & downloads
+## 🔗 External links & downloads
 
 - Any URL opened externally goes through `tauri-plugin-opener` (system browser). Nothing
   opens inside the app window except first-party `localhost`/`tauri://` content.

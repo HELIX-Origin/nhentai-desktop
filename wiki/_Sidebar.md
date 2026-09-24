@@ -1,10 +1,10 @@
-# nhentai — Wiki
+# NH Desktop — Wiki
 
 - **[Home](Home)**
 - **[Getting Started](Getting-Started)**
 - **[Installation & Maintenance](Installation-and-Maintenance)**
 
-## App
+## 🧭 App
 
 - [Search & Filters](Search-and-Filters)
 - [Blacklist](Blacklist)
@@ -12,14 +12,14 @@
 - [Reader & Galleries](Reader-and-Galleries)
 - [Settings & API Key](Settings-and-API-Key)
 
-## Development
+## 🏗️ Development
 
 - [Architecture](Architecture)
 - [Backend (Rust)](Backend-Rust)
 - [Frontend (SvelteKit)](Frontend-SvelteKit)
 - [Installer Engine](Installer-Engine)
 
-## Reference
+## 📚 Reference
 
 - [Security](Security)
 - [Privacy](Privacy)

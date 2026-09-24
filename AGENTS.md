@@ -3,16 +3,17 @@
 > **Entry point for AI agents working in this repository.** Read this file first, then
 > traverse into `.agents/` for detailed rules, agent roles, and workflows.
 
-## Project
+## 👋 Project
 
-**nhentai** — a lightweight, modern, cross-platform desktop client for **nhentai.net**
+**NH Desktop** — a lightweight, modern, cross-platform desktop client for **nhentai.net**
 with its **own custom UI** and a materially better **search/filter + global blacklist**
 experience than the site provides.
 
 > ⚠️ **Identity trap:** the workspace folder is named `lewd-clips-app` but that is NOT the
 > project name — the folder was simply misnamed and the user will fix it later. The product
-> is **nhentai** (exe `nhentai.exe`, window title "nhentai"). Never build, brand, or label
-> based on the folder name. See `.agents/rules/project-identity.md`.
+> is **NH Desktop** (exe `NH Desktop.exe`, window title "NH Desktop"). `nhentai` / `nhentai.net`
+> is the *website* this app is built for — never build, brand, or label the app with the
+> website's name alone. See `.agents/rules/project-identity.md`.
 
 - The site's filtering and blacklist are acknowledged weaknesses; our app replaces them.
 - The app imports as much data as the site makes available (galleries, tags, languages,
@@ -21,7 +22,7 @@ experience than the site provides.
   binary is both app and installer; pattern ported from the lewdzone-launcher reference
   repo (reference only, never a product target).
 
-## Stack (locked)
+## 🏗️ Stack (locked)
 
 | Concern | Choice |
 | --- | --- |
@@ -32,7 +33,7 @@ experience than the site provides.
 | Local persistence | Browser `localStorage` (favorites, history, blacklist, settings) |
 | Package manager | npm |
 
-## Layout
+## 🏗️ Layout
 
 ```
 AGENTS.md               # this file — start here
@@ -54,7 +55,7 @@ src-tauri/              # Rust backend
 src-tauri/src/          # main.rs, lib.rs, nhentai.rs (API client), commands.rs
 ```
 
-## Commands
+## 🚀 Commands
 
 | Action | Command |
 | --- | --- |
@@ -69,7 +70,7 @@ src-tauri/src/          # main.rs, lib.rs, nhentai.rs (API client), commands.rs
 Always run the relevant check before declaring a task done:
 frontend changes → `npm run check`; Rust changes → `cargo check` + `cargo test`.
 
-## Standing conventions (condensed — details in `.agents/rules/`)
+## ⚠️ Standing conventions (condensed — details in `.agents/rules/`)
 
 - **Do not add comments to code unless explicitly asked.** Prefer self-documenting names.
 - Frontend: kebab-case file/folder names (`gallery-card.svelte`), PascalCase component
@@ -84,7 +85,7 @@ frontend changes → `npm run check`; Rust changes → `cargo check` + `cargo te
   pass per `skills/manage-context.md`. One `compress` call must stay under ~7,000 chars total
   JSON (it truncates ~8k → invalid JSON). Compress multiple small ranges, never one giant blob.
 
-## Operating in a headless (non-interactive) shell
+## 🛠️ Operating in a headless (non-interactive) shell
 
 Agents run commands without a TTY. Follow these rules:
 
@@ -95,11 +96,16 @@ Agents run commands without a TTY. Follow these rules:
 - Use `sudo -n` when elevation is required; it fails fast if a password is needed.
 - Use `-y`/`--no-input` style flags where the tool authorizes them; do not force otherwise.
 
-## Decision log (recent, authoritative)
+## 💡 Decision log (recent, authoritative)
 
-- **Project identity:** the product is **nhentai** (nhentai.net client). The folder
+- **Project identity:** the product is **NH Desktop**, a desktop client for **nhentai.net**
+  (the website keeps its own name — the app never brands itself as "nhentai"). The folder
   `lewd-clips-app` is a misnomer, NOT the project name — never derive branding/naming from
   it. See `.agents/rules/project-identity.md`.
+- **Name scope (recent):** only the *user-facing* product name changed to **NH Desktop**
+  (exe `NH Desktop.exe`, install dir `Programs\NH Desktop`, shortcuts/registry DisplayName
+  "NH Desktop"). Cargo package `nhentai`, lib crate `nhentai_lib`, npm package `nhentai`,
+  bundle ID `net.nhentai.client`, and repo `nhentai-desktop` are unchanged.
 - **Stack:** Tauri 2 + SvelteKit SPA (adapter-static, `fallback: "index.html"`) + Svelte 5 runes.
 - **Styling:** plain CSS with design tokens. Rationale: lightweight, full control for the
   custom UI, zero extra deps. Revisit only with a strong argument.

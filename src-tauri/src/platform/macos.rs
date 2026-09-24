@@ -1,6 +1,6 @@
 use std::path::{Path, PathBuf};
 
-pub const PRODUCT_NAME: &str = "nhentai";
+pub const PRODUCT_NAME: &str = "NH Desktop";
 
 pub fn executable_name() -> String {
     format!("{PRODUCT_NAME}.app")

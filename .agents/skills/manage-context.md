@@ -4,13 +4,13 @@ Trigger: a `dcp-system-reminder` fires, the user says "compress / clean up conte
 transcript is visibly saturated. Goal: reclaim context without losing intent or breaking the
 `compress` tool.
 
-## The one invariant
+## 🚨 The one invariant
 
 **Never let a `compress` call exceed ~7,000 characters of total JSON payload** (truncation
 bites at ~8k; see `rules/context-management.md`). If you can't fit, you call `compress`
 again with another range — never with an even longer payload.
 
-## Workflow
+## 🧠 Workflow
 
 ```mermaid
 flowchart TD
@@ -26,7 +26,7 @@ flowchart TD
     J --> A
 ```
 
-## Pass layout
+## 🧠 Pass layout
 
 1. **Inventory.** Scan injected `<dcp-message-id>` tags and note the boundaries of each
    chapter (research / implementation / verification). Oldest first.
@@ -42,7 +42,7 @@ flowchart TD
 6. **Stop when effective.** One good pass usually reclaims enough; over-compressing the same
    turns kills cache and duplicates summaries.
 
-## Size cheat-sheet
+## 📏 Size cheat-sheet
 
 | Situations | Typical summary budget |
 | --- | --- |
@@ -51,11 +51,11 @@ flowchart TD
 | Multi-range pass in one call | 3 × ≤1,500 = ~4,500 chars total |
 | Anything bigger | Split across calls |
 
-## Rules touched
+## ⚠️ Rules touched
 
 - `rules/context-management.md` — contract, placeholders, protected tools, failure script.
 
-## Definition of done
+## ✅ Definition of done
 
 - Transcript visibly smaller; oldest spans replaced by one summary each `(bN)` block per
   previous compression where applicable.

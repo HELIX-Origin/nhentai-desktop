@@ -5,7 +5,7 @@ Applies to every agent session that runs under **opencode with the DCP plugin**
 get it wrong and sessions degrade, lose intent, or waste the user's time. **Read before doing
 anything context-related.**
 
-## What DCP does
+## 🧠 What DCP does
 
 - Renders a `compress` tool into the session. It replaces **closed**, stale spans of the
   conversation with high-fidelity summaries (never edits the raw session history).
@@ -22,7 +22,7 @@ Active settings on this machine follow the plugin defaults (local global config 
 `.opencode/dcp.jsonc` (project wins). **Restart required** after config edits. Per repo
 doctrine (`.agents/README.md` principle 5) we keep DCP config global, not in `.opencode/`.
 
-## The compress tool — input contract (exact)
+## 🧠 The compress tool — input contract (exact)
 
 Call shape:
 
@@ -46,7 +46,7 @@ Requirements:
 | Placeholders | If the selected range includes previously compressed blocks, reference them in the summary as `(bN)` placeholders (each exactly once, in order, nothing after them that reads wrong once expanded). Only for blocks genuinely inside the range. |
 | `summary` | Replace the whole span; must read as a stand-alone record: state, decisions, file paths + line numbers, signatures, constraints, user intent, and next moves. Lead with a recap of the *oldest* content in the span. |
 
-### HARD SIZE LIMIT — the failure we hit
+### 🚨 HARD SIZE LIMIT — the failure we hit
 
 **Total JSON payload of one `compress` call is truncated around ~8,000–8,200 characters.**
 Crossing it returns `Expected ',' or ']' after array element in JSON` at that position and
@@ -60,7 +60,7 @@ the call fails, eating turns and patience.
 - If a summary would be huge, split the range into successive smaller ranges across calls,
   or shorten it. Loss is acceptable when it keeps the tool working.
 
-### Summary quality bar
+### ✅ Summary quality bar
 
 - **Be exhaustive for what you keep:** paths, function signatures, decisions, constraints,
   verification state (which check passed/failed), user intent — then be *lean*: strip
@@ -72,7 +72,7 @@ the call fails, eating turns and patience.
   duplicate those outputs inside summaries.
 - Skip `bN` placeholder mention for blocks outside the chosen range.
 
-### When to compress
+### 🕑 When to compress
 
 | Compress | Do NOT compress |
 | --- | --- |
@@ -85,7 +85,7 @@ When a `dcp-system-reminder` says context is at/near the limit, **stop exploring
 compress older, resolved spans first** — finish only a critical atomic step first, then run
 a compression pass (see `skills/manage-context.md`).
 
-## Automatic strategies
+## ⚙️ Automatic strategies
 
 - `deduplication`: repeated identical tool calls keep only the last output. Recalculated on
   each `compress` run — batch tidy-ups into the same pass.
@@ -93,14 +93,14 @@ a compression pass (see `skills/manage-context.md`).
 - Don't "fake" either: don't re-run identical calls to trigger dedup, and never prune an
   errored input whose details matter before its time.
 
-## Prompt-cache trade-off
+## 💾 Prompt-cache trade-off
 
 DCP changes messages, which invalidates provider prompt-cache prefixes from that point on.
 Compression that is too frequent raises cache misses. Prefer compressing in fewer, bigger
 (but still size-capped) passes over many tiny ones — except when nudged hard, where any
 compression beats none.
 
-## Failure script (if a `compress` call errors)
+## 🚨 Failure script (if a `compress` call errors)
 
 1. Truncation-style JSON error → payload too long. Split or shorten, retry with a smaller
    call. Never retry the same oversized payload.
@@ -109,7 +109,7 @@ compression beats none.
 4. Compress is unavailable → do not thrash; continue minimizing output, keep needed facts
    in a `.agents/tracking/` scratch file for the user.
 
-## Related
+## 🔗 Related
 
 - `skills/manage-context.md` — the routine for a compression pass.
 - `rules/general.md` — scope honesty; a compressed-away decision must survive in summaries.

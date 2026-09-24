@@ -1,8 +1,8 @@
-# nhentai
+# NH Desktop
 
 **A lightweight, modern, cross-platform desktop client for [nhentai.net](https://nhentai.net).**
 
-nhentai is not a web wrapper. It is a native desktop application with its **own custom UI** and a
+NH Desktop is not a web wrapper. It is a native desktop application with its **own custom UI** and a
 materially better **search & filter** and **global blacklist** experience than the site provides.
 It imports as much data as the site's API makes available — galleries, tags, languages,
 categories, artists, characters, parodies — and lets you slice it **locally, instantly**.
@@ -12,9 +12,9 @@ categories, artists, characters, parodies — and lets you slice it **locally, i
 
 ---
 
-## Highlights
+## ✨ Highlights
 
-- **Search that actually works.** A filter drawer covers text, language, category, per-type tag
+- 🔍 **Search that actually works.** A filter drawer covers text, language, category, per-type tag
   include/exclude (artist, character, parody, group, …), page-count ranges, and six sort modes —
   compiled into native nhentai query syntax (`language:english`, `-tag:...`, `pages:>50`).
 - **A blacklist you can trust.** Global, persistent, applied **server-side** (query `-tag:`
@@ -29,7 +29,7 @@ categories, artists, characters, parodies — and lets you slice it **locally, i
 - **A real installer/uninstaller.** Tauri-native unified setup wizard (no NSIS/WiX): install,
   uninstall, repair, PATH registration, Desktop & Start Menu shortcuts — all in one binary.
 
-## Platforms
+## 🖥️ Platforms
 
 | Platform | Support |
 | --- | --- |
@@ -38,19 +38,19 @@ categories, artists, characters, parodies — and lets you slice it **locally, i
 | Linux (x86_64) | ✅ (desktop entry, standalone install dir) |
 | Mobile | ❌ (out of scope, by design) |
 
-## Installation
+## 📦 Installation
 
 Download the latest installer from the [Releases](https://github.com/HELIX-Origin/nhentai-desktop/releases)
 page:
 
-- **Windows:** `nhentai-Setup-X.Y.Z.exe` — double-click and follow the wizard.
-- **macOS:** `nhentai-X.Y.Z` (or the app bundle via your package manager of choice).
-- **Linux:** `nhentai-X.Y.Z` — mark executable and run, or install into `~/.local/share`.
+- 🪟 **Windows:** `NH Desktop-Setup-X.Y.Z.exe` — double-click and follow the wizard.
+- **macOS:** `NH Desktop-X.Y.Z` (or the app bundle via your package manager of choice).
+- **Linux:** `NH Desktop-X.Y.Z` — mark executable and run, or install into `~/.local/share`.
 
 Run the binary again at any time to reach the **maintenance mode** (reinstall, repair shortcuts,
 uninstall) via the sidebar's ⚙ Maintenance entry, or from the registry/app-store uninstall entry.
 
-## Building from source
+## 🛠️ Building from source
 
 Requires **Node.js 20+**, **Rust stable**, and the per-platform Tauri prerequisites
 ([docs](https://v2.tauri.app/start/prerequisites/)).
@@ -68,7 +68,25 @@ Full release bundle + installer:
 npm run build:installer   # runs tauri build --no-bundle, assembles dist/installer/
 ```
 
-## Project layout
+## 🏗️ Architecture
+
+Here is the app's high-level architecture: the SvelteKit SPA talks to Tauri commands in Rust,
+which wrap the throttled nhentai API client, local SQLite persistence, and the installer engine.
+
+```mermaid
+flowchart TD
+    A[SvelteKit SPA] -->|"invoke"| B[commands.rs]
+    B --> C[nhentai.rs API client]
+    B --> D[db.rs SQLite]
+    B --> E[installer.rs engine]
+    C -->|"throttled reqwest"| F[nhentai.net API]
+    F --> G[nhentai image CDNs]
+    A -->|"direct image load"| G
+    A -.->|"proxy fallback"| B
+    E --> H[platform/ per-OS]
+```
+
+## 🗂️ Project layout
 
 ```
 src/                  # SvelteKit SPA frontend (static, adapter-static)
@@ -85,7 +103,7 @@ src-tauri/            # Rust backend (Tauri 2)
 scripts/build-installer.mjs   # installer assembly
 ```
 
-## Documentation
+## 📚 Documentation
 
 Full documentation lives in the [Wiki](https://github.com/HELIX-Origin/nhentai-desktop/wiki)
 (available as [`wiki/`](wiki/) in this repository for contributions):
@@ -99,13 +117,13 @@ Full documentation lives in the [Wiki](https://github.com/HELIX-Origin/nhentai-d
 Also see [PRIVACY.md](PRIVACY.md), [TOS.md](TOS.md), [SECURITY.md](SECURITY.md), and
 [CHANGELOG.md](CHANGELOG.md) in this repository.
 
-## Contributing
+## 🤝 Contributing
 
 See the [Wiki's Development section](wiki/Development.md) and [SECURITY.md](SECURITY.md) for
 reporting guidance. Be respectful, keep changes scoped, and match the existing conventions.
 
-## License
+## 📄 License
 
-MIT (see `LICENSE` in `package.json`). nhentai is an independent client and is not affiliated
+MIT (see `LICENSE` in `package.json`). NH Desktop is an independent client and is not affiliated
 with, endorsed by, or sponsored by nhentai.net. Please respect the site's
 [terms of service](https://nhentai.net/info/terms/) and rate limits.

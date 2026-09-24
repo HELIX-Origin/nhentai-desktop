@@ -2,7 +2,7 @@ use crate::platform;
 use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
 
-pub const PRODUCT_NAME: &str = "nhentai";
+pub const PRODUCT_NAME: &str = "NH Desktop";
 const REQUIRED_BYTES: u64 = 128 * 1024 * 1024;
 
 #[derive(Clone, Serialize, Deserialize)]

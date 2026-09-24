@@ -88,7 +88,7 @@ fn open_installer_window(app: &tauri::App, mode: &str) -> tauri::Result<()> {
 
     let url = WebviewUrl::App(format!("installer?mode={mode}").into());
     WebviewWindowBuilder::new(app, "installer", url)
-        .title("nhentai Setup")
+        .title("NH Desktop Setup")
         .inner_size(820.0, 620.0)
         .min_inner_size(720.0, 560.0)
         .resizable(true)

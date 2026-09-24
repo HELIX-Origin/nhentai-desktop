@@ -1,6 +1,6 @@
 use std::path::{Path, PathBuf};
 
-pub const PRODUCT_NAME: &str = "nhentai";
+pub const PRODUCT_NAME: &str = "NH Desktop";
 
 pub fn executable_name() -> String {
     PRODUCT_NAME.to_string()
@@ -52,7 +52,7 @@ pub fn create_desktop_shortcut(exe: &Path) -> Result<(), String> {
     let dir = applications_dir();
     std::fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
     let entry = format!(
-        "[Desktop Entry]\nName={name}\nExec={exe}\nTerminal=false\nType=Application\nCategories=Network;\n",
+        "[Desktop Entry]\nName={name}\nExec=\"{exe}\"\nTerminal=false\nType=Application\nCategories=Network;\n",
         name = PRODUCT_NAME,
         exe = exe.to_string_lossy()
     );
@@ -81,7 +81,7 @@ pub fn register_uninstall(exe: &Path, _install_dir: &Path) -> Result<(), String>
     let dir = applications_dir();
     std::fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
     let entry = format!(
-        "[Desktop Entry]\nName=Uninstall {name}\nExec={exe} --installer --maintenance\nTerminal=false\nType=Application\nCategories=Settings;\n",
+        "[Desktop Entry]\nName=Uninstall {name}\nExec=\"{exe}\" --installer --maintenance\nTerminal=false\nType=Application\nCategories=Settings;\n",
         name = PRODUCT_NAME,
         exe = exe.to_string_lossy()
     );

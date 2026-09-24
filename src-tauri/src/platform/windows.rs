@@ -1,7 +1,7 @@
 use std::path::{Path, PathBuf};
 
-pub const PRODUCT_NAME: &str = "nhentai";
-const EXE_NAME: &str = "nhentai";
+pub const PRODUCT_NAME: &str = "NH Desktop";
+const EXE_NAME: &str = "NH Desktop";
 
 pub fn executable_name() -> String {
     format!("{EXE_NAME}.exe")
@@ -35,7 +35,7 @@ pub fn place_executable(src: &Path, target_dir: &Path) -> Result<PathBuf, String
 
 fn run_ps(script: &str) -> Result<(), String> {
     let dir = std::env::temp_dir();
-    let path = dir.join(format!("nhentai_setup_{}.ps1", std::process::id()));
+    let path = dir.join(format!("nh_desktop_setup_{}.ps1", std::process::id()));
     std::fs::write(&path, script).map_err(|e| format!("Failed to write script: {e}"))?;
     let out = std::process::Command::new("powershell.exe")
         .args([
@@ -101,7 +101,7 @@ fn start_menu_folder() -> Option<PathBuf> {
 
 pub fn create_desktop_shortcut(exe: &Path) -> Result<(), String> {
     match desktop_lnk() {
-        Some(lnk) => windows_shortcut(exe, &lnk, "nhentai desktop client"),
+        Some(lnk) => windows_shortcut(exe, &lnk, "NH Desktop client"),
         None => Err("Could not resolve desktop directory".to_string()),
     }
 }
@@ -111,7 +111,7 @@ pub fn create_start_menu_shortcut(exe: &Path) -> Result<(), String> {
         Some(folder) => {
             std::fs::create_dir_all(&folder).map_err(|e| e.to_string())?;
             let lnk = folder.join(format!("{PRODUCT_NAME}.lnk"));
-            windows_shortcut(exe, &lnk, "nhentai desktop client")
+            windows_shortcut(exe, &lnk, "NH Desktop client")
         }
         None => Err("Could not resolve Start Menu directory".to_string()),
     }
@@ -135,13 +135,13 @@ pub fn remove_start_menu_shortcut() -> Result<(), String> {
 }
 
 pub fn register_uninstall(exe: &Path, install_dir: &Path) -> Result<(), String> {
-    let key = r"HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\nhentai";
+    let key = r"HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\NH Desktop";
     let uninstall_string = format!("\"{}\" --installer --maintenance", exe.to_string_lossy());
     let script = format!(
         r#"New-Item -Path '{key}' -Force | Out-Null
 New-ItemProperty -Path '{key}' -Name 'DisplayName' -Value '{name}' -PropertyType String -Force | Out-Null
 New-ItemProperty -Path '{key}' -Name 'DisplayVersion' -Value '{ver}' -PropertyType String -Force | Out-Null
-New-ItemProperty -Path '{key}' -Name 'Publisher' -Value 'nhentai' -PropertyType String -Force | Out-Null
+New-ItemProperty -Path '{key}' -Name 'Publisher' -Value 'NH Desktop' -PropertyType String -Force | Out-Null
 New-ItemProperty -Path '{key}' -Name 'DisplayIcon' -Value '{icon}' -PropertyType String -Force | Out-Null
 New-ItemProperty -Path '{key}' -Name 'InstallLocation' -Value '{dir}' -PropertyType String -Force | Out-Null
 New-ItemProperty -Path '{key}' -Name 'UninstallString' -Value '{us}' -PropertyType String -Force | Out-Null
@@ -158,7 +158,7 @@ New-ItemProperty -Path '{key}' -Name 'NoRepair' -Value 0 -PropertyType DWord -Fo
 }
 
 pub fn unregister_uninstall() -> Result<(), String> {
-    let key = r"HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\nhentai";
+    let key = r"HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\NH Desktop";
     run_ps(&format!(
         r#"if (Test-Path '{key}') {{ Remove-Item -Path '{key}' -Recurse -Force }}"#
     ))

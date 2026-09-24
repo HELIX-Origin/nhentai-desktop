@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "nhentai",
+  "productName": "NH Desktop",
   "version": "0.1.0",
   "identifier": "net.nhentai.client",
   "build": {
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "nhentai",
+        "title": "NH Desktop",
         "width": 1100,
         "height": 720,
         "minWidth": 720,

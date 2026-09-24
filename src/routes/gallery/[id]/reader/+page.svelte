@@ -105,7 +105,7 @@
 </script>
 
 <svelte:head>
-	<title>{gallery?.title.english ?? 'Reader'} — nhentai</title>
+	<title>{gallery?.title.english ?? 'Reader'} — NH Desktop</title>
 </svelte:head>
 
 {#if loading && !gallery}

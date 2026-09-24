@@ -62,7 +62,7 @@
 </script>
 
 <svelte:head>
-	<title>nhentai</title>
+	<title>NH Desktop</title>
 	<meta name="color-scheme" content="dark" />
 </svelte:head>
 
@@ -73,7 +73,7 @@
 	<aside class="sidebar">
 		<div class="brand">
 			<span class="brand-mark">n</span>
-			<span class="brand-name">nhentai</span>
+			<span class="brand-name">NH Desktop</span>
 		</div>
 
 		<nav class="nav" aria-label="Primary">
@@ -90,7 +90,7 @@
 		</nav>
 
 		<div class="sidebar-foot">
-			<button class="modify-btn" onclick={onModifyInstallation} title="Repair or uninstall nhentai">
+			<button class="modify-btn" onclick={onModifyInstallation} title="Repair or uninstall NH Desktop">
 				<Icon name="settings" size={14} />
 				<span class="nav-label">Modify installation</span>
 			</button>

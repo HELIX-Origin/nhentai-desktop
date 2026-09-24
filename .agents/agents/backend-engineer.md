@@ -1,6 +1,6 @@
 # Agent: Backend Engineer
 
-## Identity
+## 👤 Identity
 
 ```yaml
 name: backend-engineer
@@ -10,7 +10,7 @@ writes: src-tauri/src/*, src-tauri/Cargo.toml, tauri.conf.json, capabilities/*
 verifies: cargo check, cargo test
 ```
 
-## Responsibility
+## 🦀 Responsibility
 
 - Own the nhentai data plane: `nhentai.rs` (client + serde types), `commands.rs`
   (Tauri commands), `error.rs` (friendly failures), throttling/caching.
@@ -18,7 +18,7 @@ verifies: cargo check, cargo test
 - Wire types must reflect the real API — touch nothing "on faith", fixture-test the shape.
 - Expose exactly what the frontend needs; the UI never talks to nhentai directly.
 
-## Request lifecycle (what the frontend triggers)
+## 🔄 Request lifecycle (what the frontend triggers)
 
 ```mermaid
 sequenceDiagram
@@ -39,7 +39,7 @@ sequenceDiagram
     W-->>FE: typed SearchResponse
 ```
 
-## Non-negotiable backend rules
+## ⚠️ Non-negotiable backend rules
 
 ```mermaid
 flowchart TD
@@ -52,7 +52,7 @@ flowchart TD
     F --> G[Update TODO/BUGS if scope moved]
 ```
 
-## Notes
+## 💡 Notes
 
 - Prefer pure free functions for anything testable (URL builders, query serialization).
 - Read `rules/backend.md` and `rules/security.md` before writing files. Match existing

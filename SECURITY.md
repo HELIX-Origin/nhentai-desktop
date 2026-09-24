@@ -1,9 +1,9 @@
 # Security Policy
 
-The nhentai desktop client is an independent client for nhentai.net. We take security
+The NH Desktop client is an independent client for nhentai.net. We take security
 seriously — both for the app itself and for the privacy of your local data.
 
-## Supported versions
+## 🛡️ Supported versions
 
 | Version | Supported |
 | --- | --- |
@@ -14,7 +14,7 @@ Only the latest release receives security fixes. Check the
 [Releases page](https://github.com/HELIX-Origin/nhentai-desktop/releases) for the current
 version.
 
-## Reporting a vulnerability
+## 🚨 Reporting a vulnerability
 
 **Do not open a public issue** for a security vulnerability.
 
@@ -33,17 +33,17 @@ In your report, please include:
 3. Steps to reproduce (minimal, if possible).
 4. Impact assessment and — if you have one — a suggested fix.
 
-### What happens next
+### ⏭️ What happens next
 
 We aim to acknowledge reports within **5 business days**, and to ship a fix for confirmed
 issues within a reasonable window depending on severity. Security fixes are noted in
 [CHANGELOG.md](CHANGELOG.md).
 
-## Scope
+## 🎯 Scope
 
 Issues we consider in scope:
 
-- Code execution, path traversal, or arbitrary writes via the installer/uninstaller
+- 🚨 Code execution, path traversal, or arbitrary writes via the installer/uninstaller
   (`installer.rs`, `platform/` powering install & uninstall).
 - Injection or data corruption via the Rust API client, SQLite persistence (`db.rs`), or the
   WebView bridge (Tauri commands).
@@ -54,14 +54,14 @@ Issues we consider in scope:
 
 Out of scope:
 
-- Denial-of-service against nhentai.net, or issues that fundamentally stem from nhentai.net's
+- ⚠️ Denial-of-service against nhentai.net, or issues that fundamentally stem from nhentai.net's
   own website/app.
 - Phishing or social engineering against individual nhentai users.
 - Vulnerability reports about the site's Web API itself — report those to nhentai.net.
 
-## Security design notes (for auditors)
+## 🏗️ Security design notes (for auditors)
 
-- **CSP is set** in `src-tauri/tauri.conf.json`: images are allow-listed to `t.nhentai.net`,
+- 🛡️ **CSP is set** in `src-tauri/tauri.conf.json`: images are allow-listed to `t.nhentai.net`,
   `i.nhentai.net`, `data:`, `blob:`; IPC connects are limited to the app's local IPC endpoints.
   A separate `devCsp` permits the Vite dev-server (HMR) endpoints.
 - **No remote code paths**: the Rust backend fetches only from nhentai.net API + CDN hosts
@@ -75,11 +75,11 @@ Out of scope:
 - **User data** (favorites, history, blacklist, settings, API key) is stored locally only
   (SQLite + `localStorage`). See [PRIVACY.md](PRIVACY.md).
 
-## Security hardening wishlist
+## ⬜ Security hardening wishlist
 
 These are tracked in the Wiki's [Roadmap](wiki/Roadmap.md):
 
-- Code-signing / notarization for Windows + macOS release binaries.
+- 🔏 Code-signing / notarization for Windows + macOS release binaries.
 - Installer signature verification prior to launch-any-later-updates.
 - Additional sanitization hardening for HTML/URL output in gallery detail pages.
 - A formal threat-model document.

@@ -87,7 +87,7 @@ jobs:
 
           # 1. Announcements
           if [ "$CATEGORY_FILTER" = "all" ] || [ "$CATEGORY_FILTER" = "announcements" ]; then
-            create_discussion_if_missing "Announcements" "🚀 Welcome to the LewdZone Launcher Community & v0.1.0 Initial Release!" ".github/discussions/announcements.md"
+            create_discussion_if_missing "Announcements" "🚀 Welcome to the NH Desktop Community & v0.1.0 Initial Release!" ".github/discussions/announcements.md"
           fi
 
           # 2. General

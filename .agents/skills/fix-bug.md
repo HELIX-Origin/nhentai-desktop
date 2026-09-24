@@ -3,17 +3,24 @@
 Trigger: a `BUGS.md` entry (or a report). Goal: recording, fix, regression coverage, tidy
 paper trail.
 
-## Workflow
+## 🔄 Workflow — Part 1: triage → root cause
 
 ```mermaid
 flowchart TD
-    A[Read BUGS entry / repro] --> B[Confirm reproduction path]
-    B --> C{Existing entry?}
+    A[Read BUGS entry / repro]
+    B[Confirm reproduction path]
+    C{Existing entry?}
     C -- no --> D[Create BUG entry + tracking file]
     C -- yes --> E[Set investigating]
     D --> E
     E --> F[Root-cause: read code + fixtures]
-    F --> G[Fix smallest surface, follow rules]
+```
+
+## 🔄 Workflow — Part 2: fix → verify → close
+
+```mermaid
+flowchart TD
+    F[Root cause identified] --> G[Fix smallest surface, follow rules]
     G --> H[Add regression check for pure logic]
     H --> I[Run checks]
     I --> J[Reviewer pass]
@@ -24,7 +31,7 @@ flowchart TD
     M --> N[Report root cause + fix + proof]
 ```
 
-## Sequence (with docs)
+## 🔄 Sequence (with docs)
 
 ```mermaid
 sequenceDiagram
@@ -42,7 +49,7 @@ sequenceDiagram
     E->>T: close out
 ```
 
-## Rules
+## ⚠️ Rules
 
 - **Reproduce before fixing.** If you can't reproduce, record environment/steps and stop
   rather than blind-patching.

@@ -6,10 +6,13 @@ wasted work and nonsense branding.
 
 ## The project
 
-We build **a modern desktop client for nhentai.net**, named **nhentai** in UI and
-installer branding (exe `nhentai.exe`, window title "nhentai", product name "nhentai",
-install dir `Programs\nhentai`). The backend talks to the nhentai.net public API; the
-frontend is a SvelteKit static SPA.
+We build **a modern desktop client for nhentai.net**, named **NH Desktop**. Branding:
+exe `NH Desktop.exe`, window title "NH Desktop", product name "NH Desktop", install dir
+`Programs\NH Desktop`. The app talks to the nhentai.net public API; the nhentai.net website
+and its hosts (`t.nhentai.net`, `i.nhentai.net`, `nhentai.net/g/…`) keep their own names and
+are referenced as-is. Backend identifiers (cargo package `nhentai`, lib crate `nhentai_lib`,
+npm package `nhentai`, bundle ID `net.nhentai.client`, repo `nhentai-desktop`) stay unchanged
+— only the user-facing product name is **NH Desktop**.
 
 ## The rule
 
@@ -28,6 +31,10 @@ frontend is a SvelteKit static SPA.
 - **Keep the user's corrections verbatim in tracking docs.** If the user corrects a name or
   scope fact, the correction goes into the relevant doc in the same change so it cannot be
   un-learned.
+- **The app is not the website.** `nhentai.net` is the site the app is built for; the app is
+  a distinct product named **NH Desktop**. A bare "nhentai" string inside the app often should
+  read "NH Desktop"; keep "nhentai"/"nhentai.net" only where it refers to the website, the
+  API, an account, or the API key. When unsure which, re-read `AGENTS.md`.
 
 ## Checklist (before naming anything)
 

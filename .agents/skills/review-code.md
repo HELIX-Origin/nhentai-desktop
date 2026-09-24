@@ -8,10 +8,11 @@ Trigger: a change is presented as done. Goal: verifiable "approved" outcome with
 flowchart TD
     D[Diff] --> P1[Correctness]
     P1 --> P2[Rules conformance]
-    P2 --> P3[Edge cases]
-    P3 --> P4[Security]
-    P4 --> P5[Tracking docs]
-    P5 --> V{Verdict}
+    P2 --> P3[Docs & diagrams]
+    P3 --> P4[Edge cases]
+    P4 --> P5[Security]
+    P5 --> P6[Tracking docs]
+    P6 --> V{Verdict}
     V -- APPROVE --> OUT[Pass + evidence list]
     V -- CHANGES --> RC[File:line findings]
     RC --> P1
@@ -21,6 +22,7 @@ flowchart TD
 | --- | --- |
 | Correctness | Does it do what the task said? Are the types right? Could it panic? |
 | Rules | Naming, runes vs legacy, tokens vs hard-coded color, snake_case, no invented deps |
+| Docs/diagrams | Emoji per `docs-format.md`; every `mermaid` fence valid, ≤10 nodes, TD-default, legible at GitHub scale |
 | Edge cases | Empty results, error path, refresh, rapid double-click, offline, 404 image |
 | Security | CSP still tight? API only via invoke? No `{@html}` of remote data? No secrets? |
 | Tracking | `TODO.md`/`BUGS.md`/`ROADMAP.md` reflect the change? |

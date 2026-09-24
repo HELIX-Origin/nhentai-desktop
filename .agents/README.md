@@ -6,7 +6,7 @@ auto-loads root `AGENTS.md`), Claude Code/Cursor/Codex-like agents, or custom ha
 the same conventions and workflows apply. Root `AGENTS.md` is the entry point; everything
 below it is reachable via `INDEX.md`.
 
-## Principles
+## 🏛️ Principles
 
 1. **One brain, one doctrine.** No parallel, conflicting rule sets. Rules live here and
    only here (plus the condensed summary in root `AGENTS.md`).
@@ -20,7 +20,7 @@ below it is reachable via `INDEX.md`.
    Root `AGENTS.md` is the cross-agent entry point (read by opencode, Claude Code, Cursor,
    Codex, Windsurf, and others); everything else lives under `.agents/`.
 
-## Layout
+## 🏗️ Layout
 
 ```
 .agents/
@@ -28,7 +28,7 @@ below it is reachable via `INDEX.md`.
   INDEX.md             # gateway / routing table
   rules/               # standing conventions (read before writing code)
     general.md         # universal coding + repo etiquette
-    project-identity.md # the product is nhentai; folder name ≠ project name, ever
+    project-identity.md # the product is NH Desktop; folder name ≠ project name, ever
     frontend.md        # Svelte/TS/CSS conventions
     backend.md         # Rust/Tauri conventions
     security.md        # secret handling, API respect, CSP
@@ -57,7 +57,7 @@ below it is reachable via `INDEX.md`.
     todos/
 ```
 
-## Ecosystem at a glance
+## 🗺️ Ecosystem at a glance — how tasks are routed
 
 ```mermaid
 flowchart TD
@@ -68,14 +68,20 @@ flowchart TD
     Q -- planning --> PLAN[skills/update-roadmap]
     Q -- review --> REV[skills/review-code]
     IMPL & FIX & PLAN & REV -. consult .-> RULES[rules/*]
-    IMPL --> ENG[agents/* engineer]
-    FIX --> TRI[agents/triager]
-    REV --> REVW[agents/reviewer]
-    RULES -. enforce .-> REVW
+```
+
+## 🗺️ Ecosystem at a glance — who executes
+
+```mermaid
+flowchart TD
+    IMPL[implement-feature] --> ENG[agents/* engineer]
+    FIX[fix-bug] --> TRI[agents/triager]
+    REV[review-code] --> REVW[agents/reviewer]
+    RULES[rules/*] -. enforce .-> REVW
     ENG & TRI --> DOCS[TODO.md / BUGS.md / ROADMAP.md]
 ```
 
-## Routing (who reads what)
+## 🔍 Routing (who reads what)
 
 | Task | Read first |
 | --- | --- |
@@ -88,7 +94,7 @@ flowchart TD
 | Sync with reference repo | lewdzone-launcher: pattern for installer, reference only, never product |
 | Context saturated (DCP reminder) | `rules/context-management.md` + `skills/manage-context.md` |
 
-## Keeping this ecosystem healthy
+## 🛠️ Keeping this ecosystem healthy
 
 - Format is GitHub-flavored Markdown; frontmatter is optional and used only for agent
   definitions (see `agents/*.md`).

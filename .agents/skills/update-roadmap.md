@@ -3,7 +3,7 @@
 Trigger: scope changed, a milestone landed, or `ROADMAP.md`/`TODO.md`/`BUGS.md` went stale.
 Goal: the three docs stay truthful and cross-referenced.
 
-## Truth grid
+## 🗺️ Truth grid
 
 ```mermaid
 flowchart TD
@@ -24,7 +24,7 @@ flowchart TD
     end
 ```
 
-## Rules of mutation
+## ⚠️ Rules of mutation
 
 - **Scope add/cut/reorder** → edit `ROADMAP.md` milestone table/current-focus, then sync
   `TODO.md`. Same change or not at all.
@@ -36,7 +36,7 @@ flowchart TD
 - **No orphan tracks.** Every ROADMAP milestone traces to TODO items; every TODO item
   traces to a milestone or backlog; every fix links its BUG entry.
 
-## Cadence
+## 🕑 Cadence
 
 ```mermaid
 flowchart LR
@@ -46,7 +46,7 @@ flowchart LR
     Q -- yes --> Done[Ship]
 ```
 
-## Anti-patterns
+## 🚫 Anti-patterns
 
 - Docs that claim more done than checks prove.
 - TODO items without a traceable milestone or backlog tag.

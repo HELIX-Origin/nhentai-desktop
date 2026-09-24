@@ -1,12 +1,12 @@
-# What is nhentai?
+# What is NH Desktop?
 
-**nhentai** is a lightweight, modern, cross-platform **desktop client** for the adult manga
+**NH Desktop** is a lightweight, modern, cross-platform **desktop client** for the adult manga
 archive nhentai.net. It is not a website clone: it ships a custom UI and a materially better
 **search/filter** and **global blacklist** experience than the site can offer, backed by the
 site's own public API and imported metadata (galleries, tags, languages, categories, artists,
 characters, parodies).
 
-- **Browser & discover** — New (home), Popular, tag pages, everything lazy-loaded.
+- 👋 **Browser & discover** — New (home), Popular, tag pages, everything lazy-loaded.
 - **Search that actually works** — a filter drawer (text, language, category, per-type tag
   include/exclude, page ranges, six sorts) compiled into native nhentai query syntax, so you
   can cut a giant haystack down to exactly what you want.
@@ -21,16 +21,16 @@ characters, parodies).
 > **18+ only.** This software is for adults. You confirm you are of legal age to view adult
 > content. See the [Terms of Service](https://github.com/HELIX-Origin/nhentai-desktop/blob/main/TOS.md).
 
-## Platform support
+## 📦 Platform support
 
 | Platform | Status |
 | --- | --- |
-| Windows 10+ | Supported |
-| macOS 10.13+ | Supported |
-| Linux (x86_64) | Supported |
-| Mobile | Not supported (by design) |
+| Windows 10+ | ✅ Supported |
+| macOS 10.13+ | ✅ Supported |
+| Linux (x86_64) | ✅ Supported |
+| Mobile | ⬜ Not supported (by design) |
 
-## Getting around
+## 🧭 Getting around
 
 - **[Getting Started](Getting-Started.md)** — first run, API key, what to expect.
 - **[Installation & Maintenance](Installation-and-Maintenance.md)** — installing, updating,
@@ -40,15 +40,15 @@ characters, parodies).
 - **[Readers & Galleries](Reader-and-Galleries.md)** — detail pages and the reader.
 - **[Architecture](Architecture.md)** — how the pieces fit together.
 
-## Quick facts
+## 💡 Quick facts
 
 - Stack: **Tauri 2 (Rust `reqwest`)** backend + **SvelteKit static SPA** (Svelte 5 runes,
   strict TypeScript) + **plain CSS tokens** (no UI framework).
 - Persistence: browser `localStorage` + a local SQLite database (`nhentai.db`).
-- Rebranded/verified: this is the **nhentai** product — `nhentai.exe`, window title
-  "nhentai", identifier `net.nhentai.client`. The old scaffold names are gone.
+- Rebranded/verified: this is the **NH Desktop** product — `NH Desktop.exe`, window title
+  "NH Desktop", identifier `net.nhentai.client`. The old scaffold names are gone.
 
-## Links
+## 🔗 Links
 
 - [Repository](https://github.com/HELIX-Origin/nhentai-desktop)
 - [Releases](https://github.com/HELIX-Origin/nhentai-desktop/releases)

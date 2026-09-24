@@ -7,7 +7,8 @@ import { readFileSync } from 'node:fs';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
 const version = pkg.version;
-const product = 'nhentai';
+const product = 'NH Desktop';
+const binName = 'nhentai';
 
 console.log(`Building ${product} release binary...`);
 execSync('npx tauri build --no-bundle', { cwd: root, stdio: 'inherit' });
@@ -18,9 +19,9 @@ mkdirSync(outDir, { recursive: true });
 const isWindows = process.platform === 'win32';
 let srcBin = join(root, 'src-tauri', 'target', 'release');
 if (isWindows) {
-  srcBin = join(srcBin, `${product}.exe`);
+  srcBin = join(srcBin, `${binName}.exe`);
 } else {
-  srcBin = join(srcBin, product);
+  srcBin = join(srcBin, binName);
 }
 
 const versionedName = isWindows

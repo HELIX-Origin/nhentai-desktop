@@ -84,7 +84,7 @@
 				mode = detected.is_installed ? 'maintenance' : 'install';
 			}
 		} catch {
-			targetDir = info?.default_install_dir ?? 'C:\\Program Files\\nhentai';
+			targetDir = info?.default_install_dir ?? 'C:\\Program Files\\NH Desktop';
 		} finally {
 			statusLoading = false;
 		}
@@ -168,7 +168,7 @@
 </script>
 
 <svelte:head>
-	<title>nhentai Setup</title>
+	<title>NH Desktop Setup</title>
 	<meta name="color-scheme" content="dark" />
 </svelte:head>
 
@@ -176,7 +176,7 @@
 	<header class="wizard-header" role="presentation" onpointerdown={onHeaderPointerDown}>
 		<div class="app-badge">
 			<span class="app-icon">n</span>
-			<span class="app-title">nhentai Setup</span>
+			<span class="app-title">NH Desktop Setup</span>
 			{#if info}
 				<span class="version-tag">v{info.current_version}</span>
 			{/if}
@@ -238,7 +238,7 @@
 			<main class="wizard-page">
 				{#if installTab === 'welcome'}
 					<div class="page-content hero-page">
-						<h2>Welcome to nhentai</h2>
+						<h2>Welcome to NH Desktop</h2>
 						<p class="hero-desc">
 							A lightweight, modern desktop client for nhentai.net. Browse the full
 							catalog with fast search, powerful filtering, and a global blacklist
@@ -272,7 +272,7 @@
 				{:else if installTab === 'destination'}
 					<div class="page-content">
 						<h3>Choose Install Location</h3>
-						<p class="section-desc">Setup will install nhentai into the following directory:</p>
+						<p class="section-desc">Setup will install NH Desktop into the following directory:</p>
 
 						<div class="path-card">
 							<label class="path-label" for="target-path">Destination Folder:</label>
@@ -317,7 +317,7 @@
 								<input type="checkbox" bind:checked={addToPath} />
 								<div class="opt-desc">
 									<strong>Enable CLI Access (PATH)</strong>
-									<span>Allows running the <code>nhentai</code> command in terminal</span>
+									<span>Allows running the <code>NH Desktop</code> command in terminal</span>
 								</div>
 							</label>
 
@@ -325,7 +325,7 @@
 								<input type="checkbox" bind:checked={launchAfter} />
 								<div class="opt-desc">
 									<strong>Launch after finish</strong>
-									<span>Open nhentai immediately after setup completes</span>
+									<span>Open NH Desktop immediately after setup completes</span>
 								</div>
 							</label>
 						</div>
@@ -333,7 +333,7 @@
 
 				{:else if installTab === 'installing'}
 					<div class="page-content progress-page">
-						<h3>Installing nhentai…</h3>
+						<h3>Installing NH Desktop…</h3>
 						<p class="section-desc">{progressStep}</p>
 
 						<div class="progress-bar-bg">
@@ -360,7 +360,7 @@
 						<div class="success-icon">✓</div>
 						<h3>Installation Completed</h3>
 						<p class="complete-desc">
-							{result?.message ?? 'nhentai has been successfully installed on your computer.'}
+							{result?.message ?? 'NH Desktop has been successfully installed on your computer.'}
 						</p>
 						<p class="launch-hint">Click Finish to exit setup and begin browsing the catalog.</p>
 					</div>
@@ -425,7 +425,7 @@
 					<div class="page-content">
 						<h3>Manage Installation</h3>
 						<p class="section-desc">
-							nhentai is currently installed at:
+							NH Desktop is currently installed at:
 							<code>{info?.default_install_dir}</code>
 						</p>
 
@@ -444,7 +444,7 @@
 							</button>
 
 							<button class="card-btn danger" onclick={() => (maintenanceTab = 'uninstall_options')}>
-								<div class="card-title">Uninstall nhentai</div>
+								<div class="card-title">Uninstall NH Desktop</div>
 								<div class="card-sub">Remove the application and registered system handlers</div>
 							</button>
 						</div>
@@ -473,7 +473,7 @@
 
 				{:else if maintenanceTab === 'removing'}
 					<div class="page-content progress-page">
-						<h3>Uninstalling nhentai…</h3>
+						<h3>Uninstalling NH Desktop…</h3>
 						<p class="section-desc">{progressStep}</p>
 
 						<div class="progress-bar-bg">
@@ -486,7 +486,7 @@
 						<div class="success-icon">✓</div>
 						<h3>Uninstallation Completed</h3>
 						<p class="complete-desc">
-							{result?.message ?? 'nhentai has been successfully removed from your computer.'}
+							{result?.message ?? 'NH Desktop has been successfully removed from your computer.'}
 						</p>
 					</div>
 				{/if}

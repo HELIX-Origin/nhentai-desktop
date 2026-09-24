@@ -1,12 +1,12 @@
 # Security
 
-Security posture, reporting, and hardening notes for nhentai.
+Security posture, reporting, and hardening notes for NH Desktop.
 
 > The full project policy lives at
 > [SECURITY.md](https://github.com/HELIX-Origin/nhentai-desktop/blob/main/SECURITY.md) in the
 > repo root — this page is the wiki summary.
 
-## Design principles
+## 🏗️ Design principles
 
 - **Local-first.** Favorites, history, blacklist, settings and the cache live on-device
   (localStorage / `nhentai.db`). No app server, no telemetry.
@@ -18,7 +18,7 @@ Security posture, reporting, and hardening notes for nhentai.
   solely to authenticate requests you trigger; it is not uploaded anywhere else. The UI shows
   only a 4-character prefix.
 
-## Hardenings in place
+## 🛡️ Hardenings in place
 
 | Area | Where |
 | --- | --- |
@@ -28,7 +28,7 @@ Security posture, reporting, and hardening notes for nhentai.
 | Request throttle | `nhentai.rs` |
 | Single unsigned binary signature | installer engine (see below) |
 
-## Supported versions / reporting
+## 🚨 Supported versions / reporting
 
 - Supported: current 0.1.x.
 - Report vulnerabilities via **GitHub private vulnerability reporting** on the repository, or
@@ -36,13 +36,13 @@ Security posture, reporting, and hardening notes for nhentai.
 - Scope: the app code, installer, and build scripts. Out of scope: nhentai.net itself and
   its CDNs.
 
-## Hardening wishlist (future)
+## ⬜ Hardening wishlist (future)
 
 - Code signing (Windows) / notarization (macOS).
 - Optional verify-on-first-run of the downloaded installer.
 - Per-host network policy beyond CSP (e.g. platform-level connect-restr).
 
-## Related
+## 🔗 Related
 
 - [Privacy](Privacy.md) · [Installer Engine](Installer-Engine.md) ·
   [Architecture](Architecture.md) · [Settings & API Key](Settings-and-API-Key.md)

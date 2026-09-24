@@ -4,7 +4,7 @@ The blacklist is one of the product's core reasons to exist. The site's own filt
 known weakness; the client replaces it with a **global, persistent, two-layer blacklist** that
 never leaves you stranded with an empty grid.
 
-## How it works (two layers)
+## 🚫 How it works (two layers)
 
 1. **Server-side (query excludes).** Every search query the app runs gets your blacklist's
    *tag exclusions* appended (`-tag:...`, `-artist:...`, etc.) via
@@ -17,7 +17,23 @@ never leaves you stranded with an empty grid.
 A **master toggle** switches the entire blacklist on/off instantly — if a search ever feels
 "too empty," flip it off and the full unfiltered results come back.
 
-## Managing the blocklist
+One picture of the two-layer pipeline, including what the master toggle disables:
+
+```mermaid
+flowchart TD
+    A[Search query] --> B{Master toggle on?}
+    B -->|Off| G[Card shown normally]
+    B -->|On| C[Append blacklist excludes]
+    C -->|Final query| D[API search - site filters]
+    D -->|Results| E[Grid checks each gallery]
+    E -->|Blocked match| F[Card hidden or blurred]
+    E -->|Clean| G
+```
+
+With the toggle **off**, the whole pipeline is bypassed — the grid shows whatever the site
+returns.
+
+## 🛠️ Managing the blocklist
 
 **Blacklist** in the sidebar opens the management view:
 
@@ -29,7 +45,7 @@ A **master toggle** switches the entire blacklist on/off instantly — if a sear
 - **Import/export** — JSON export/import of the whole list (planned — see
   [Roadmap](Roadmap.md)).
 
-## Privacy & where it lives
+## 🕵️ Privacy & where it lives
 
 - Blacklist entries persist in `localStorage` (plus mirrored to `nhentai.db` by the storage
   layer). They **never leave your device** except as tag-excludes rewritten into a query sent
@@ -39,7 +55,7 @@ A **master toggle** switches the entire blacklist on/off instantly — if a sear
   `update_account_blacklist`), which syncs with *your* nhentai.net account's own blacklist —
   your choice.
 
-## Behavior in grids
+## 🖼️ Behavior in grids
 
 | State | Grid behavior |
 | --- | --- |
@@ -48,7 +64,7 @@ A **master toggle** switches the entire blacklist on/off instantly — if a sear
 | Blacklist off (toggle) | No filtering at all — full unfiltered results. |
 | Direct-link galleries | Blacklisting never blocks a gallery you opened directly (detail/reader stay accessible by design) — it governs discovery lists. |
 
-## Edge cases
+## ⚠️ Edge cases
 
 - **Rare/legacy galleries** whose tags diverge from the site metadata still get caught by the
   client-side text/title matcher.
@@ -57,7 +73,7 @@ A **master toggle** switches the entire blacklist on/off instantly — if a sear
 - If a blacklisted tag is present on a gallery *you* made a direct link to, the detail page is
   still accessible (see "Explicitly not bugs" in `BUGS.md`).
 
-## Source
+## 🏗️ Source
 
 - Store: `src/lib/stores/blacklist.svelte.ts`
 - Server-side exclude builder: `buildServerExcludes()` (same module)

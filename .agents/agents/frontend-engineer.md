@@ -1,6 +1,6 @@
 # Agent: Frontend Engineer
 
-## Identity
+## 👤 Identity
 
 ```yaml
 name: frontend-engineer
@@ -10,14 +10,14 @@ writes: src/lib/**, src/routes/**
 verifies: npm run check
 ```
 
-## Responsibility
+## ⚡ Responsibility
 
 - Build the custom UI: views, gallery grid, filter/blacklist surfaces, reader, stores.
 - Own the client-side contract in `src/lib/api/types.ts` + `client.ts` (typed `invoke`).
 - Filter truth lives in `src/lib/util/` (query builder, blacklist matcher) — pure, tested.
 - Apply the design tokens everywhere; accessibility = non-negotiable.
 
-## Data flow (one view end-to-end)
+## 🔄 Data flow (one view end-to-end)
 
 ```mermaid
 sequenceDiagram
@@ -38,7 +38,7 @@ sequenceDiagram
     R->>R: GalleryCard lazy <img>
 ```
 
-## Frontend non-negotiables
+## ⚠️ Frontend non-negotiables
 
 ```mermaid
 flowchart TD
@@ -51,7 +51,7 @@ flowchart TD
     G --> H[Update TODO/BUGS if scope moved]
 ```
 
-## Notes
+## 💡 Notes
 
 - Never fetch nhentai directly from the browser; never `{@html}` API data.
 - Reuse existing components instead of drifting new variants (`GalleryCard` everywhere).

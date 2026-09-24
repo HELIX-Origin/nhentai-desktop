@@ -1,4 +1,4 @@
-# nhentai desktop client — Wiki
+# NH Desktop — Wiki
 
 This folder mirrors the [project Wiki](https://github.com/HELIX-Origin/nhentai-desktop/wiki)
 as plain Markdown so it can be reviewed, contributed to, and synced to GitHub Wiki.
@@ -10,7 +10,7 @@ as plain Markdown so it can be reviewed, contributed to, and synced to GitHub Wi
 - Files are named for direct wiki-page mapping: `Home.md`, `Getting-Started.md`, and so on.
   GitHub wiki page names use hyphens in URLs; keep file names hyphenated (no spaces).
 
-## Page index (mirrors `_Sidebar.md`)
+## 🧭 Page index (mirrors `_Sidebar.md`)
 
 - **Start here:** [Home](Home.md) · [Getting Started](Getting-Started.md) · [Installation & Maintenance](Installation-and-Maintenance.md)
 - **Using the app:** [Search & Filters](Search-and-Filters.md) · [Blacklist](Blacklist.md) · [Reader & Galleries](Reader-and-Galleries.md) · [Favorites & History](Favorites-and-History.md) · [Settings & API Key](Settings-and-API-Key.md)

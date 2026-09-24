@@ -3,7 +3,7 @@
 The entire UI is a static SvelteKit SPA (no SSR) running inside a Tauri 2 WebView. Stack:
 **Svelte 5 runes**, **TypeScript strict**, **plain CSS design tokens** (no framework).
 
-## Source layout
+## 🧩 Source layout
 
 ```
 src/lib/
@@ -32,9 +32,9 @@ src/routes/
   installer/        separate frameless wizard window (see Installer Engine)
 ```
 
-## Conventions
+## ⚡ Conventions
 
-- **Kebab-case filenames**, PascalCase component names.
+- ⚡ **Kebab-case filenames**, PascalCase component names.
 - **Svelte 5 runes** (`$state`, `$derived`, `$effect`) — no legacy stores for UI state.
 - **localStorage** backs favorites/history/blacklist/settings; runes hydrate/serialize via
   the `stores/` modules (`localStorage` namespaced keys).
@@ -42,27 +42,38 @@ src/routes/
 - Images render direct from `t.nhentai.net` / `i.nhentai.net` and fall back to a `blob:` URL
   from `proxy_image` when the CDN 404s (see [Reader & Galleries](Reader-and-Galleries.md)).
 
-## Event flow (example: search)
+## 🔍 Event flow (example: search)
 
-1. `search/+page.svelte` builds a `FilterModel` → `buildQuery(model)` + blacklist excludes →
+The chain is short — four hops from page to grid:
+
+```mermaid
+flowchart LR
+    A[+page.svelte] -->|"buildQuery + blacklist"| B[api.search]
+    B -->|"invoke search_galleries"| C[Rust command]
+    C -->|"typed GalleryList"| D[Grid + pager]
+```
+
+In full:
+
+1. 🔍 `search/+page.svelte` builds a `FilterModel` → `buildQuery(model)` + blacklist excludes →
    `api.search(query, sort, page)`.
 2. `client.ts` calls `invoke('search_galleries', { query, sort, page })`.
 3. Rust returns `GalleryList` (typed); grid + pager render; `ErrorNotice` shows failures.
 
-## Child / helper windows
+## 📦 Child / helper windows
 
 The layout detects sub-window routes (`/installer`) and renders them **without** the normal
 app shell (no sidebar). The maintenance window is opened from e.g. settings / sidebar via
 `open_maintenance_window` (Rust) — see [Installer Engine](Installer-Engine.md).
 
-## Design system
+## 🎨 Design system
 
 Tokens live in `design/tokens.css`: dark-first palette (bg/elevated/surface/border/text),
 violet accent `#7c5cff`, semantic danger/success/warning, radius/shadows and `--sidebar-w` /
 `--topbar-h` layout vars. A light theme (`[data-theme='light']`) is reserved. Base styles and
 shared `.btn`, `.input`, `.page` etc. live in `design/base.css`.
 
-## Related
+## 🤝 Related
 
 - [Architecture](Architecture.md) · [Backend (Rust)](Backend-Rust.md) ·
   [Reader & Galleries](Reader-and-Galleries.md)
