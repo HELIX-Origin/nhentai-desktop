@@ -55,14 +55,54 @@
 	let logDetails = $state<string[]>([]);
 	let showLogs = $state(false);
 
-	const closeWindow = () => getCurrentWindow().close();
-	const minimizeWindow = () => getCurrentWindow().minimize();
+	async function closeWindow() {
+		try {
+			await getCurrentWindow().close();
+		} catch {
+			try {
+				await invoke('app_quit');
+			} catch {
+				try {
+					await getCurrentWindow().destroy();
+				} catch {
+					window.close();
+				}
+			}
+		}
+	}
 
-	function onHeaderPointerDown(e: PointerEvent) {
+	async function minimizeWindow() {
+		try {
+			await getCurrentWindow().minimize();
+		} catch (e) {
+			console.error('Failed to minimize window:', e);
+		}
+	}
+
+	async function maximizeWindow() {
+		try {
+			await getCurrentWindow().toggleMaximize();
+		} catch (e) {
+			console.error('Failed to toggle maximize:', e);
+		}
+	}
+
+	const isMac = $derived(
+		typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.userAgent),
+	);
+
+	function onBarPointerDown(e: PointerEvent) {
 		if (e.button !== 0) return;
 		const t = e.target as HTMLElement | null;
-		if (t?.closest('button, input, select, a')) return;
+		if (t?.closest('button, select, input, a, [role="menuitem"]')) return;
+		e.preventDefault();
 		getCurrentWindow().startDragging();
+	}
+
+	function onBarDoubleClick(e: MouseEvent) {
+		const t = e.target as HTMLElement | null;
+		if (t?.closest('button, select, input, a')) return;
+		getCurrentWindow().toggleMaximize();
 	}
 
 	function formatBytes(bytes: number): string {
@@ -174,18 +214,27 @@
 </svelte:head>
 
 <div class="installer-shell">
-	<header class="wizard-header" role="presentation" onpointerdown={onHeaderPointerDown}>
-		<div class="app-badge">
-			<img class="app-icon" src={`${base}/favicon.png`} alt="NH Desktop logo" />
-			<span class="app-title">NH Desktop Setup</span>
+	<header
+		class="titlebar"
+		class:mac={isMac}
+		data-tauri-drag-region
+		role="presentation"
+		onpointerdown={onBarPointerDown}
+		ondblclick={onBarDoubleClick}
+	>
+		<div class="traffic" aria-label="Window controls">
+			<button class="dot close" aria-label="Close window" title="Close" onclick={closeWindow}></button>
+			<button class="dot min" aria-label="Minimize window" title="Minimize" onclick={minimizeWindow}></button>
+			<button class="dot max" aria-label="Maximize window" title="Maximize" onclick={maximizeWindow}></button>
+		</div>
+		<div class="tb-brand" data-tauri-drag-region>
+			<img class="tb-icon" src={`${base}/favicon.png`} alt="NH Desktop logo" />
+			<span class="tb-title">NH Desktop Setup</span>
 			{#if info}
 				<span class="version-tag">v{info.current_version}</span>
 			{/if}
 		</div>
-		<div class="window-controls">
-			<button class="win-btn" onclick={minimizeWindow} aria-label="Minimize">─</button>
-			<button class="win-btn close" onclick={closeWindow} aria-label="Close">✕</button>
-		</div>
+		<div class="spacer" data-tauri-drag-region></div>
 	</header>
 
 	{#if statusLoading}
@@ -527,73 +576,117 @@
 		color: var(--text);
 	}
 
-	.wizard-header {
-		height: 38px;
-		background: var(--bg-elevated);
-		border-bottom: 1px solid var(--border);
+	.titlebar {
+		position: relative;
+		z-index: 10;
+		flex: 0 0 auto;
+		height: 36px;
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
+		gap: 14px;
 		padding: 0 12px;
+		background: var(--bg-elevated);
+		border-bottom: 1px solid var(--border);
+		user-select: none;
 		cursor: grab;
 	}
 
-	.app-badge {
+	.titlebar:active {
+		cursor: grabbing;
+	}
+
+	.traffic {
 		display: flex;
 		align-items: center;
 		gap: 8px;
 	}
 
-	.app-icon {
+	.dot {
+		width: 13px;
+		height: 13px;
+		border-radius: 50%;
+		border: none;
+		padding: 0;
+		cursor: pointer;
+		position: relative;
+	}
+
+	.dot.close {
+		background: #ff5f57;
+	}
+
+	.dot.min {
+		background: #febc2e;
+	}
+
+	.dot.max {
+		background: #28c840;
+	}
+
+	.dot:hover::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		border-radius: 50%;
+		background: rgba(0, 0, 0, 0.25);
+	}
+
+	.dot:active::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		border-radius: 50%;
+		background: rgba(0, 0, 0, 0.4);
+	}
+
+	.tb-brand {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.tb-icon {
 		display: block;
-		width: 18px;
-		height: 18px;
-		border-radius: 5px;
+		width: 16px;
+		height: 16px;
+		border-radius: 4px;
 		object-fit: contain;
 	}
 
-	.app-title {
+	.tb-title {
 		font-size: 13px;
 		font-weight: 600;
+		letter-spacing: -0.01em;
+		color: var(--text-secondary);
 	}
 
 	.version-tag {
 		font-size: 11px;
 		color: var(--text-faint);
 		background: var(--surface);
-		padding: 2px 6px;
+		padding: 1px 6px;
 		border-radius: 4px;
 	}
 
-	.window-controls {
-		display: flex;
-		align-items: center;
-		gap: 4px;
+	.spacer {
+		flex: 1;
 	}
 
-	.win-btn {
-		background: transparent;
-		border: none;
-		color: var(--text-faint);
-		font-size: 12px;
-		width: 28px;
-		height: 24px;
-		cursor: pointer;
-		border-radius: 4px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
+	/* Default (Windows/Linux): traffic lights on the right. */
+	.titlebar .tb-brand { order: 1; }
+	.titlebar .spacer { order: 2; }
+	.titlebar .traffic { order: 3; }
+	.titlebar .traffic .dot.min { order: 1; }
+	.titlebar .traffic .dot.max { order: 2; }
+	.titlebar .traffic .dot.close { order: 3; }
 
-	.win-btn:hover {
-		background: var(--surface-hover);
-		color: var(--text);
-	}
-
-	.win-btn.close:hover {
-		background: var(--danger);
-		color: #fff;
-	}
+	/* macOS: traffic lights on the left, close/min/max order. */
+	.titlebar.mac .traffic { order: 0; margin-right: 2px; }
+	.titlebar.mac .traffic .dot.close { order: 1; }
+	.titlebar.mac .traffic .dot.min { order: 2; }
+	.titlebar.mac .traffic .dot.max { order: 3; }
+	.titlebar.mac .tb-brand { order: 2; }
+	.titlebar.mac .spacer { order: 3; }
 
 	.wizard-body {
 		flex: 1;
