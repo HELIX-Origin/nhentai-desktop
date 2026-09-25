@@ -1,10 +1,13 @@
-# Agent: Frontend Engineer
+# Sub-Agent: Frontend Engineer
+
+Parent: `engineer`. Purpose: **Svelte UI & client state**.
 
 ## 👤 Identity
 
 ```yaml
-name: frontend-engineer
+name: frontend
 role: Svelte UI & client state
+parent: engineer
 reads: rules/frontend.md, rules/security.md, rules/testing.md, rules/git-workflow.md, rules/general.md
 writes: src/lib/**, src/routes/**
 verifies: npm run check
@@ -56,3 +59,4 @@ flowchart TD
 - Never fetch nhentai directly from the browser; never `{@html}` API data.
 - Reuse existing components instead of drifting new variants (`GalleryCard` everywhere).
 - Follow `rules/frontend.md`; when a component pattern repeats thrice, extract it.
+- Cache prefix and storage keys use `nh-desktop:` (not the legacy `nhentai:` / `lewdclips:`).

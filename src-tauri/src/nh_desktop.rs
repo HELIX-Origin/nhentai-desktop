@@ -135,15 +135,15 @@ pub struct DownloadResponse {
     pub expires_at: u64,
 }
 
-pub struct NhentaiClient {
+pub struct NhDesktopClient {
     http: reqwest::Client,
     last_request: Mutex<Instant>,
 }
 
-impl NhentaiClient {
+impl NhDesktopClient {
     pub fn new() -> Result<Self, reqwest::Error> {
         let http = reqwest::Client::builder()
-            .user_agent(format!("nhentai/{}", env!("CARGO_PKG_VERSION")))
+            .user_agent(format!("NH Desktop/{}", env!("CARGO_PKG_VERSION")))
             .timeout(Duration::from_secs(30))
             .build()?;
         Ok(Self {

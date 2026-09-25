@@ -16,7 +16,7 @@ The only "online" setting. Get a key from nhentai.net → *Settings → API Key*
 
 | Control | Behavior |
 | --- | --- |
-| **Add API key** | Stores the key locally in `nhentai.db` (the `api_key` table). The UI shows only a 4-character prefix after saving. |
+| **Add API key** | Stores the key locally in `nh-desktop.db` (the `api_key` table). The UI shows only a 4-character prefix after saving. |
 | **Verify** | Calls nhentai.net's `/api/users/me` with the stored key and shows your username if valid. |
 | **Clear** | Removes the stored key from the local DB immediately. |
 
@@ -52,7 +52,7 @@ flowchart TD
 - 💾 **Clear cache** — flushes the in-memory Redis-style cache and the mirrored SQLite table
   (`cacheFlush()` → `clear_db`). Safe: it only drops cached lists/images, never favorites,
   history, blacklist, settings, or the API key.
-- The cache stores recent gallery/list payloads under the `nhentai:` prefix and rehydrates on
+- The cache stores recent gallery/list payloads under the `nh-desktop:` prefix and rehydrates on
   launch (`cacheInit()`), keeping repeat navigation instant and reducing load on the site.
 
 ## ⚙️ Other settings surfaces

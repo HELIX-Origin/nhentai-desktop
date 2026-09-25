@@ -1,6 +1,6 @@
 use crate::db::Db;
-use crate::nhentai::{
-    DownloadResponse, FavoriteResponse, GalleryDetail, GalleryList, NhentaiClient, RelatedGalleries,
+use crate::nh_desktop::{
+    DownloadResponse, FavoriteResponse, GalleryDetail, GalleryList, NhDesktopClient, RelatedGalleries,
     TagResponse, UserMeResponse, GalleryListItem,
 };
 use serde::Serialize;
@@ -23,7 +23,7 @@ fn require_key(db: &Db) -> Result<String, String> {
 }
 
 #[tauri::command]
-pub async fn fetch_new(client: State<'_, NhentaiClient>, db: State<'_, Db>, page: Option<u32>, per_page: Option<u32>) -> Result<GalleryList, String> {
+pub async fn fetch_new(client: State<'_, NhDesktopClient>, db: State<'_, Db>, page: Option<u32>, per_page: Option<u32>) -> Result<GalleryList, String> {
     client
         .list_galleries(optional_key(&db).as_deref(), page.unwrap_or(1), per_page.unwrap_or(25))
         .await
@@ -31,12 +31,12 @@ pub async fn fetch_new(client: State<'_, NhentaiClient>, db: State<'_, Db>, page
 }
 
 #[tauri::command]
-pub async fn fetch_popular(client: State<'_, NhentaiClient>, db: State<'_, Db>) -> Result<Vec<GalleryListItem>, String> {
+pub async fn fetch_popular(client: State<'_, NhDesktopClient>, db: State<'_, Db>) -> Result<Vec<GalleryListItem>, String> {
     client.popular(optional_key(&db).as_deref()).await.map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub async fn fetch_tagged(client: State<'_, NhentaiClient>, db: State<'_, Db>, tag_id: u64, sort: Option<String>, page: Option<u32>, per_page: Option<u32>) -> Result<GalleryList, String> {
+pub async fn fetch_tagged(client: State<'_, NhDesktopClient>, db: State<'_, Db>, tag_id: u64, sort: Option<String>, page: Option<u32>, per_page: Option<u32>) -> Result<GalleryList, String> {
     client
         .tagged(optional_key(&db).as_deref(), tag_id, sort.as_deref().unwrap_or("date"), page.unwrap_or(1), per_page.unwrap_or(25))
         .await
@@ -44,7 +44,7 @@ pub async fn fetch_tagged(client: State<'_, NhentaiClient>, db: State<'_, Db>, t
 }
 
 #[tauri::command]
-pub async fn search_galleries(client: State<'_, NhentaiClient>, db: State<'_, Db>, query: String, sort: Option<String>, page: Option<u32>) -> Result<GalleryList, String> {
+pub async fn search_galleries(client: State<'_, NhDesktopClient>, db: State<'_, Db>, query: String, sort: Option<String>, page: Option<u32>) -> Result<GalleryList, String> {
     client
         .search(optional_key(&db).as_deref(), &query, sort.as_deref().unwrap_or("date"), page.unwrap_or(1))
         .await
@@ -52,7 +52,7 @@ pub async fn search_galleries(client: State<'_, NhentaiClient>, db: State<'_, Db
 }
 
 #[tauri::command]
-pub async fn fetch_gallery(client: State<'_, NhentaiClient>, db: State<'_, Db>, id: u64, include: Option<String>) -> Result<GalleryDetail, String> {
+pub async fn fetch_gallery(client: State<'_, NhDesktopClient>, db: State<'_, Db>, id: u64, include: Option<String>) -> Result<GalleryDetail, String> {
     client
         .gallery(optional_key(&db).as_deref(), id, include.as_deref().unwrap_or("favorite"))
         .await
@@ -60,12 +60,12 @@ pub async fn fetch_gallery(client: State<'_, NhentaiClient>, db: State<'_, Db>, 
 }
 
 #[tauri::command]
-pub async fn related_galleries(client: State<'_, NhentaiClient>, db: State<'_, Db>, id: u64) -> Result<RelatedGalleries, String> {
+pub async fn related_galleries(client: State<'_, NhDesktopClient>, db: State<'_, Db>, id: u64) -> Result<RelatedGalleries, String> {
     client.related(optional_key(&db).as_deref(), id).await.map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub async fn fetch_tag_info(client: State<'_, NhentaiClient>, tag_type: String, slug: String) -> Result<TagResponse, String> {
+pub async fn fetch_tag_info(client: State<'_, NhDesktopClient>, tag_type: String, slug: String) -> Result<TagResponse, String> {
     client
         .request::<TagResponse>(None, reqwest::Method::GET, &format!("/tags/{tag_type}/{slug}"), &[], None)
         .await
@@ -73,7 +73,7 @@ pub async fn fetch_tag_info(client: State<'_, NhentaiClient>, tag_type: String, 
 }
 
 #[tauri::command]
-pub async fn proxy_image(client: State<'_, NhentaiClient>, url: String) -> Result<Vec<u8>, String> {
+pub async fn proxy_image(client: State<'_, NhDesktopClient>, url: String) -> Result<Vec<u8>, String> {
     client.image_bytes(&url).await.map_err(|e| e.to_string())
 }
 
@@ -128,55 +128,55 @@ pub fn clear_api_key(db: State<'_, Db>) -> Result<(), String> {
 }
 
 #[tauri::command]
-pub async fn verify_api_key(client: State<'_, NhentaiClient>, db: State<'_, Db>) -> Result<UserMeResponse, String> {
+pub async fn verify_api_key(client: State<'_, NhDesktopClient>, db: State<'_, Db>) -> Result<UserMeResponse, String> {
     let key = require_key(&db)?;
     client.current_user(&key).await.map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub async fn get_current_user(client: State<'_, NhentaiClient>, db: State<'_, Db>) -> Result<UserMeResponse, String> {
+pub async fn get_current_user(client: State<'_, NhDesktopClient>, db: State<'_, Db>) -> Result<UserMeResponse, String> {
     let key = require_key(&db)?;
     client.current_user(&key).await.map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub async fn check_favorite(client: State<'_, NhentaiClient>, db: State<'_, Db>, id: u64) -> Result<FavoriteResponse, String> {
+pub async fn check_favorite(client: State<'_, NhDesktopClient>, db: State<'_, Db>, id: u64) -> Result<FavoriteResponse, String> {
     let key = require_key(&db)?;
     client.check_favorite(&key, id).await.map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub async fn add_favorite(client: State<'_, NhentaiClient>, db: State<'_, Db>, id: u64) -> Result<FavoriteResponse, String> {
+pub async fn add_favorite(client: State<'_, NhDesktopClient>, db: State<'_, Db>, id: u64) -> Result<FavoriteResponse, String> {
     let key = require_key(&db)?;
     client.add_favorite(&key, id).await.map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub async fn remove_favorite(client: State<'_, NhentaiClient>, db: State<'_, Db>, id: u64) -> Result<FavoriteResponse, String> {
+pub async fn remove_favorite(client: State<'_, NhDesktopClient>, db: State<'_, Db>, id: u64) -> Result<FavoriteResponse, String> {
     let key = require_key(&db)?;
     client.remove_favorite(&key, id).await.map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub async fn fetch_favorites(client: State<'_, NhentaiClient>, db: State<'_, Db>, query: Option<String>, page: Option<u32>) -> Result<GalleryList, String> {
+pub async fn fetch_favorites(client: State<'_, NhDesktopClient>, db: State<'_, Db>, query: Option<String>, page: Option<u32>) -> Result<GalleryList, String> {
     let key = require_key(&db)?;
     client.my_favorites(&key, query.as_deref().unwrap_or(""), page.unwrap_or(1)).await.map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub async fn fetch_account_blacklist(client: State<'_, NhentaiClient>, db: State<'_, Db>) -> Result<crate::nhentai::BlacklistListResponse, String> {
+pub async fn fetch_account_blacklist(client: State<'_, NhDesktopClient>, db: State<'_, Db>) -> Result<crate::nh_desktop::BlacklistListResponse, String> {
     let key = require_key(&db)?;
     client.blacklist(&key).await.map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub async fn update_account_blacklist(client: State<'_, NhentaiClient>, db: State<'_, Db>, added: Vec<u64>, removed: Vec<u64>) -> Result<serde_json::Value, String> {
+pub async fn update_account_blacklist(client: State<'_, NhDesktopClient>, db: State<'_, Db>, added: Vec<u64>, removed: Vec<u64>) -> Result<serde_json::Value, String> {
     let key = require_key(&db)?;
     client.update_blacklist(&key, &added, &removed).await.map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub async fn download_gallery(client: State<'_, NhentaiClient>, db: State<'_, Db>, id: u64, format: Option<String>) -> Result<DownloadResponse, String> {
+pub async fn download_gallery(client: State<'_, NhDesktopClient>, db: State<'_, Db>, id: u64, format: Option<String>) -> Result<DownloadResponse, String> {
     let key = require_key(&db)?;
     client.download(&key, id, format.as_deref().unwrap_or("zip")).await.map_err(|e| e.to_string())
 }
@@ -215,7 +215,7 @@ pub fn open_maintenance_window(app: tauri::AppHandle) -> Result<(), String> {
     let mode = if is_uninstall { "uninstall" } else { "maintenance" };
     let url = WebviewUrl::App(format!("installer?mode={mode}").into());
     WebviewWindowBuilder::new(&app, "installer", url)
-        .title("nhentai Setup")
+        .title("NH Desktop Setup")
         .inner_size(820.0, 620.0)
         .min_inner_size(720.0, 560.0)
         .resizable(true)

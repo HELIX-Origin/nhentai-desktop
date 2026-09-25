@@ -65,9 +65,9 @@ Out of scope:
   `i.nhentai.net`, `data:`, `blob:`; IPC connects are limited to the app's local IPC endpoints.
   A separate `devCsp` permits the Vite dev-server (HMR) endpoints.
 - **No remote code paths**: the Rust backend fetches only from nhentai.net API + CDN hosts
-  (`nhentai.rs`), rendering content is done in a WebView with the CSP above, and external links
+  (`nh_desktop.rs`), rendering content is done in a WebView with the CSP above, and external links
   open in the system browser via the OS opener.
-- **Rate limiting**: the API client throttles requests (`THROTTLE` sleep in `nhentai.rs`) to
+- **Rate limiting**: the API client throttles requests (`THROTTLE` sleep in `nh_desktop.rs`) to
   respect nhentai.net's public API; the CI/CLI never bypasses it.
 - **The installer runs a single binary** (the app itself is the installer, see `main.rs`
   argv routing). Uninstall strings, Start Menu/Desktop shortcuts, PATH, and the HKCU uninstall

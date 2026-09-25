@@ -8,7 +8,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
 const version = pkg.version;
 const product = 'NH Desktop';
-const binName = 'nhentai';
+const binName = 'nh-desktop';
 
 console.log(`Building ${product} release binary...`);
 execSync('npx tauri build --no-bundle', { cwd: root, stdio: 'inherit' });

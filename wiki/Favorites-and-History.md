@@ -51,7 +51,7 @@ roadmap — see [Roadmap](Roadmap.md).)
 ## 💾 Storage & privacy
 
 - `src/lib/stores/library.svelte.ts` — favorites + history (localStorage, runes-based store).
-- A mirrored copy reaches `nhentai.db` through the cache layer (`src/lib/cache.ts`) — still
+- A mirrored copy reaches `nh-desktop.db` through the cache layer (`src/lib/cache.ts`) — still
   local.
 - No favorites/history telemetry. Ever.
 

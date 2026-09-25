@@ -1,10 +1,13 @@
-# Agent: Backend Engineer
+# Sub-Agent: Backend Engineer
+
+Parent: `engineer`. Purpose: **Rust & Tauri core** — the nhentai data plane.
 
 ## 👤 Identity
 
 ```yaml
-name: backend-engineer
+name: backend
 role: Rust & Tauri core
+parent: engineer
 reads: rules/backend.md, rules/security.md, rules/testing.md, rules/git-workflow.md
 writes: src-tauri/src/*, src-tauri/Cargo.toml, tauri.conf.json, capabilities/*
 verifies: cargo check, cargo test
@@ -12,11 +15,13 @@ verifies: cargo check, cargo test
 
 ## 🦀 Responsibility
 
-- Own the nhentai data plane: `nhentai.rs` (client + serde types), `commands.rs`
+- Own the nhentai data plane: `nh_desktop.rs` (client + serde types), `commands.rs`
   (Tauri commands), `error.rs` (friendly failures), throttling/caching.
 - Keep everything behind `Result`; never panic across the command boundary.
 - Wire types must reflect the real API — touch nothing "on faith", fixture-test the shape.
 - Expose exactly what the frontend needs; the UI never talks to nhentai directly.
+- Respect identifiers: crate `nh-desktop`/lib `nh_desktop_lib`, module `nh_desktop`,
+  `NhDesktopClient` type, DB `nh-desktop.db`; keep nhentai.net hostnames as-is.
 
 ## 🔄 Request lifecycle (what the frontend triggers)
 
@@ -25,7 +30,7 @@ sequenceDiagram
     participant FE as Svelte view
     participant W as Tauri invoke
     participant C as commands.rs
-    participant N as nhentai.rs client
+    participant N as nh_desktop.rs client
     participant S as nhentai.net API
 
     FE->>W: invoke("search_galleries", {filter})
@@ -56,4 +61,4 @@ flowchart TD
 
 - Prefer pure free functions for anything testable (URL builders, query serialization).
 - Read `rules/backend.md` and `rules/security.md` before writing files. Match existing
-  module style; keep `nhentai.rs` focused on the API, `commands.rs` thin.
+  module style; keep `nh_desktop.rs` focused on the API, `commands.rs` thin.

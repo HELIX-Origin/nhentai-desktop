@@ -1,5 +1,5 @@
 {
-  "name": "nhentai",
+  "name": "nh-desktop",
   "version": "0.1.0",
   "description": "A modern desktop client for nhentai.net",
   "type": "module",
@@ -17,8 +17,7 @@
   "license": "MIT",
   "dependencies": {
     "@tauri-apps/api": "^2",
-    "@tauri-apps/plugin-opener": "^2",
-    "ioredis-mock": "^8.13.1"
+    "@tauri-apps/plugin-opener": "^2"
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "^3.0.10",

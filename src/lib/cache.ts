@@ -1,25 +1,24 @@
-import Redis from 'ioredis-mock';
 import { backend } from '$lib/client';
 
-const redis = new Redis();
+const PREFIX = 'nh-desktop:';
 
-const PREFIX = 'nhentai:';
+const memory = new Map<string, string>();
 
 function appKey(key: string): string {
 	return PREFIX + key;
 }
 
 export async function cacheGet(key: string): Promise<string | null> {
-	return redis.get(appKey(key));
+	return memory.get(appKey(key)) ?? null;
 }
 
 export async function cacheSet(key: string, value: string): Promise<void> {
-	await redis.set(appKey(key), value);
+	memory.set(appKey(key), value);
 	backend.dbSet(appKey(key), value).catch(() => undefined);
 }
 
 export async function cacheDel(key: string): Promise<void> {
-	await redis.del(appKey(key));
+	memory.delete(appKey(key));
 	backend.dbDel(appKey(key)).catch(() => undefined);
 }
 
@@ -41,13 +40,12 @@ export async function cacheInit(): Promise<void> {
 	const rows = await backend.dbDump();
 	for (const [key, value] of rows) {
 		if (key.startsWith(PREFIX) || !key.includes(':')) {
-			await redis.set(key, value);
+			memory.set(key, value);
 		}
 	}
 }
 
 export async function cacheFlush(): Promise<void> {
-	const keys = await redis.keys('*');
-	if (keys.length > 0) await redis.del(...keys);
+	memory.clear();
 	await backend.dbClear().catch(() => undefined);
 }

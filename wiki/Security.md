@@ -9,12 +9,12 @@ Security posture, reporting, and hardening notes for NH Desktop.
 ## 🏗️ Design principles
 
 - **Local-first.** Favorites, history, blacklist, settings and the cache live on-device
-  (localStorage / `nhentai.db`). No app server, no telemetry.
+  (localStorage / `nh-desktop.db`). No app server, no telemetry.
 - **No remote code paths.** The WebView never executes remote scripts; CSP restricts
   connections to nhentai.net + its CDNs.
-- **One network path.** All API traffic goes through `NhentaiClient` (reqwest), throttled
+- **One network path.** All API traffic goes through `NhDesktopClient` (reqwest), throttled
   (`THROTTLE`) to respect nhentai.net and avoid hammering the service.
-- **API key stays local.** The nhentai.net API key is stored in `nhentai.db` only and is used
+- **API key stays local.** The nhentai.net API key is stored in `nh-desktop.db` only and is used
   solely to authenticate requests you trigger; it is not uploaded anywhere else. The UI shows
   only a 4-character prefix.
 
@@ -25,7 +25,7 @@ Security posture, reporting, and hardening notes for NH Desktop.
 | CSP (`default-src 'self'` + image hosts + IPC only) | `src-tauri/tauri.conf.json` |
 | Dev CSP (Vite HMR) isolated from production | `security.devCsp` in the same config |
 | Result-based errors (no panics across the bridge) | `src-tauri/src/error.rs` |
-| Request throttle | `nhentai.rs` |
+| Request throttle | `nh_desktop.rs` |
 | Single unsigned binary signature | installer engine (see below) |
 
 ## 🚨 Supported versions / reporting

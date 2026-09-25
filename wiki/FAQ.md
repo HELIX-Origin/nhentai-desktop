@@ -39,7 +39,7 @@ Browser (localStorage) data lives in the WebView storage for the app origin.
 ## 🚫 Does the blacklist sync with my nhentai.net account?
 
 Only if you add an API key and enable it. By default the blacklist is fully local
-(localStorage, mirrored to `nhentai.db`). See [Blacklist](Blacklist.md).
+(localStorage, mirrored to `nh-desktop.db`). See [Blacklist](Blacklist.md).
 
 ## ⬜ Can I download galleries for offline reading?
 

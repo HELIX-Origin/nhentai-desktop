@@ -23,7 +23,7 @@ Applies to every file and every agent, everywhere.
 | Svelte component files | kebab-case `.svelte` | `gallery-card.svelte` |
 | Svelte component names | PascalCase | `GalleryCard` |
 | TS/JS modules | kebab-case | `nhentai-client.ts` |
-| Rust files | snake_case | `nhentai.rs`, `commands.rs`, `error.rs` |
+| Rust files | snake_case | `nh_desktop.rs`, `commands.rs`, `error.rs` |
 | Docs | `UPPER.md` for root, Title Case in `.agents/` | `BUGS.md`, `git-workflow.md` |
 
 ## ⚖️ Scope & honesty

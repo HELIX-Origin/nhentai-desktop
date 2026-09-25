@@ -9,7 +9,7 @@ Here's the lifecycle of a request, from UI to nhentai.net and back:
 ```mermaid
 flowchart TD
     A[Frontend invoke] -->|"invoke()"| B[Command handler]
-    B -->|"calls client"| C[NhentaiClient]
+    B -->|"calls client"| C[NhDesktopClient]
     C -->|"HTTPS throttled"| D[nhentai.net API]
     D -->|"typed JSON"| C
     C -->|"typed model"| B
@@ -20,9 +20,9 @@ flowchart TD
 
 | File | Responsibility |
 | --- | --- |
-| `src-tauri/src/nhentai.rs` | `NhentaiClient` — typed nhentai.net API client (reqwest) + `THROTTLE` |
+| `src-tauri/src/nh_desktop.rs` | `NhDesktopClient` — typed nhentai.net API client (reqwest) + `THROTTLE` |
 | `src-tauri/src/commands.rs` | All `#[tauri::command]` handlers |
-| `src-tauri/src/db.rs` | SQLite persistence (`Db`, `nhentai.db`) |
+| `src-tauri/src/db.rs` | SQLite persistence (`Db`, `nh-desktop.db`) |
 | `src-tauri/src/installer.rs` | Unified installer/uninstaller engine |
 | `src-tauri/src/platform/{mod,windows,macos,linux}.rs` | Per-OS implementations |
 | `src-tauri/src/error.rs` | Friendly error type |
@@ -75,7 +75,7 @@ All are camelCase, registered on the Tauri invoke handler.
 
 ## 🦀 Networking rules
 
-- 🦀 **One client, one place:** `NhentaiClient` is the only thing touching nhentai.net.
+- 🦀 **One client, one place:** `NhDesktopClient` is the only thing touching nhentai.net.
 - **Respect the site:** a `THROTTLE` sleep keeps requests human-paced; single-flight/reuse
   patterns avoid fan-out.
 - **Typed serde models** mirror the API JSON 1:1; deserialization tests cover the shapes.

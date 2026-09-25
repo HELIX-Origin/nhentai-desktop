@@ -76,7 +76,7 @@ which wrap the throttled nhentai API client, local SQLite persistence, and the i
 ```mermaid
 flowchart TD
     A[SvelteKit SPA] -->|"invoke"| B[commands.rs]
-    B --> C[nhentai.rs API client]
+    B --> C[nh_desktop.rs API client]
     B --> D[db.rs SQLite]
     B --> E[installer.rs engine]
     C -->|"throttled reqwest"| F[nhentai.net API]
@@ -95,7 +95,7 @@ src/                  # SvelteKit SPA frontend (static, adapter-static)
   lib/components/     # GalleryCard, GalleryGrid, FilterPanel, BlacklistView, ...
   routes/             # latest, popular, search, favorites, history, blacklist, settings, gallery, reader, installer
 src-tauri/            # Rust backend (Tauri 2)
-  src/nhentai.rs      # nhentai.net API client (reqwest, throttled)
+  src/nh_desktop.rs   # nhentai.net API client (reqwest, throttled)
   src/commands.rs     # Tauri commands (26+)
   src/db.rs           # local SQLite persistence
   src/installer.rs    # unified installer/uninstaller engine

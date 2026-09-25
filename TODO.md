@@ -19,11 +19,11 @@ remains:
 
 - ✅ CSP tightened (`img-src` for nhentai `t.`/`i.` hosts + data:/blob:, IPC `connect-src`, `devCsp` for Vite HMR) — verified with `npm run check` 0/0
 - ✅ Scaffold Tauri 2 + SvelteKit (static SPA) project — template generated
-- ✅ Rust: `nhentai.rs` API client (`reqwest`): gallery, search, new/popular/tagged lists, related, tag info, image proxy
+- ✅ Rust: `nh_desktop.rs` API client (`reqwest`): gallery, search, new/popular/tagged lists, related, tag info, image proxy
 - ✅ Rust: types (`Gallery`, `Tag`, `SearchResponse`, …) with serde + frontend-consistent shape (`src/lib/types.ts`)
 - ✅ Rust: `error.rs` — friendly error type, no panics across command boundary
 - ✅ Rust: `commands.rs` — 26 commands incl. `fetch_gallery`, `search_galleries`, `fetch_new`, `fetch_popular`, `fetch_tagged`, `fetch_tag_info`, `proxy_image`, `download_gallery`, favorites/blacklist/api-key/db
-- ✅ Rust: throttle for API calls (`THROTTLE` + `tokio::time::sleep` in `nhentai.rs`) with ioredis-mock-style cache (frontend `cache.ts`)
+- ✅ Rust: throttle for API calls (`THROTTLE` + `tokio::time::sleep` in `nh_desktop.rs`) with ioredis-mock-style cache (frontend `cache.ts`)
 - ✅ Frontend: `src/lib/api.ts` + `client.ts` (typed invoke wrapper) + `query.ts` query builder
 - ✅ Frontend: stores — settings, library (favorites/history), blacklist, account (runes + localStorage)
 - ✅ Frontend: design tokens (CSS variables; dark theme live, `[data-theme='light']` reserved)

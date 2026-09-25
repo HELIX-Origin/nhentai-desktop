@@ -41,18 +41,18 @@ ROADMAP.md              # product direction & milestones — start here for "wha
 TODO.md                 # actionable task ledger
 BUGS.md                 # known issues & quirks
 .agents/
-  INDEX.md              # gateway into the agent ecosystem
+  README.md             # gateway into the agent ecosystem (indexes are README.md, no INDEX.md)
   rules/                # standing conventions (read these before writing code)
-  agents/               # role definitions (planner, engineers, reviewer, triager)
+  agents/               # role definitions ({primary-agent}/{sub-agent}/README.md)
   skills/               # repeatable workflows (implement-feature, fix-bug, ...)
-  templates/            # pull-request, bug, feature, todo templates
-  tracking/             # optional per-item detail files (BUG-001.md, TODO-007.md)
+  templates/            # pull-request, bug, feature, todo, requirement, agent templates
+  tracking/             # optional per-item detail files (BUG-001.md, TODO-007.md, REQ-###.md)
 src/                    # frontend (SvelteKit SPA)
 src/lib/api/            # nhentai API types + client wrapper
 src/lib/components/     # UI components
 src/lib/stores/         # favorites, history, blacklist, settings (runes-based)
 src-tauri/              # Rust backend
-src-tauri/src/          # main.rs, lib.rs, nhentai.rs (API client), commands.rs
+src-tauri/src/          # main.rs, lib.rs, nh_desktop.rs (API client), commands.rs
 ```
 
 ## 🚀 Commands
@@ -75,7 +75,7 @@ frontend changes → `npm run check`; Rust changes → `cargo check` + `cargo te
 - **Do not add comments to code unless explicitly asked.** Prefer self-documenting names.
 - Frontend: kebab-case file/folder names (`gallery-card.svelte`), PascalCase component
   names (`GalleryCard`), use Svelte 5 runes (`$state`, `$derived`), strict TS, `$lib/` alias.
-- Backend: snake_case, small focused modules (`nhentai.rs`, `commands.rs`, `error.rs`),
+- Backend: snake_case, small focused modules (`nh_desktop.rs`, `commands.rs`, `error.rs`),
   no panics across the command boundary — return `Result`.
 - Respect nhentai's public API; throttle requests; never hammer the site. See `.agents/rules/git-workflow.md` and `security.md`.
 - **Keep tracking docs honest:** updating `TODO.md`, `BUGS.md`, or scope changes requires
@@ -102,10 +102,14 @@ Agents run commands without a TTY. Follow these rules:
   (the website keeps its own name — the app never brands itself as "nhentai"). The folder
   `lewd-clips-app` is a misnomer, NOT the project name — never derive branding/naming from
   it. See `.agents/rules/project-identity.md`.
-- **Name scope (recent):** only the *user-facing* product name changed to **NH Desktop**
-  (exe `NH Desktop.exe`, install dir `Programs\NH Desktop`, shortcuts/registry DisplayName
-  "NH Desktop"). Cargo package `nhentai`, lib crate `nhentai_lib`, npm package `nhentai`,
-  bundle ID `net.nhentai.client`, and repo `nhentai-desktop` are unchanged.
+- **Name scheme:** the *user-facing* product name is **NH Desktop** (exe `NH Desktop.exe`,
+  install dir `Programs\NH Desktop`, shortcuts/registry DisplayName "NH Desktop"). **All
+  identifiers use the lowercase hyphenated name** `nh-desktop` (`nh_desktop_lib`,
+  `nh_desktop` where Rust requires underscores): cargo package `nh-desktop`, lib crate
+  `nh_desktop_lib`, module `nh_desktop` / type `NhDesktopClient`, npm package `nh-desktop`,
+  bundle ID `net.nh-desktop.client`, cache prefix `nh-desktop:`, db file `nh-desktop.db`.
+  The website `nhentai.net` (API, image hosts, accounts) keeps its own name, as do the
+  repo's historical references to the site.
 - **Stack:** Tauri 2 + SvelteKit SPA (adapter-static, `fallback: "index.html"`) + Svelte 5 runes.
 - **Styling:** plain CSS with design tokens. Rationale: lightweight, full control for the
   custom UI, zero extra deps. Revisit only with a strong argument.
@@ -120,4 +124,4 @@ Agents run commands without a TTY. Follow these rules:
   Contract and size limits in `.agents/rules/context-management.md`; pass routine in
   `.agents/skills/manage-context.md`. Config stays at the global `~/.config/opencode/dcp.jsonc`.
 
-For full detail, rules, and role definitions, continue to **`.agents/INDEX.md`**.
+For full detail, rules, and role definitions, continue to **`.agents/README.md`**.

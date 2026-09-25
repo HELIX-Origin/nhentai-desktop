@@ -2,11 +2,11 @@ mod commands;
 mod db;
 mod error;
 mod installer;
-mod nhentai;
+mod nh_desktop;
 mod platform;
 
 use db::Db;
-use nhentai::NhentaiClient;
+use nh_desktop::NhDesktopClient;
 use tauri::Manager;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -15,8 +15,8 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .setup(|app| {
             let data_dir = app.path().app_data_dir()?;
-            app.manage(NhentaiClient::new()?);
-            app.manage(Db::new(&data_dir.join("nhentai.db"))?);
+            app.manage(NhDesktopClient::new()?);
+            app.manage(Db::new(&data_dir.join("nh-desktop.db"))?);
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -62,8 +62,8 @@ pub fn run_installer() {
         .plugin(tauri_plugin_opener::init())
         .setup(move |app| {
             let data_dir = app.path().app_data_dir()?;
-            app.manage(NhentaiClient::new()?);
-            app.manage(Db::new(&data_dir.join("nhentai.db"))?);
+            app.manage(NhDesktopClient::new()?);
+            app.manage(Db::new(&data_dir.join("nh-desktop.db"))?);
             open_installer_window(app, mode)?;
             Ok(())
         })

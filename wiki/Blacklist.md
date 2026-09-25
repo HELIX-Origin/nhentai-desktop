@@ -47,7 +47,7 @@ returns.
 
 ## 🕵️ Privacy & where it lives
 
-- Blacklist entries persist in `localStorage` (plus mirrored to `nhentai.db` by the storage
+- Blacklist entries persist in `localStorage` (plus mirrored to `nh-desktop.db` by the storage
   layer). They **never leave your device** except as tag-excludes rewritten into a query sent
   to nhentai.net — the site never sees a "blacklist", only normal exclude tokens.
 - There is no server-side "blacklist account" unless you also use the **optional API key**

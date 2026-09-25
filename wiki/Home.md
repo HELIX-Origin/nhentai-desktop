@@ -44,9 +44,9 @@ characters, parodies).
 
 - Stack: **Tauri 2 (Rust `reqwest`)** backend + **SvelteKit static SPA** (Svelte 5 runes,
   strict TypeScript) + **plain CSS tokens** (no UI framework).
-- Persistence: browser `localStorage` + a local SQLite database (`nhentai.db`).
+- Persistence: browser `localStorage` + a local SQLite database (`nh-desktop.db`).
 - Rebranded/verified: this is the **NH Desktop** product — `NH Desktop.exe`, window title
-  "NH Desktop", identifier `net.nhentai.client`. The old scaffold names are gone.
+  "NH Desktop", identifier `net.nh-desktop.client`. The old scaffold names are gone.
 
 ## 🔗 Links
 

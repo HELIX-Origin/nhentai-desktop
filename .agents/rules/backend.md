@@ -3,12 +3,12 @@
 ## 🏗️ Module layout (`src-tauri/src/`)
 
 ```
-main.rs       # bin entry, #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
-lib.rs        # Builder::default() → plugins → invoke_handler → run()
-nhentai.rs    # nhentai API wire types (serde) + client functions (reqwest): get_gallery,
-              #   search, list_new, list_all, list_tagged, fetch_bytes
-commands.rs   # #[tauri::command] wrappers — thin, typed, call client, no business logic
-error.rs      # AppError enum -> String messages; no panics across the command boundary
+main.rs        # bin entry, #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+lib.rs         # Builder::default() → plugins → invoke_handler → run()
+nh_desktop.rs  # nhentai API wire types (serde) + client functions (reqwest): get_gallery,
+               #   search, list_new, list_all, list_tagged, fetch_bytes
+commands.rs    # #[tauri::command] wrappers — thin, typed, call client, no business logic
+error.rs       # AppError enum -> String messages; no panics across the command boundary
 ```
 
 ## 🦀 Conventions

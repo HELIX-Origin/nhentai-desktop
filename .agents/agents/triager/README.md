@@ -1,5 +1,7 @@
 # Agent: Triager
 
+Primary agent — owns **bug intake & classification**. `.agents/agents/triager/README.md`.
+
 ## 👤 Identity
 
 ```yaml
@@ -8,6 +10,7 @@ role: bug intake & classification
 reads: BUGS.md, rules/testing.md, rules/git-workflow.md
 writes: BUGS.md entries, .agents/tracking/bugs/BUG-###.md
 verifies: reproduction, not a fix
+sub-agents: reproducer
 ```
 
 ## 🚨 Responsibility
@@ -17,6 +20,8 @@ verifies: reproduction, not a fix
 - Decide and record: **open** · **investigating** · **wontfix** (site/API limitation) ·
   external (CDN/rate-limit quirk).
 - Route fixable bugs to the right engineer. Do not fix; just classify and hand off.
+- **Reproduce before routing.** When a repro is non-trivial, delegate to the `reproducer`
+  sub-agent so the hand-off to the engineer includes proof, not vibes.
 
 ## 🔄 Bug lifecycle
 
@@ -51,3 +56,4 @@ flowchart TD
 
 - Don't fix and don't speculate in the entry; record evidence, not theories.
 - Link the BUG id everywhere relevant (`TODO.md`, PR template) so the paper trail closes.
+- Use the `reproducer` sub-agent for deep-dive reproduction and regression proof.

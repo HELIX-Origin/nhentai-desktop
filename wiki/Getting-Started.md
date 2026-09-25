@@ -31,7 +31,7 @@ one. An nhentai.net API key is **optional** and only unlocks one thing in this a
   within the app (see [Favorites & History](Favorites-and-History.md)).
 
 Get one from nhentai.net → *Settings → API Key*. Add it in the app under **Settings → API
-Key**. It is stored locally in `nhentai.db` and sent only to nhentai.net over HTTPS — see
+Key**. It is stored locally in `nh-desktop.db` and sent only to nhentai.net over HTTPS — see
 [Privacy](Privacy.md).
 
 ## 🔍 4. Search something real

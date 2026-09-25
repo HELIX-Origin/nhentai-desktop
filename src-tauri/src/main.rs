@@ -15,9 +15,9 @@ fn main() -> ExitCode {
         || exe_name.contains("setup")
         || args.iter().any(|a| a == "--installer" || a == "--setup" || a == "--uninstall" || a == "--maintenance")
     {
-        nhentai_lib::run_installer();
+        nh_desktop_lib::run_installer();
         return ExitCode::SUCCESS;
     }
-    nhentai_lib::run();
+    nh_desktop_lib::run();
     ExitCode::SUCCESS
 }

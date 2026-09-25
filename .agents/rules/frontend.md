@@ -27,7 +27,7 @@ src/lib/
 - All app state lives in `src/lib/stores/` as exported runes or small classes of runes:
   `favorites`, `history`, `blacklist`, `settings`.
 - Persist via `localStorage` through a tiny helper in `src/lib/util/`; write-through on
-  mutation, hydrate on module load. Version the storage keys (`lewdclips:favorites:v1`).
+  mutation, hydrate on module load. Version the storage keys (`nh-desktop:favorites:v1`).
 - Components receive props downward; do not import stores deep inside leaf components
   unless the store *is* the natural contract (e.g. a `FavoritesButton`).
 - Data fetching happens in views/route modules, never inside presentational components.

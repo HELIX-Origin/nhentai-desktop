@@ -6,13 +6,22 @@ wasted work and nonsense branding.
 
 ## The project
 
-We build **a modern desktop client for nhentai.net**, named **NH Desktop**. Branding:
-exe `NH Desktop.exe`, window title "NH Desktop", product name "NH Desktop", install dir
-`Programs\NH Desktop`. The app talks to the nhentai.net public API; the nhentai.net website
-and its hosts (`t.nhentai.net`, `i.nhentai.net`, `nhentai.net/g/…`) keep their own names and
-are referenced as-is. Backend identifiers (cargo package `nhentai`, lib crate `nhentai_lib`,
-npm package `nhentai`, bundle ID `net.nhentai.client`, repo `nhentai-desktop`) stay unchanged
-— only the user-facing product name is **NH Desktop**.
+We build **a modern desktop client for nhentai.net**, named **NH Desktop**. The app talks to
+the nhentai.net public API; the nhentai.net website and its hosts (`t.nhentai.net`,
+`i.nhentai.net`, `nhentai.net/g/…`) keep their own names and are referenced as-is.
+
+**Name scheme (authoritative):**
+
+| Scope | Value |
+| --- | --- |
+| User-facing product (exe, title, install dir `Programs\NH Desktop`, shortcuts, registry DisplayName) | **NH Desktop** |
+| Rust crate package / npm package / bundle identifier / file prefixes | `nh-desktop` · `net.nh-desktop.client` |
+| Rust lib crate / Rust module / cache prefix / db file | `nh_desktop_lib` · `nh_desktop` · `nh-desktop:` · `nh-desktop.db` |
+| Website / API / image hosts | `nhentai.net` · `nhentai.net/api/v2` · `t.nhentai.net` · `i.nhentai.net` (never renamed) |
+| Repo | misnamed folder `lewd-clips-app` is NOT the name; product is NH Desktop |
+
+Identifiers use `nh-desktop` (hyphenated, lowercase) or `nh_desktop_lib` where Rust requires
+underscores; a bare `nhentai` string in the app is stale unless it refers to the website.
 
 ## The rule
 

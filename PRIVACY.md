@@ -15,8 +15,8 @@ All persistent data is stored **on your own device**:
 | Data | Where | Storage type |
 | --- | --- | --- |
 | Favorites, reading history, blacklist entries, settings | Browser `localStorage` of the App's webview | Local only |
-| API key (if you add one) | `nhentai.db` via the App's Rust command (`db_set` / `set_api_key`) | Local SQLite |
-| Cache (search results, gallery lists, images) | In-memory cache + `nhentai.db` | Local, can be cleared in Settings |
+| API key (if you add one) | `nh-desktop.db` via the App's Rust command (`db_set` / `set_api_key`) | Local SQLite |
+| Cache (search results, gallery lists, images) | In-memory cache + `nh-desktop.db` | Local, can be cleared in Settings |
 
 Nothing here is ever sent to us, uploaded, or synced to any server controlled by the publisher.
 
@@ -57,7 +57,7 @@ on GitHub). The installer itself respects the same local-only principles; uninst
 
 - 🗑️ **All localStorage data** (favorites, history, blacklist, settings): clear it in the App's
   Settings, or delete the App's profile directory on your OS.
-- **Your API key:** remove it in Settings → "Clear API key", or delete `nhentai.db`.
+- **Your API key:** remove it in Settings → "Clear API key", or delete `nh-desktop.db`.
 - **Everything:** uninstall with **Remove user data** checked, or delete the App data folder
   (`%LOCALAPPDATA%\NH Desktop`, `~/Library/Application Support/NH Desktop`, `~/.local/share/NH Desktop`).
 

@@ -47,7 +47,7 @@ pub fn place_executable(src: &Path, target_dir: &Path) -> Result<PathBuf, String
 	<key>CFBundleExecutable</key>
 	<string>{name}</string>
 	<key>CFBundleIdentifier</key>
-	<string>net.nhentai.client</string>
+	<string>net.nh-desktop.client</string>
 	<key>CFBundleName</key>
 	<string>{name}</string>
 	<key>CFBundlePackageType</key>

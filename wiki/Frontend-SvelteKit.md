@@ -11,7 +11,7 @@ src/lib/
   client.ts         thin invoke() wrapper for Tauri commands (camelCase)
   types.ts          shared types mirroring serde models (Gallery, Tag, …)
   query.ts          buildQuery() → nhentai search syntax + SORT_OPTIONS
-  cache.ts          in-memory/session cache (prefix 'nhentai:')
+  cache.ts          in-memory/session cache (prefix 'nh-desktop:')
   image.ts          host helpers (IMAGE_HOST/THUMB_HOST) + proxiedBlobUrl()
   format.ts         display helpers (sizes, dates, counts)
   stores/           runes state (favorites/history/blacklist/settings/account)

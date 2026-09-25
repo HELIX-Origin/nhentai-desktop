@@ -8,10 +8,10 @@ Here's the shape of the whole system — SvelteKit on top, Rust under it, nhenta
 flowchart TD
     A[SvelteKit SPA] -->|"invoke()"| B[Rust backend]
     A -->|"direct img load"| E[nhentai.net CDN]
-    B --> C[NhentaiClient]
+    B --> C[NhDesktopClient]
     C -->|"HTTPS throttled"| D[nhentai.net API]
     C -->|"proxy_image fallback"| E
-    B --> F[SQLite nhentai.db]
+    B --> F[SQLite nh-desktop.db]
 ```
 
 Rust owns all networking and local data; the SPA only renders. Images load straight from the
@@ -43,8 +43,8 @@ CDNs, with Rust as the proxy fallback.
 
 ## 🦀 Backend → nhentai.net
 
-- 🦀 All requests go through `NhentaiClient` (reqwest, `rustls`, gzip). A `THROTTLE` delay
-  between requests respects the site's public API (see `nhentai.rs`). No hammering. Ever.
+- 🦀 All requests go through `NhDesktopClient` (reqwest, `rustls`, gzip). A `THROTTLE` delay
+  between requests respects the site's public API (see `nh_desktop.rs`). No hammering. Ever.
 - Type-accurate serde models mirror the API JSON.
 
 ## 💾 Persistence model
@@ -52,7 +52,7 @@ CDNs, with Rust as the proxy fallback.
 | Store | Location | Purpose |
 | --- | --- | --- |
 | Favorites / history / blacklist / settings | `localStorage` | user state, runes-backed |
-| Cache mirror + API key | `nhentai.db` (SQLite) | fast startup, offline-ish lists, key at-rest |
+| Cache mirror + API key | `nh-desktop.db` (SQLite) | fast startup, offline-ish lists, key at-rest |
 
 ## 🤝 Related pages
 
