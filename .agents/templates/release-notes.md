@@ -1,4 +1,4 @@
-# Release Notes: NH Desktop {{ version }}
+# {{Project Name}} v{{ version }}
 
 **Release date:** {{ YYYY-MM-DD }}
 
@@ -8,40 +8,37 @@
 
 ## 🚀 Key Improvements & Features
 
-- {{ Feature / change }}
-- {{ Feature / change }}
+- **{{ Feature name }}** — {{ Feature description }}
+- **{{ Feature name }}** — {{ Feature description }}
 
-## 🛡️ Security & Governance
+## ✅ Changed
 
-- {{ security fix / dependency bump / CSP note }}
+- {{ Change description }}
 
-## Fixed
+## 🐛 Fixed
 
-- {{ Bug fix }}
-
-## Removed / deprecated
-
-- {{ Removed feature }}
+- {{ Bug fix description }}
 
 ## 📦 Install & Upgrading
 
-Download from the Assets section below:
+Download the installer for your platform from the Assets section below:
 
-- Windows: `NH Desktop-Setup-{{ version }}-win-{{ arch }}.exe` (e.g. `win-x64`)
-- macOS: `NH Desktop-Setup-{{ version }}-macos-{{ arch }}` (e.g. `macos-arm64`)
-- Linux: `NH Desktop-Setup-{{ version }}-linux-{{ arch }}` (e.g. `linux-x64`)
+- Windows: `{{Project Name}}-Setup-v{{ version }}-windows-x64.exe`
+- macOS: `{{Project Name}}-Setup-v{{ version }}-macos-arm64` (or `macos-x64` if available)
+- Linux: `{{Project Name}}-Setup-v{{ version }}-linux-x64`
 
-Upgrade in place: run the new installer — it repairs/reinstalls over the
-existing installation (Tauri-native unified installer/uninstaller).
+Upgrade in place: run the new installer over your existing installation. The unified installer will repair/replace files and update shortcuts.
 
 ## Verification
 
-- `cargo check` + `cargo test` (src-tauri) — green
-- `npm run check` (svelte-check) + `npm run build` — green
-- `npm run tauri build` — green; installer smoke — passed
+- `cargo check` + `cargo test` (src-tauri) — passed
+- `npm run check` (svelte-check) — 0 errors, 0 warnings
+- `npm run build` — adapter-static site generated successfully
 
 ## 📄 Changes & Commits
 
-{{ List the concrete changes in this release. One bullet per user-visible change,
-with the Conventional Commit type/scope when helpful. Do not punt to
-CHANGELOG.md — put the summary here. }}
+- `{{ commit title / description }}`
+- `{{ commit title / description }}`
+
+Full commit history: `git log --oneline {{ prev_tag }}..v{{ version }}`
+
