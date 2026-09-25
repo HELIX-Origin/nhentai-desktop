@@ -35,7 +35,7 @@ public API — we fetch data, we don't scrape aggressively.
 | M5 | Library | ✅ Shipped (core) | Favorites, history, local persistence; import/export JSON still backlog |
 | M6 | Reader | ✅ Shipped (core) | Gallery detail, paged thumbnails, strip mode, preload, fullscreen |
 | M7 | Downloads & background services | 🚧 In progress | Background-service core shipped (zip downloads to disk with progress, image prefetch, cache/image maintenance, account sync, Popular auto-refresh with job events); still backlog: per-gallery Download button, CBZ/other formats, storage management, cache consumers |
-| M8 | Polish / release | 🚧 In progress | Installer (built: native wizard, platform split); still backlog: light theme, accent picker, image quality, reader preload distance, end-to-end installer smoke test |
+| M8 | Polish / release | 🚧 In progress | Release 0.1.0 shipped 2026-09-24 (installer + verified gates green); still backlog: light theme, accent picker, image quality, reader preload distance, installer E2E smoke via CI |
 
 ## 🎯 Current focus
 
@@ -51,7 +51,7 @@ Foundation** closeout and **M8 hardening** remain:
 - ✅ Single-instance: second launch focuses the running window
 - ✅ Images verified loading from API v2 relative paths; disk image cache backing `proxy_image`
 - ⬜ M7 polish: Download button, CBZ/other formats, downloads storage management
-- ⬜ M8: light theme, accent picker, image quality, reader preload distance, installer E2E smoke test
+- ⬜ M8: light theme, accent picker, image quality, reader preload distance; installer E2E smoke now runs via CI packaging workflow on release tags
 
 ## 🔁 Recurring themes (applies to every milestone)
 
