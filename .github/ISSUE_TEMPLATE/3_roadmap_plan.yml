@@ -1,0 +1,99 @@
+name: "🗺️ Roadmap / Epic Plan"
+description: "Propose or track a major architectural initiative or milestone roadmap (issue-protocol rule)"
+title: "🗺️ "
+labels: ["roadmap", "epic"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Issue Protocol
+        Every major plan gets **ONE roadmap issue** whose first post is the **COMPLETE LIVING ROADMAP**.
+        The first post is edited in place as work progresses.
+        See [issue-protocol rule](https://github.com/HELIX-Origin/nhentai-desktop/blob/main/.agents/rules/issue-protocol.md).
+  - type: dropdown
+    id: milestone
+    attributes:
+      label: "Target Milestone"
+      description: "Which ROADMAP.md milestone does this plan move?"
+      options:
+        - "M1 Foundation"
+        - "M2 Browse & discover"
+        - "M3 Search & filters"
+        - "M4 Global blacklist"
+        - "M5 Library"
+        - "M6 Reader"
+        - "M7 Downloads & background services"
+        - "M8 Polish / release"
+        - "New milestone / cross-cutting"
+    validations:
+      required: true
+  - type: textarea
+    id: strategic_objective
+    attributes:
+      label: "Strategic Objective & Context"
+      description: "Explain why this roadmap exists, what milestone it achieves, and target user benefits."
+      placeholder: "This roadmap tracks the implementation of..."
+    validations:
+      required: true
+  - type: textarea
+    id: mermaid_diagram
+    attributes:
+      label: "Mermaid Lifecycle Diagram"
+      description: "Include a valid GitHub-compatible Mermaid diagram (flowchart TD/LR, quoted labels, ≤12 nodes)."
+      render: markdown
+      value: |
+        ```mermaid
+        flowchart TD
+            P["🗺️ plan roadmap issue"]
+            P --> S1["Sub-Issue 1: diagnostics + architecture"]
+            P --> S2["Sub-Issue 2: core implementation"]
+            P --> S3["Sub-Issue 3: test suite + regression"]
+            P --> S4["Sub-Issue 4: verification + docs sync"]
+            S1 --> S2
+            S2 --> S3
+            S3 --> S4
+            style P fill:#e11,color:#fff
+        ```
+    validations:
+      required: true
+  - type: textarea
+    id: sub_issue_1
+    attributes:
+      label: "Sub-Issue 1 Scope: Diagnostics & Architecture"
+      description: "Baseline diagnostics, design decisions, contract locking, type/serde shapes."
+      placeholder: "- [ ] Decide Rust types & Tauri commands\n- [ ] Define types.ts shapes"
+    validations:
+      required: true
+  - type: textarea
+    id: sub_issue_2
+    attributes:
+      label: "Sub-Issue 2 Scope: Core Implementation"
+      description: "Rust logic, Tauri invoke handlers, Svelte views, service/cache wiring."
+      placeholder: "- [ ] Implement Rust command\n- [ ] Wire Svelte view\n- [ ] Update stores"
+    validations:
+      required: true
+  - type: textarea
+    id: sub_issue_3
+    attributes:
+      label: "Sub-Issue 3 Scope: Test Suite & Regression"
+      description: "Unit tests on pure logic, API fixture round-trips, error-path coverage."
+      placeholder: "- [ ] Rust unit tests\n- [ ] Fixture deserialization checks"
+    validations:
+      required: true
+  - type: textarea
+    id: sub_issue_4
+    attributes:
+      label: "Sub-Issue 4 Scope: Verification Gate & Docs Sync"
+      description: "cargo check/test, npm run check, TODO/BUGS/ROADMAP/CHANGELOG sync, release prep."
+      placeholder: "- [ ] Verification gate: checks green\n- [ ] Update ROADMAP/TODO/CHANGELOG"
+    validations:
+      required: true
+  - type: checkboxes
+    id: rule_check
+    attributes:
+      label: "Governance Checklist"
+      options:
+        - label: "I will edit the first post of this issue in place as sub-issues progress."
+          required: true
+        - label: "I will avoid hammering the nhentai API and follow rate-limit etiquette (see .agents/rules/security.md)."
+          required: true

@@ -32,7 +32,10 @@ wizard.
 
 `main.rs` → `run_installer()` (lib.rs) builds a Tauri app with only the installer commands;
 it opens a frameless `installer` window (`NH Desktop Setup`, 820×620, min 720×560, centered,
-`installer?mode=install|maintenance`).
+`installer?mode=install|maintenance`). Both the installer and the maintenance window
+(`open_maintenance_window`) are given the app's default icon via
+`app.default_window_icon()` → `WebviewWindowBuilder::icon()`. `run_installer()` manages only
+the API client and the local DB — no background service or image cache.
 
 ## 📦 Engine (`src-tauri/src/installer.rs`)
 

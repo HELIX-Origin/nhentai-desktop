@@ -20,15 +20,18 @@ sidebar on the left navigates everywhere:
 - **Search** — the [filter engine](Search-and-Filters.md)
 - **Favorites** / **History** — your local library
 - **Blacklist** — global [blacklist](Blacklist.md) management
-- **Settings** — appearance + optional [API key](Settings-and-API-Key.md)
+- **Settings** — appearance, optional [API key](Settings-and-API-Key.md), and background
+  services (auto-refresh, sync, maintenance, recent jobs)
 
 ## 🔑 3. Do you need an API key?
 
 **No.** Browsing, searching, the reader, favorites, history, and blacklist all work without
-one. An nhentai.net API key is **optional** and only unlocks one thing in this app:
+one. An nhentai.net API key is **optional** and only unlocks account-backed features:
 
 - **Account sync:** view/manage your nhentai.net account *favorites* and *blacklist* from
   within the app (see [Favorites & History](Favorites-and-History.md)).
+- **Background downloads:** download galleries (zip) to disk through the background service
+  (see [Settings & API Key](Settings-and-API-Key.md)).
 
 Get one from nhentai.net → *Settings → API Key*. Add it in the app under **Settings → API
 Key**. It is stored locally in `nh-desktop.db` and sent only to nhentai.net over HTTPS — see

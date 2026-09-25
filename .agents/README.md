@@ -56,6 +56,8 @@ flowchart TD
     security.md        # secret handling, API respect, CSP
     testing.md         # how to verify work
     git-workflow.md    # commits, branches, PRs, headless-shell rules
+    issue-protocol.md  # roadmap-first issues, sub-issues, PR linkage (gh, non-interactive)
+    release-standards.md # SemVer, verification gate, tags, gh release, changelog sync
     context-management.md # DCP/compress tool contract + size limits
     docs-format.md     # emoji + mermaid legibility conventions (poor eyesight)
   agents/              # role definitions — {primary-agent}/{sub-agent}/README.md
@@ -92,6 +94,12 @@ flowchart TD
     bug.md
     pr.md
     todo.md
+    issue.md           # GitHub issue / roadmap sub-issue
+    commit-message.md  # types, scopes, examples
+    changelog.md       # CHANGELOG.md release entries (Keep a Changelog)
+    release-notes.md   # GitHub release notes (SemVer per rule)
+    # GitHub-driven YAML forms live in .github/ISSUE_TEMPLATE/ (bug, feature,
+    # roadmap, sub-issue, docs, api/data, blacklist, installer/service)
   tracking/            # optional detail files, one per item
     bugs/
     todos/
@@ -108,6 +116,8 @@ flowchart TD
 - `rules/security.md` — secrets, CSP, remote-image trust, API etiquette/rate limits
 - `rules/testing.md` — what "done & verified" means here
 - `rules/git-workflow.md` — branches, commits, PRs, headless-shell rules
+- `rules/issue-protocol.md` — roadmap-first issues, sub-issues, PR linkage
+- `rules/release-standards.md` — SemVer, verification gate, tags, releases
 - `rules/context-management.md` — DCP/compress tool contract, size limits
 - `rules/docs-format.md` — emoji + mermaid legibility (user has poor eyesight)
 

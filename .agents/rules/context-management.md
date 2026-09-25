@@ -1,7 +1,13 @@
 # Rule: Context Management (DCP / compress)
 
-Applies to every agent session that runs under **opencode with the DCP plugin**
-(`@tarquinen/opencode-dcp`, AGPL-3.0, auto-installed globally). This is meta-infrastructure:
+Applies to every agent session that runs under **opencode**, because DCP is an **opencode
+plugin** (`@tarquinen/opencode-dcp`, AGPL-3.0, auto-installed globally — it is tooling for the
+agent, NOT part of the NH Desktop product). This is meta-infrastructure:
+
+> **Non-opencode agents: ignore this rule.** There is no `compress` tool outside opencode+dcp.
+> Do not try to run, replicate, or emulate a compression pass — just keep summaries or working
+> notes in `.agents/tracking/` and move on. This file's contract is only meaningful in sessions
+> that actually expose the `compress` tool and `dcp-system-reminder` blocks.
 get it wrong and sessions degrade, lose intent, or waste the user's time. **Read before doing
 anything context-related.**
 

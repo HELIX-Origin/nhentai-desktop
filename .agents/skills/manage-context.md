@@ -1,5 +1,9 @@
 # Skill: Manage Context (compression pass)
 
+> Applies **only** to sessions running under **opencode with the DCP plugin**. Non-opencode
+> agents have no `compress` tool — ignore this skill and this rule entirely; see
+> `rules/context-management.md`.
+
 Trigger: a `dcp-system-reminder` fires, the user says "compress / clean up context", or the
 transcript is visibly saturated. Goal: reclaim context without losing intent or breaking the
 `compress` tool.

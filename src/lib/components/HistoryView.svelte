@@ -2,6 +2,7 @@
 	import type { HistoryEntry } from '$lib/types';
 	import { relativeDate } from '$lib/format';
 	import { clearHistory, isFavorite, toggleFavorite } from '$lib/stores/library.svelte';
+	import { thumbPath } from '$lib/image';
 	import Icon from './Icon.svelte';
 
 	let { entries }: { entries: HistoryEntry[] } = $props();
@@ -30,7 +31,7 @@
 				<li>
 					<a class="row" href={`/gallery/${h.galleryId}`}>
 						<span class="thumb">
-							<img src={h.thumbnail} alt="" loading="lazy" />
+							<img src={thumbPath(h.thumbnail)} alt="" loading="lazy" />
 						</span>
 						<span class="info">
 							<span class="title">{h.englishTitle}</span>

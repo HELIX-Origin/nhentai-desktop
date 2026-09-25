@@ -1,0 +1,67 @@
+name: "🚫 Blacklist or Filter Issue"
+description: "Report problems with the global blacklist or the search/filter engine"
+title: "🚫 [Blacklist/Filter]: "
+labels: ["blacklist", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        NH Desktop's blacklist and filter engine is a core selling point. Use this template
+        when tags aren't excluded, hide/blur behavior is wrong, or the filter drawer produces
+        unexpected results.
+  - type: dropdown
+    id: issue_type
+    attributes:
+      label: "Issue Type"
+      description: "Which part of the blacklist/filter experience is wrong?"
+      options:
+        - "Blacklist Not Applied (blocked tags still appear)"
+        - "Hide vs Blur Mode Broken (wrong card behavior)"
+        - "Master Toggle Not Respected (items revealed when blacklist should be off)"
+        - "Filter Drawer Produces Wrong Results (query builder)"
+        - "Tag picker / type tabs broken (Blacklist manager)"
+        - "Search query exclude (-tag:) not working"
+        - "Other"
+    validations:
+      required: true
+  - type: dropdown
+    id: surface
+    attributes:
+      label: "Where is the problem visible?"
+      options:
+        - "Home / Latest grid"
+        - "Popular grid"
+        - "Search results"
+        - "Gallery detail / reader"
+        - "Blacklist manager (Settings)"
+        - "Filter drawer"
+        - "Everywhere"
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction_steps
+    attributes:
+      label: "Steps to Reproduce"
+      description: "Numbered steps including the tags, filters, and toggles involved."
+      value: |
+        1. Add tag '...' to blacklist
+        2. Set mode to '...' (hide/blur)
+        3. Open '...'
+        4. Observed: ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: "Expected Behavior"
+      description: "What should happen with the locks on (or off)?"
+      placeholder: "Cards matching the blacklist should be filtered from the grid entirely..."
+    validations:
+      required: true
+  - type: checkboxes
+    id: verification
+    attributes:
+      label: "Verification"
+      options:
+        - label: "I reproduced this on the latest release and confirmed the blacklist toggle state (on/off) explicitly in the report."
+          required: true

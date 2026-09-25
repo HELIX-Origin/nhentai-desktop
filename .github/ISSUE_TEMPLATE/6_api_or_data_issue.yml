@@ -1,0 +1,61 @@
+name: "🌐 nhentai API / Data Issue"
+description: "Report problems with the nhentai.net API: missing galleries, changed response shapes, image host failures"
+title: "🌐 [API/Data]: "
+labels: ["api", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        NH Desktop talks to the public nhentai.net API through its Rust client.
+        Use this when galleries fail to load, search returns wrong results, or the API's
+        response shape changed (types mismatch).
+  - type: dropdown
+    id: issue_type
+    attributes:
+      label: "Issue Type"
+      description: "What stage of the data pipeline failed?"
+      options:
+        - "Gallery / Search / Tagged Listing Fails (empty, error notice, wrong items)"
+        - "Gallery Detail Fails (title, pages, tags missing)"
+        - "Response Shape Changed (deserialization error / types misaligned)"
+        - "Image Host Failing (t.nhentai.net / i.nhentai.net blocked, 404, placeholder)"
+        - "Rate Limiting / Throttling (too many requests, 429/403)"
+        - "Other"
+    validations:
+      required: true
+  - type: input
+    id: gallery_url
+    attributes:
+      label: "nhentai Gallery URL or ID (if relevant)"
+      description: "The full nhentai.net URL or numeric gallery id."
+      placeholder: "https://nhentai.net/g/123456/ or 123456"
+    validations:
+      required: false
+  - type: textarea
+    id: error_details
+    attributes:
+      label: "Error Description & Observed Output"
+      description: "Describe what went wrong and any error messages displayed."
+      placeholder: "Home page shows 'Error loading galleries' after pressing Retry..."
+    validations:
+      required: true
+  - type: textarea
+    id: proof
+    attributes:
+      label: "Proof / Network Trace"
+      description: "If the API responded differently to a plain browser request, describe the divergence or paste the JSON response."
+      render: shell
+      placeholder: "curl https://nhentai.net/api/v2/galleries?page=1 ... returns ..."
+    validations:
+      required: false
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: "Verification Checklist"
+      options:
+        - label: "I verified the gallery/search loads normally in a plain web browser."
+          required: true
+        - label: "I confirmed my network/ISP is not blocking nhentai.net or its image hosts."
+          required: true
+        - label: "I confirmed the issue is not already covered by an open API/Data issue."
+          required: true

@@ -21,8 +21,11 @@ categories, artists, characters, parodies — and lets you slice it **locally, i
   excludes) *and* **client-side** (hide/blur in grids), with a master toggle. It never silently
   breaks the grid or the reader.
 - **Native and fast.** Tauri 2 (Rust `reqwest`) backend, SvelteKit SPA frontend that uses Svelte 5
-  runes. Everything runs locally; images load lazily with a Rust image-proxy fallback when the
-  CDN 404s.
+  runes. Everything runs locally; images load lazily with a Rust image-proxy fallback (backed by a
+  disk cache) when the CDN 404s.
+- **Background jobs built in.** Gallery zip downloads, image prefetch, cache/account maintenance,
+  and an optional Popular auto-refresh run in a throttled background service, with live progress
+  in Settings. Launching the app again just focuses the running window (single instance).
 - **Private by default.** Favorites, history, blacklist, and settings live only on your device
   (`localStorage` + a local SQLite database). No accounts, no servers, no telemetry. An
   **optional** nhentai account API key unlocks account favorites/blacklist sync.
@@ -36,7 +39,12 @@ categories, artists, characters, parodies — and lets you slice it **locally, i
 | Windows 10+ | ✅ |
 | macOS 10.13+ | ✅ |
 | Linux (x86_64) | ✅ (desktop entry, standalone install dir) |
-| Mobile | ❌ (out of scope, by design) |
+| Mobile | ❌ (no mobile support; use [`NClientV3`](https://github.com/maxwai/NClientV3) on mobile) |
+
+> **Why no mobile app?** Desktop-only by design. Android already has a good third-party
+> client ([NClientV3](https://github.com/maxwai/NClientV3)), and iOS rejects NSFW apps while
+> its developer license is prohibitively expensive. On a phone, use NClientV3 on Android or
+> the site directly in a browser.
 
 ## 📦 Installation
 
@@ -59,7 +67,7 @@ Requires **Node.js 20+**, **Rust stable**, and the per-platform Tauri prerequisi
 npm install
 npm run check          # svelte-kit sync + svelte-check (frontend type/lint)
 cargo check            # run inside src-tauri/ (backend)
-npm run tauri dev      # run in dev mode
+npm run dev:tauri      # run in dev mode (fixed Vite port 14440)
 ```
 
 Full release bundle + installer:
@@ -79,10 +87,12 @@ flowchart TD
     B --> C[nh_desktop.rs API client]
     B --> D[db.rs SQLite]
     B --> E[installer.rs engine]
+    B --> S[service.rs background worker]
+    S --> K[image_cache.rs disk cache]
     C -->|"throttled reqwest"| F[nhentai.net API]
     F --> G[nhentai image CDNs]
     A -->|"direct image load"| G
-    A -.->|"proxy fallback"| B
+    A -.->|"proxy fallback"| K
     E --> H[platform/ per-OS]
 ```
 
@@ -91,13 +101,15 @@ flowchart TD
 ```
 src/                  # SvelteKit SPA frontend (static, adapter-static)
   lib/api/            # typed API client + query builder (frontend)
-  lib/stores/         # settings, library, blacklist, account (runes + localStorage)
+  lib/stores/         # settings, library, blacklist, account, service (runes + localStorage)
   lib/components/     # GalleryCard, GalleryGrid, FilterPanel, BlacklistView, ...
   routes/             # latest, popular, search, favorites, history, blacklist, settings, gallery, reader, installer
 src-tauri/            # Rust backend (Tauri 2)
   src/nh_desktop.rs   # nhentai.net API client (reqwest, throttled)
-  src/commands.rs     # Tauri commands (26+)
+  src/commands.rs     # Tauri commands (37)
   src/db.rs           # local SQLite persistence
+  src/service.rs      # background worker queue (downloads, prefetch, maintenance, sync, auto-refresh)
+  src/image_cache.rs  # disk image cache (cache-first proxy fallback)
   src/installer.rs    # unified installer/uninstaller engine
   src/platform/       # per-OS implementations (windows, macos, linux)
 scripts/build-installer.mjs   # installer assembly
@@ -109,7 +121,7 @@ Full documentation lives in the [Wiki](https://github.com/HELIX-Origin/nhentai-d
 (available as [`wiki/`](wiki/) in this repository for contributions):
 
 - [Home](wiki/Home.md) · [Getting Started](wiki/Getting-Started.md) · [Search & Filters](wiki/Search-and-Filters.md)
-- [Blacklist](wiki/Blacklist.md) · [Reader](wiki/Reader.md) · [Settings & API Key](wiki/Settings-and-API-Key.md)
+- [Blacklist](wiki/Blacklist.md) · [Reader & Galleries](wiki/Reader-and-Galleries.md) · [Settings & API Key](wiki/Settings-and-API-Key.md)
 - [Installation & Maintenance](wiki/Installation-and-Maintenance.md) · [Architecture](wiki/Architecture.md)
 - [Security](wiki/Security.md) · [Privacy](wiki/Privacy.md) · [Troubleshooting](wiki/Troubleshooting.md)
 - [FAQ](wiki/FAQ.md) · [Roadmap](wiki/Roadmap.md)
@@ -119,7 +131,7 @@ Also see [PRIVACY.md](PRIVACY.md), [TOS.md](TOS.md), [SECURITY.md](SECURITY.md),
 
 ## 🤝 Contributing
 
-See the [Wiki's Development section](wiki/Development.md) and [SECURITY.md](SECURITY.md) for
+See the [Wiki's Development section](wiki/Development-and-Contributing.md) and [SECURITY.md](SECURITY.md) for
 reporting guidance. Be respectful, keep changes scoped, and match the existing conventions.
 
 ## 📄 License

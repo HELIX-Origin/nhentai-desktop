@@ -10,6 +10,7 @@
 	import Loader from '$lib/components/Loader.svelte';
 	import ErrorNotice from '$lib/components/ErrorNotice.svelte';
 	import Icon from '$lib/components/Icon.svelte';
+	import { thumbPath } from '$lib/image';
 
 	const id = $derived(Number(page.params.id));
 	const settings = getSettings();
@@ -21,7 +22,7 @@
 	let error = $state<string | null>(null);
 	let loading = $state(true);
 	let currentIdx = $state(0);
-	let hovering = $state(false);
+	let stageEl = $state<HTMLDivElement>();
 
 	const pages = $derived(gallery?.pages ?? []);
 	const orderedPages = $derived(settings.readerRtl ? [...pages].reverse() : pages);
@@ -87,7 +88,7 @@
 					galleryId: res.id,
 					mediaId: res.media_id,
 					englishTitle: res.title.english,
-					thumbnail: `https://t.nhentai.net${res.thumbnail.path}`,
+					thumbnail: thumbPath(res.thumbnail.path),
 					numPages: res.num_pages,
 					visitedAt: Date.now(),
 				});
@@ -102,6 +103,15 @@
 			cancelled = true;
 		};
 	});
+
+	$effect(() => {
+		void currentIdx;
+		void settings.readerFit;
+		if (stageEl) {
+			stageEl.scrollTop = 0;
+			stageEl.scrollLeft = 0;
+		}
+	});
 </script>
 
 <svelte:head>
@@ -113,8 +123,8 @@
 {:else if error && !gallery}
 	<div class="page"><ErrorNotice message={error} onretry={() => (loading = true)} /></div>
 {:else if gallery}
-	<div class="reader" role="group" onpointerenter={() => (hovering = true)} onpointerleave={() => (hovering = false)}>
-		<header class="bar" class:hidden={!hovering}>
+	<div class="reader" role="group">
+		<header class="bar">
 			<button class="btn btn-ghost icon-now" onclick={bounce} aria-label="Back to gallery">
 				<Icon name="arrow-left" size={16} />
 			</button>
@@ -139,12 +149,20 @@
 			</div>
 		</header>
 
-		<div class="stage" role="button" tabindex="0" onkeydown={onStageKey} onclick={(e) => {
-			const x = e.clientX;
-			const w = window.innerWidth;
-			if (x < w * 0.28) settings.readerRtl ? forward() : back();
-			else if (x > w * 0.72) settings.readerRtl ? back() : forward();
-		}}>
+		<div
+			class="stage"
+			data-fit={settings.readerFit}
+			bind:this={stageEl}
+			role="button"
+			tabindex="0"
+			onkeydown={onStageKey}
+			onclick={(e) => {
+				const x = e.clientX;
+				const w = window.innerWidth;
+				if (x < w * 0.28) settings.readerRtl ? forward() : back();
+				else if (x > w * 0.72) settings.readerRtl ? back() : forward();
+			}}
+		>
 			{#if pages.length === 0}
 				<p class="faint">No page data available for this gallery.</p>
 			{:else}
@@ -159,7 +177,6 @@
 		<div class="edge-nav">
 			<button
 				class="edge-btn"
-				class:intro={hovering}
 				disabled={settings.readerRtl ? isLast : currentIdx <= 0}
 				onclick={() => (settings.readerRtl ? forward() : back())}
 				aria-label="Previous page"
@@ -168,7 +185,6 @@
 			</button>
 			<button
 				class="edge-btn"
-				class:intro={hovering}
 				disabled={!settings.readerRtl ? isLast : currentIdx <= 0}
 				onclick={() => (!settings.readerRtl ? forward() : back())}
 				aria-label="Next page"
@@ -205,15 +221,6 @@
 		padding: 0 16px;
 		background: linear-gradient(to bottom, rgba(6, 6, 9, 0.92), transparent);
 		z-index: 10;
-		opacity: 0;
-		transform: translateY(-6px);
-		transition: opacity 0.16s ease, transform 0.16s ease;
-		pointer-events: none;
-	}
-
-	.bar.hidden {
-		opacity: 1;
-		transform: none;
 		pointer-events: auto;
 	}
 
@@ -253,16 +260,34 @@
 	.stage {
 		flex: 1;
 		min-height: 0;
+		min-width: 0;
 		position: relative;
-		overflow: hidden;
+		overflow: auto;
 	}
 
 	.layer {
 		position: absolute;
-		inset: 0;
+		top: 0;
+		left: 0;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+	}
+
+	.stage[data-fit='width'] .layer {
+		width: 100%;
+		min-height: 100%;
+		height: max-content;
+	}
+
+	.stage[data-fit='height'] .layer {
+		height: 100%;
+		min-width: 100%;
+		width: max-content;
+	}
+
+	.stage[data-fit='contain'] .layer {
+		inset: 0;
 	}
 
 	.layer:not(.visible) {
@@ -299,11 +324,10 @@
 		height: 72px;
 		margin: 0 18px;
 		border-radius: var(--radius);
-		background: rgba(255, 255, 255, 0.06);
+		background: rgba(255, 255, 255, 0.08);
 		color: var(--text-secondary);
-		opacity: 0;
-		transform: translateY(8px);
-		transition: opacity 0.16s ease, transform 0.16s ease, background 0.12s ease, color 0.12s ease;
+		opacity: 0.9;
+		transition: background 0.12s ease, color 0.12s ease, opacity 0.12s ease;
 	}
 
 	.edge-btn:disabled {
@@ -312,13 +336,8 @@
 	}
 
 	.edge-btn:not(:disabled):hover {
-		background: rgba(255, 255, 255, 0.12);
+		background: rgba(255, 255, 255, 0.14);
 		color: var(--text);
-	}
-
-	.edge-btn.intro {
-		opacity: 1;
-		transform: none;
 	}
 
 	.stage p {

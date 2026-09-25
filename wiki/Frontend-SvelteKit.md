@@ -12,9 +12,10 @@ src/lib/
   types.ts          shared types mirroring serde models (Gallery, Tag, …)
   query.ts          buildQuery() → nhentai search syntax + SORT_OPTIONS
   cache.ts          in-memory/session cache (prefix 'nh-desktop:')
-  image.ts          host helpers (IMAGE_HOST/THUMB_HOST) + proxiedBlobUrl()
+  image.ts          URL helpers (IMAGE_HOST/THUMB_HOST/AVATAR_HOST) +
+                    pagePath()/thumbPath()/avatarUrl() + proxiedBlobUrl()
   format.ts         display helpers (sizes, dates, counts)
-  stores/           runes state (favorites/history/blacklist/settings/account)
+  stores/           runes state (favorites/history/blacklist/settings/account/service)
   components/       GalleryCard, GalleryGrid, FilterPanel, ReaderImage,
                     CoverImage, Pager, Loader, Drawer, TagChip, EmptyState,
                     ErrorNotice, SettingsView, FavoritesView, HistoryView,
@@ -39,8 +40,10 @@ src/routes/
 - **localStorage** backs favorites/history/blacklist/settings; runes hydrate/serialize via
   the `stores/` modules (`localStorage` namespaced keys).
 - All async reads go through the typed `api`/`client` layer; never raw `invoke` in components.
-- Images render direct from `t.nhentai.net` / `i.nhentai.net` and fall back to a `blob:` URL
-  from `proxy_image` when the CDN 404s (see [Reader & Galleries](Reader-and-Galleries.md)).
+- Image URLs are derived from the API's relative path fragments via `image.ts`
+  (`pagePath` / `thumbPath` / `avatarUrl`); images render direct from the `*.nhentai.net` CDNs
+  and fall back to a `blob:` URL from `proxy_image` (served from the disk image cache) when the
+  CDN 404s (see [Reader & Galleries](Reader-and-Galleries.md)).
 
 ## 🔍 Event flow (example: search)
 
@@ -65,6 +68,16 @@ In full:
 The layout detects sub-window routes (`/installer`) and renders them **without** the normal
 app shell (no sidebar). The maintenance window is opened from e.g. settings / sidebar via
 `open_maintenance_window` (Rust) — see [Installer Engine](Installer-Engine.md).
+
+## 🔄 Background services
+
+`src/lib/stores/service.svelte.ts` surfaces the Rust background service (`service.rs`): a
+throttled one-at-a-time queue for gallery downloads (zip to disk), image prefetch, cache/image
+maintenance, account sync, and periodic Popular auto-refresh. It listens for the
+`service://job` / `service://refresh` Tauri events, keeps the last 50 job records, and renders
+them live in **Settings → Background services**. The store exposes `enqueueDownload`,
+`prefetchImages`, `enqueueSync`, `enqueueMaintenance`, and reads/writes the auto-refresh config
+(`service_set/get_auto_refresh`).
 
 ## 🎨 Design system
 

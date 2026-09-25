@@ -1,0 +1,109 @@
+name: "🐛 Bug Report"
+description: "Report a bug or unexpected behavior in NH Desktop (UI, reader, searches, downloads, installer)"
+title: "🐛 [Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting an issue with **NH Desktop**!
+        Please search existing issues before submitting to avoid duplicates.
+  - type: dropdown
+    id: component
+    attributes:
+      label: "Affected Component"
+      description: "Select the subsystem where the problem occurs."
+      options:
+        - "Gallery Grid / Home / Popular (listings & cards)"
+        - "Search & Filters (query builder, filter drawer, results)"
+        - "Blacklist (hide/blur modes, manager, toggle)"
+        - "Reader (gallery detail, paging, strip mode, fullscreen)"
+        - "Favorites / History (local storage, import/export)"
+        - "Account & Sign-in (nhentai.net key, profile)"
+        - "Downloads & Background Service (queue, cache maintenance, prefetch)"
+        - "Image Loading / Proxy / Cache (slow images, placeholders, 404s)"
+        - "Installer / Uninstaller / Maintenance (native wizard)"
+        - "System Tray & Window Management (titlebar, minimize-to-tray)"
+        - "Settings (persistence, service panel, theme)"
+        - "Other / Unsure"
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: "Operating System"
+      description: "Which operating system are you running?"
+      options:
+        - "Windows 11 (x86_64)"
+        - "Windows 10 (x86_64)"
+        - "Linux - Ubuntu / Debian (x86_64 / arm64)"
+        - "Linux - Fedora / RHEL (x86_64)"
+        - "Linux - Arch / Manjaro (x86_64)"
+        - "macOS - Apple Silicon (M1/M2/M3/M4)"
+        - "macOS - Intel (x86_64)"
+        - "Other"
+    validations:
+      required: true
+  - type: input
+    id: app_version
+    attributes:
+      label: "NH Desktop Version"
+      description: "Check the version in the sidebar footer or settings."
+      placeholder: "e.g. 0.1.0"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: "Bug Description"
+      description: "A clear and concise description of what the bug is."
+      placeholder: "When attempting to..."
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction_steps
+    attributes:
+      label: "Steps to Reproduce"
+      description: "Numbered steps to reproduce the behavior."
+      value: |
+        1. Open '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+    validations:
+      required: true
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: "Expected Behavior"
+      description: "A clear and concise description of what you expected to happen."
+      placeholder: "The gallery grid should show all items across equal-sized pages..."
+    validations:
+      required: true
+  - type: textarea
+    id: logs_or_cli_output
+    attributes:
+      label: "Logs or Error Output"
+      description: "Include relevant Webview DevTools console logs, Rust command errors, or the error notice shown in-app."
+      render: shell
+      placeholder: "Error: ..."
+    validations:
+      required: false
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: "Screenshots / Media"
+      description: "Attach screenshots or screen recordings showing the issue (drag and drop files here)."
+    validations:
+      required: false
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: "Pre-submission Checklist"
+      options:
+        - label: "I have searched open and closed issues and confirmed this is not a duplicate."
+          required: true
+        - label: "I am using a supported release or verified source build."
+          required: true
+        - label: "If related to images, I verified the URL loads in a normal browser."
+          required: false

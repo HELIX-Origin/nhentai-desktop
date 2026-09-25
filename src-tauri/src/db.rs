@@ -91,6 +91,15 @@ impl Db {
         }
     }
 
+    pub fn prune_cache(&self, before_ts: i64) -> Result<usize, rusqlite::Error> {
+        let conn = self.conn.lock().unwrap();
+        let n = conn.execute(
+            "DELETE FROM kv WHERE key LIKE 'nh-desktop:cache:%' AND updated_at < ?1",
+            params![before_ts],
+        )?;
+        Ok(n)
+    }
+
     pub fn clear_api_key(&self) -> Result<(), rusqlite::Error> {
         let conn = self.conn.lock().unwrap();
         conn.execute("DELETE FROM api_key WHERE id = 1", [])?;

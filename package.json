@@ -11,6 +11,7 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "tauri": "tauri",
+    "dev:tauri": "tauri dev",
     "build:installer": "node scripts/build-installer.mjs",
     "installer:build": "npm run build:installer"
   },

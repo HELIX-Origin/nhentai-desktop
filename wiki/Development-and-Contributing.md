@@ -12,7 +12,9 @@ BUGS.md          known issues
 wiki/            GitHub wiki source (copy to .wiki.git to publish)
 src/             SvelteKit static SPA
 src-tauri/       Rust backend (Tauri 2)
-  src/installer.rs, platform/{mod,windows,macos,linux}.rs
+  src/nh_desktop.rs (API client), commands.rs (37 commands),
+      service.rs (background queue), image_cache.rs (disk cache),
+      db.rs (SQLite), installer.rs, platform/{mod,windows,macos,linux}.rs
 scripts/         build-installer.mjs
 ```
 
@@ -30,7 +32,7 @@ development — read `AGENTS.md` first (it's the entry point for agents and huma
 | Task | Command |
 | --- | --- |
 | Install deps | `npm install` |
-| Dev app | `npm run tauri dev` |
+| Dev app | `npm run dev:tauri` (Tauri dev; Vite serves on the fixed port **14440**) |
 | Frontend type/lint | `npm run check` |
 | Frontend build | `npm run build` |
 | Rust check | `cargo check` (in `src-tauri/`) |

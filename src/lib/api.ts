@@ -1,8 +1,9 @@
 import { backend } from '$lib/client';
 import { cacheGetJson, cacheSetJson } from '$lib/cache';
-import type { GalleryDetail, GalleryList, GalleryListItem, RelatedGalleries } from '$lib/types';
+import type { GalleryDetail, GalleryList, GalleryListItem, Paginated, RelatedGalleries, Tag } from '$lib/types';
 
 const TTL_HOURS = 24;
+export const GALLERIES_PER_PAGE = 28;
 
 async function cached<T>(key: string, fetchFn: () => Promise<T>): Promise<T> {
 	const hit = await cacheGetJson<T>(key);
@@ -17,7 +18,7 @@ function cacheKey(parts: (string | number | undefined)[]): string {
 }
 
 export const api = {
-	newGalleries(page = 1, perPage = 25): Promise<GalleryList> {
+	newGalleries(page = 1, perPage = GALLERIES_PER_PAGE): Promise<GalleryList> {
 		return cached(cacheKey(['cache:new', page, perPage]), () =>
 			backend.fetchNew(page, perPage),
 		);
@@ -27,7 +28,7 @@ export const api = {
 		return cached('cache:popular', () => backend.fetchPopular());
 	},
 
-	tagged(tagId: number, sort = 'date', page = 1, perPage = 25): Promise<GalleryList> {
+	tagged(tagId: number, sort = 'date', page = 1, perPage = GALLERIES_PER_PAGE): Promise<GalleryList> {
 		return cached(cacheKey(['cache:tagged', tagId, sort, page, perPage]), () =>
 			backend.fetchTagged(tagId, sort, page, perPage),
 		);
@@ -47,5 +48,11 @@ export const api = {
 
 	related(id: number): Promise<RelatedGalleries> {
 		return cached(cacheKey(['cache:related', id]), () => backend.relatedGalleries(id));
+	},
+
+	tagsByType(tagType: string, sort = 'popular', page = 1, perPage = 24): Promise<Paginated<Tag>> {
+		return cached(cacheKey(['cache:tags', tagType, sort, page, perPage]), () =>
+			backend.fetchTagsByType(tagType, sort, page, perPage),
+		);
 	},
 };

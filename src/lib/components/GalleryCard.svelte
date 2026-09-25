@@ -3,6 +3,7 @@
 	import { getBlacklist } from '$lib/stores/blacklist.svelte';
 	import { isFavorite, toggleFavorite } from '$lib/stores/library.svelte';
 	import { formatCount } from '$lib/format';
+	import { thumbPath } from '$lib/image';
 	import type { GalleryListItem } from '$lib/types';
 	import Icon from './Icon.svelte';
 	import CoverImage from './CoverImage.svelte';
@@ -14,11 +15,6 @@
 		s.blacklistEnabled && getBlacklist().some((e) => gallery.tag_ids.includes(e.id)),
 	);
 	const fav = $derived(isFavorite(gallery.id));
-	const ratio = $derived(
-		gallery.thumbnail_width && gallery.thumbnail_height
-			? gallery.thumbnail_width / gallery.thumbnail_height
-			: 0.6667,
-	);
 
 	function onFav(event: MouseEvent) {
 		event.preventDefault();
@@ -29,7 +25,7 @@
 
 <a class="card" class:blurred={s.blacklistMode === 'blur' && blocked} href={`/gallery/${gallery.id}`}>
 	<div class="thumb">
-		<CoverImage src={gallery.thumbnail} alt={gallery.english_title} ratio={ratio} />
+		<CoverImage src={thumbPath(gallery.thumbnail)} alt={gallery.english_title} />
 		{#if blocked}
 			<span class="blocked-tag"><Icon name="shield" size={11} /> blocked</span>
 		{/if}
@@ -140,7 +136,7 @@
 		line-clamp: 2;
 		-webkit-box-orient: vertical;
 		overflow: hidden;
-		min-height: 0;
+		min-height: calc(1.35em * 2);
 		padding: 0 4px;
 	}
 

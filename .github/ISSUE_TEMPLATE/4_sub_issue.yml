@@ -1,0 +1,73 @@
+name: "🔨 Sub-Issue Execution"
+description: "Track execution of one of the 4 standard sub-issues tied to a parent roadmap issue (issue-protocol rule)"
+title: "Sub-Issue :  (#)"
+labels: ["sub-issue"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### Sub-Issue Lifecycle
+        Every pull request mirrors a sub-issue with `Part of #parent` / `Closes #sub-issue`.
+        Work strictly within the phase boundaries defined in the parent roadmap.
+  - type: input
+    id: parent_roadmap
+    attributes:
+      label: "Parent Roadmap Issue"
+      description: "URL or issue number of the parent roadmap issue (e.g. `#10` or full URL)."
+      placeholder: "#10"
+    validations:
+      required: true
+  - type: dropdown
+    id: sub_issue_phase
+    attributes:
+      label: "Sub-Issue Phase"
+      description: "Which phase of the 4-phase lifecycle does this issue execute?"
+      options:
+        - "Sub-Issue 1: Diagnostics + Architecture (design, contracts, serde shapes)"
+        - "Sub-Issue 2: Core Implementation (Rust commands, Svelte views)"
+        - "Sub-Issue 3: Test Suite + Regression (unit tests, fixtures)"
+        - "Sub-Issue 4: Verification + Docs Sync (checks green, docs updated)"
+    validations:
+      required: true
+  - type: input
+    id: owning_domain
+    attributes:
+      label: "Owning Area"
+      description: "Frontend, backend, or specific module (e.g. `service.rs`, `blacklist.svelte.ts`)."
+      placeholder: "backend/service.rs"
+    validations:
+      required: true
+  - type: textarea
+    id: tasks
+    attributes:
+      label: "Implementation Tasks"
+      description: "Actionable checklist of tasks for this sub-issue."
+      value: |
+        - [ ] Task 1
+        - [ ] Task 2
+        - [ ] Task 3
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: "Acceptance Criteria"
+      description: "Conditions that must be satisfied to close this sub-issue."
+      value: |
+        - [ ] Criteria 1
+        - [ ] Criteria 2
+    validations:
+      required: true
+  - type: checkboxes
+    id: verification_gate
+    attributes:
+      label: "Verification Gate"
+      options:
+        - label: "Backend changes pass `cargo check` + `cargo test` (if Rust touched)."
+          required: true
+        - label: "Frontend changes pass `npm run check` (if UI touched)."
+          required: true
+        - label: "Tracking docs (TODO.md / ROADMAP.md / CHANGELOG.md) updated in the same change."
+          required: true
+        - label: "Parent roadmap first post updated with link to this sub-issue."
+          required: true

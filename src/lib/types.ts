@@ -166,3 +166,28 @@ export interface FilterModel {
 	maxPages?: number;
 	sort: SortOption;
 }
+
+export type ServiceJobKind = 'download' | 'prefetch' | 'maintenance' | 'refresh' | 'sync';
+
+export type ServiceEvent =
+	| { state: 'queued'; job_id: number; kind: ServiceJobKind }
+	| { state: 'started'; job_id: number; kind: ServiceJobKind }
+	| {
+			state: 'progress';
+			job_id: number;
+			kind: ServiceJobKind;
+			done: number;
+			total: number | null;
+			label: string;
+	  }
+	| { state: 'finished'; job_id: number; kind: ServiceJobKind; message: string }
+	| { state: 'failed'; job_id: number; kind: ServiceJobKind; error: string };
+
+export interface ServiceStatus {
+	pending: number;
+}
+
+export interface AutoRefreshConfig {
+	enabled: boolean;
+	intervalMinutes: number;
+}

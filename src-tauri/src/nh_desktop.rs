@@ -1,11 +1,13 @@
 use crate::error::AppError;
 use serde::{Deserialize, Serialize};
+use std::sync::Arc;
 use std::time::{Duration, Instant};
-use tokio::sync::Mutex;
 
 const BASE_API: &str = "https://nhentai.net/api/v2";
 const THROTTLE: Duration = Duration::from_millis(500);
-const ALLOWED_IMAGE_HOSTS: [&str; 2] = ["t.nhentai.net", "i.nhentai.net"];
+fn is_allowlisted_image_host(host: &str) -> bool {
+    host == "nhentai.net" || host.ends_with(".nhentai.net")
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TagResponse {
@@ -135,9 +137,10 @@ pub struct DownloadResponse {
     pub expires_at: u64,
 }
 
+#[derive(Clone)]
 pub struct NhDesktopClient {
     http: reqwest::Client,
-    last_request: Mutex<Instant>,
+    last_request: Arc<tokio::sync::Mutex<Instant>>,
 }
 
 impl NhDesktopClient {
@@ -148,7 +151,7 @@ impl NhDesktopClient {
             .build()?;
         Ok(Self {
             http,
-            last_request: Mutex::new(Instant::now()),
+            last_request: Arc::new(tokio::sync::Mutex::new(Instant::now())),
         })
     }
 
@@ -225,6 +228,21 @@ impl NhDesktopClient {
         self.request(key, reqwest::Method::GET, &format!("/galleries/{id}/related"), &[], None).await
     }
 
+    pub async fn tags_by_type(&self, key: Option<&str>, tag_type: &str, sort: &str, page: u32, per_page: u32) -> Result<Paginated<TagResponse>, AppError> {
+        self.request(
+            key,
+            reqwest::Method::GET,
+            &format!("/tags/{tag_type}"),
+            &[
+                ("sort", sort.to_string()),
+                ("page", page.to_string()),
+                ("per_page", per_page.to_string()),
+            ],
+            None,
+        )
+        .await
+    }
+
     pub async fn search(&self, key: Option<&str>, query: &str, sort: &str, page: u32) -> Result<GalleryList, AppError> {
         self.request(
             key,
@@ -287,7 +305,7 @@ impl NhDesktopClient {
             return Err(AppError::InvalidInput("only https is allowed".into()));
         }
         let host = parsed.host_str().unwrap_or_default();
-        if !ALLOWED_IMAGE_HOSTS.contains(&host) {
+        if !is_allowlisted_image_host(host) {
             return Err(AppError::InvalidInput(format!("host {host} is not allowed")));
         }
         self.pace().await;
@@ -297,6 +315,20 @@ impl NhDesktopClient {
             return Err(AppError::Status(status));
         }
         resp.bytes().await.map(|b| b.to_vec()).map_err(AppError::Http)
+    }
+
+    pub async fn open_bytes(&self, url: &str) -> Result<reqwest::Response, AppError> {
+        let parsed = url::Url::parse(url).map_err(|e| AppError::InvalidInput(format!("bad url: {e}")))?;
+        if parsed.scheme() != "https" {
+            return Err(AppError::InvalidInput("only https is allowed".into()));
+        }
+        self.pace().await;
+        let resp = self.http.get(url).send().await.map_err(AppError::Http)?;
+        let status = resp.status();
+        if !status.is_success() {
+            return Err(AppError::Status(status));
+        }
+        Ok(resp)
     }
 }
 
@@ -395,15 +427,18 @@ mod tests {
 
     #[test]
     fn parses_only_https_allowlisted_image_hosts() {
-        let cases: [(&str, bool); 3] = [
+        let cases: [(&str, bool); 6] = [
             ("https://i.nhentai.net/galleries/123/1.jpg", true),
             ("https://t.nhentai.net/galleries/123/thumb.jpg", true),
+            ("https://static.nhentai.net/avatars/123.png", true),
+            ("https://nhentai.net/g/123/1/", true),
             ("http://evil.example/x.jpg", false),
+            ("https://evil.nhentai.net.evil.example/x.jpg", false),
         ];
         for (url, should_pass) in cases {
             let parsed = url::Url::parse(url).unwrap();
             let host = parsed.host_str().unwrap_or_default();
-            let pass = parsed.scheme() == "https" && ALLOWED_IMAGE_HOSTS.contains(&host);
+            let pass = parsed.scheme() == "https" && is_allowlisted_image_host(host);
             assert_eq!(pass, should_pass, "case {url}");
         }
     }

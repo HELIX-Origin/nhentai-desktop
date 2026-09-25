@@ -5,6 +5,7 @@
 	import { invoke } from '@tauri-apps/api/core';
 	import { getCurrentWindow } from '@tauri-apps/api/window';
 	import { page } from '$app/state';
+	import { base } from '$app/paths';
 	import '../../lib/design/base.css';
 
 	interface InstallerStatus {
@@ -175,7 +176,7 @@
 <div class="installer-shell">
 	<header class="wizard-header" role="presentation" onpointerdown={onHeaderPointerDown}>
 		<div class="app-badge">
-			<span class="app-icon">n</span>
+			<img class="app-icon" src={`${base}/favicon.png`} alt="NH Desktop logo" />
 			<span class="app-title">NH Desktop Setup</span>
 			{#if info}
 				<span class="version-tag">v{info.current_version}</span>
@@ -544,16 +545,11 @@
 	}
 
 	.app-icon {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
+		display: block;
 		width: 18px;
 		height: 18px;
 		border-radius: 5px;
-		background: var(--accent);
-		color: #fff;
-		font-size: 12px;
-		font-weight: 700;
+		object-fit: contain;
 	}
 
 	.app-title {

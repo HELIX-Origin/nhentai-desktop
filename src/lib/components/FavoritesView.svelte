@@ -2,6 +2,7 @@
 	import { getFavorites, clearFavorites, removeFavorite } from '$lib/stores/library.svelte';
 	import type { GalleryListItem } from '$lib/types';
 	import { formatCount } from '$lib/format';
+	import { thumbPath } from '$lib/image';
 	import Icon from './Icon.svelte';
 	import CoverImage from './CoverImage.svelte';
 	import EmptyState from './EmptyState.svelte';
@@ -37,7 +38,7 @@
 			{#each sorted as g (g.id)}
 				<div class="cell">
 					<a class="card" href={`/gallery/${g.id}`}>
-						<CoverImage src={g.thumbnail} alt={g.english_title} />
+						<CoverImage src={thumbPath(g.thumbnail)} alt={g.english_title} />
 						<div class="info">
 							<span class="title">{g.english_title}</span>
 							<span class="meta faint">

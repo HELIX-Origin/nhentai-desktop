@@ -1,11 +1,21 @@
 <script lang="ts">
 	import { getSettings, updateSettings } from '$lib/stores/settings.svelte';
 	import { getAccountState, setApiKey, clearApiKey } from '$lib/stores/account.svelte';
+	import {
+		getServiceAutoRefresh,
+		getServiceJobs,
+		setServiceAutoRefresh,
+		enqueueMaintenance,
+		enqueueSync,
+		serviceKindLabel,
+	} from '$lib/stores/service.svelte';
 	import { cacheFlush } from '$lib/cache';
 	import Icon from './Icon.svelte';
 
 	const s = getSettings();
-	const account = getAccountState();
+	const account = $derived(getAccountState());
+	const serviceJobs = $derived(getServiceJobs());
+	const autoRefresh = $derived(getServiceAutoRefresh());
 
 	let keyInput = $state('');
 	let busy = $state(false);
@@ -40,6 +50,11 @@
 	async function onClearCache() {
 		await cacheFlush();
 		message = { ok: true, text: 'Local cache cleared. Data will be re-fetched on demand.' };
+	}
+
+	async function onToggleAutoRefresh() {
+		const current = getServiceAutoRefresh();
+		await setServiceAutoRefresh({ ...current, enabled: !current.enabled });
 	}
 </script>
 
@@ -134,6 +149,78 @@
 				<span class="knob"></span>
 			</button>
 		</div>
+	</section>
+
+	<section class="panel">
+		<div class="section-title">
+			<Icon name="sparkle" size={16} />
+			<h3>Background services</h3>
+		</div>
+
+		<div class="row-label">
+			<span>Auto-refresh popular gallery list</span>
+			<button
+				class="switch"
+				class:on={autoRefresh.enabled}
+				onclick={onToggleAutoRefresh}
+				role="switch"
+				aria-checked={autoRefresh.enabled}
+				aria-label="Auto-refresh popular gallery list"
+			>
+				<span class="knob"></span>
+			</button>
+		</div>
+		{#if autoRefresh.enabled}
+			<div class="row-label">
+				<span>Refresh interval</span>
+				<div class="seg">
+					<button
+						class:on={autoRefresh.intervalMinutes === 15}
+						onclick={() => setServiceAutoRefresh({ enabled: true, intervalMinutes: 15 })}
+					>15 min</button>
+					<button
+						class:on={autoRefresh.intervalMinutes === 60}
+						onclick={() => setServiceAutoRefresh({ enabled: true, intervalMinutes: 60 })}
+					>1 hour</button>
+					<button
+						class:on={autoRefresh.intervalMinutes === 1440}
+						onclick={() => setServiceAutoRefresh({ enabled: true, intervalMinutes: 1440 })}
+					>Daily</button>
+				</div>
+			</div>
+		{/if}
+
+		<div class="row">
+			<p class="faint">Run scheduled tasks on demand.</p>
+			<div class="btn-group">
+				<button class="btn" onclick={() => enqueueSync()}>Sync account</button>
+				<button class="btn" onclick={() => enqueueMaintenance()}>Run maintenance</button>
+			</div>
+		</div>
+
+		{#if serviceJobs.length > 0}
+			<div class="jobs">
+				<h4>Recent jobs</h4>
+				<ul>
+					{#each serviceJobs as job}
+						<li class:job-failed={job.state === 'failed'}>
+							<span class="job-kind">{serviceKindLabel(job.kind)}</span>
+							<span class="job-state" class:done={job.state === 'finished'} class:err={job.state === 'failed'}>
+								{job.state}
+							</span>
+							{#if job.state === 'running' && job.done !== undefined}
+								<span class="job-progress">
+									{job.done}{#if job.total} / {job.total}{/if}
+								</span>
+							{/if}
+							<span class="job-note">
+								{job.error ?? job.message ?? job.label ?? ''}
+							</span>
+						</li>
+					{/each}
+				</ul>
+			</div>
+		{/if}
 	</section>
 
 	<section class="panel">
@@ -237,6 +324,83 @@
 
 	.msg.error {
 		color: var(--danger);
+	}
+
+	.btn-group {
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap;
+	}
+
+	.jobs {
+		margin-top: 14px;
+		border-top: 1px solid var(--border);
+		padding-top: 12px;
+	}
+
+	.jobs h4 {
+		margin: 0 0 8px;
+		font-size: 12.5px;
+		font-weight: 650;
+		color: var(--text-secondary);
+	}
+
+	.jobs ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+	}
+
+	.jobs li {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		font-size: 12.5px;
+		padding: 5px 8px;
+		border-radius: var(--radius-sm);
+		background: var(--surface);
+	}
+
+	.jobs li.job-failed {
+		background: color-mix(in srgb, var(--danger) 10%, var(--surface));
+	}
+
+	.job-kind {
+		font-weight: 600;
+		color: var(--text);
+		flex-shrink: 0;
+	}
+
+	.job-state {
+		font-size: 11px;
+		text-transform: capitalize;
+		color: var(--text-secondary);
+		flex-shrink: 0;
+	}
+
+	.job-state.done {
+		color: var(--success);
+	}
+
+	.job-state.err {
+		color: var(--danger);
+	}
+
+	.job-progress {
+		color: var(--accent);
+		font-variant-numeric: tabular-nums;
+		flex-shrink: 0;
+	}
+
+	.job-note {
+		color: var(--text-faint);
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		min-width: 0;
 	}
 
 	.row-label {

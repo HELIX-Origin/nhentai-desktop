@@ -23,11 +23,17 @@ app instead. Re-run via a correctly-suffixed copy, or pass `--installer`.
 
 ### 🚨 Galleries load but images are blank
 
-- Check the network: `t.nhentai.net` / `i.nhentai.net` must be reachable (CSP already
-  allows them).
+- Older builds joined the API's relative image paths onto the CDN host incorrectly, so nothing
+  loaded. That bug is fixed — URLs are now derived from the API's path fragments via
+  `image.ts` (`pagePath` / `thumbPath` / `avatarUrl`). If you still see blanks, the fixes below
+  apply.
+- Check the network: nhentai.net's CDN hosts (`t.` / `i.` / `static.`) must be reachable (CSP
+  already allows `https://*.nhentai.net`).
 - Some legacy galleries 404 on the CDN. The app auto-falls back to its image proxy
-  (`proxy_image` → `blob:`); if that still fails you'll see an error notice with a retry.
-- Try clearing the cache (**Settings → Cache**), then reload.
+  (`proxy_image` → `blob:`, served from the on-disk image cache `cache/images`); if that still
+  fails you'll see an error notice with a retry.
+- **Settings → Cache** clears the in-memory/mirror cache; the on-disk image cache is pruned
+  automatically by *Background services → Run maintenance* (images older than 30 days).
 
 Stuck on blank images? Follow this decision tree:
 

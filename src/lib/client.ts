@@ -1,13 +1,16 @@
 import { invoke } from '@tauri-apps/api/core';
 import type {
 	ApiKeyStatus,
+	AutoRefreshConfig,
 	BlacklistListResponse,
 	DownloadResponse,
 	FavoriteResponse,
 	GalleryDetail,
 	GalleryList,
 	GalleryListItem,
+	Paginated,
 	RelatedGalleries,
+	ServiceStatus,
 	Tag,
 	UserMeResponse,
 } from '$lib/types';
@@ -29,6 +32,8 @@ export const backend = {
 	relatedGalleries: (id: number) => call<RelatedGalleries>('related_galleries', { id }),
 	fetchTagInfo: (tagType: string, slug: string) =>
 		call<Tag>('fetch_tag_info', { tagType, slug }),
+	fetchTagsByType: (tagType: string, sort?: string, page?: number, perPage?: number) =>
+		call<Paginated<Tag>>('fetch_tags_by_type', { tagType, sort, page, perPage }),
 	proxyImage: (url: string) => call<number[]>('proxy_image', { url }),
 
 	dbGet: (key: string) => call<string | null>('db_get', { key }),
@@ -55,4 +60,15 @@ export const backend = {
 
 	downloadGallery: (id: number, format: 'zip' | 'cbz' | 'torrent' = 'zip') =>
 		call<DownloadResponse>('download_gallery', { id, format }),
+
+	serviceEnqueueDownload: (id: number, format: 'zip' | 'cbz' | 'torrent' = 'zip') =>
+		call<number>('service_enqueue_download', { id, format }),
+	serviceEnqueuePrefetch: (urls: string[]) =>
+		call<number>('service_enqueue_prefetch', { urls }),
+	serviceEnqueueMaintenance: () => call<number>('service_enqueue_maintenance'),
+	serviceEnqueueSync: () => call<number>('service_enqueue_sync'),
+	serviceStatus: () => call<ServiceStatus>('service_status'),
+	serviceSetAutoRefresh: (enabled: boolean, intervalMinutes: number) =>
+		call<void>('service_set_auto_refresh', { enabled, intervalMinutes }),
+	serviceGetAutoRefresh: () => call<AutoRefreshConfig>('service_get_auto_refresh'),
 };

@@ -17,6 +17,10 @@ characters, parodies).
   unlocks account favorites/blacklist sync.
 - **A real installer** — a Tauri-native unified setup/uninstall wizard (no NSIS/WiX MSI),
   single binary is both the app and the installer.
+- **Background jobs built in** — a throttled worker queue handles gallery downloads (zip to
+  disk), image prefetch, cache/image maintenance, account sync, and periodic Popular refreshes,
+  with live progress in Settings. Launching the app twice just focuses the running window
+  (single instance).
 
 > **18+ only.** This software is for adults. You confirm you are of legal age to view adult
 > content. See the [Terms of Service](https://github.com/HELIX-Origin/nhentai-desktop/blob/main/TOS.md).
@@ -29,6 +33,11 @@ characters, parodies).
 | macOS 10.13+ | ✅ Supported |
 | Linux (x86_64) | ✅ Supported |
 | Mobile | ⬜ Not supported (by design) |
+
+> **Why no mobile app?** Desktop-only by design. Android already has a good third-party
+> client ([NClientV3](https://github.com/maxwai/NClientV3)); iOS rejects NSFW apps and its
+> developer license is prohibitively expensive. On a phone, use NClientV3 on Android or the
+> site directly in a browser.
 
 ## 🧭 Getting around
 
@@ -44,7 +53,8 @@ characters, parodies).
 
 - Stack: **Tauri 2 (Rust `reqwest`)** backend + **SvelteKit static SPA** (Svelte 5 runes,
   strict TypeScript) + **plain CSS tokens** (no UI framework).
-- Persistence: browser `localStorage` + a local SQLite database (`nh-desktop.db`).
+- Persistence: browser `localStorage` + a local SQLite database (`nh-desktop.db`), plus an
+  on-disk image cache (`cache/images`) and a `downloads/` folder.
 - Rebranded/verified: this is the **NH Desktop** product — `NH Desktop.exe`, window title
   "NH Desktop", identifier `net.nh-desktop.client`. The old scaffold names are gone.
 

@@ -26,6 +26,7 @@
 	import GalleryGrid from '$lib/components/GalleryGrid.svelte';
 	import TagChip from '$lib/components/TagChip.svelte';
 	import Icon from '$lib/components/Icon.svelte';
+	import { thumbPath } from '$lib/image';
 
 	const id = $derived(Number(page.params.id));
 
@@ -35,7 +36,7 @@
 	let related = $state<GalleryListItem[]>([]);
 	let tick = $state(0);
 
-	const account = getAccountState();
+	const account = $derived(getAccountState());
 	const blacklist = $derived(getBlacklist());
 
 	const localFav = $derived(isFavorite(id));
@@ -57,7 +58,7 @@
 					galleryId: res.id,
 					mediaId: res.media_id,
 					englishTitle: res.title.english,
-					thumbnail: `https://t.nhentai.net${res.thumbnail.path}`,
+					thumbnail: thumbPath(res.thumbnail.path),
 					numPages: res.num_pages,
 					visitedAt: Date.now(),
 				});
@@ -128,7 +129,7 @@
 		<div class="detail">
 			<div class="cover-col">
 				<CoverImage
-					src={`https://t.nhentai.net${gallery.thumbnail.path}`}
+					src={thumbPath(gallery.thumbnail.path)}
 					alt={gallery.title.english}
 					ratio={gallery.thumbnail.width / gallery.thumbnail.height}
 					loading="eager"

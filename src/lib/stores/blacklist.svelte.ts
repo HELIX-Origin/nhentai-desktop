@@ -70,8 +70,7 @@ export function clearBlacklist(): void {
 export function matchesBlacklist(item: GalleryListItem): boolean {
 	if (entries.length === 0) return false;
 	const ids = item.tag_ids ?? [];
-	const names = new Set(entries.map((e) => e.name.toLowerCase()));
-	return ids.some((id) => entries.some((e) => e.id !== 0 && e.id === id)) || names.size > 0;
+	return ids.some((id) => entries.some((e) => e.id !== 0 && e.id === id));
 }
 
 export function buildServerExcludes(): string {

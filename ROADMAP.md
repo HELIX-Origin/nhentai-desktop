@@ -18,28 +18,40 @@ public API — we fetch data, we don't scrape aggressively.
 3. **Fast and light.** SPA on Tauri; images load lazily; requests throttled.
 4. **Local & private.** Favorites, history, blacklist, and settings live only on-device.
 
+## 🚫 Non-goals
+
+- **Mobile support (Android/iOS).** Desktop-only, deliberately. Android already has a good
+  third-party client ([NClientV3](https://github.com/maxwai/NClientV3)); iOS rejects NSFW apps
+  and its developer license is prohibitively expensive. See the decision log in `AGENTS.md`.
+
 ## 🗺️ Milestones
 
 | # | Milestone | Status | Scope |
 | --- | --- | --- | --- |
-| M1 | Foundation | ✅ Shipped (core) | Scaffold, green toolchain, Rust client + 26 commands, CSP, app shell, tokens, stores, all views; remaining: clean-clone baseline + initial commit |
+| M1 | Foundation | ✅ Shipped (core) | Scaffold, green toolchain, Rust client + 37 commands, CSP, app shell, tokens, stores, all views; remaining: clean-clone baseline + initial commit |
 | M2 | Browse & discover | ✅ Shipped (core) | Home (new releases), popular, gallery grid/cards, pagination, lazy images with proxy fallback |
 | M3 | Search & filters | ✅ Shipped (core) | Query builder, filter drawer (text, language, category, per-type tag include/exclude, page ranges, sort), results + count |
 | M4 | Global blacklist | ✅ Shipped (core) | Manage panel, server-side `-tag:` excludes, client-side hide/blur, master toggle |
 | M5 | Library | ✅ Shipped (core) | Favorites, history, local persistence; import/export JSON still backlog |
 | M6 | Reader | ✅ Shipped (core) | Gallery detail, paged thumbnails, strip mode, preload, fullscreen |
-| M7 | Downloads (stretch) | ⬜ Backlog | CBZ/zip export, progress UI, storage management |
+| M7 | Downloads & background services | 🚧 In progress | Background-service core shipped (zip downloads to disk with progress, image prefetch, cache/image maintenance, account sync, Popular auto-refresh with job events); still backlog: per-gallery Download button, CBZ/other formats, storage management, cache consumers |
 | M8 | Polish / release | 🚧 In progress | Installer (built: native wizard, platform split); still backlog: light theme, accent picker, image quality, reader preload distance, end-to-end installer smoke test |
 
 ## 🎯 Current focus
 
-**M1 Foundation.** Driving checklist lives in `TODO.md`. Definition of done for M1:
+**M7 Downloads & background services** core pipeline is shipped (see `TODO.md`); **M1
+Foundation** closeout and **M8 hardening** remain:
 
 - ⬜ `npm install` + `npm run check` + `cargo check`/`test` all green on a clean clone
 - ✅ Rust client returns real nhentai data (search, newest, detail) through Tauri commands
 - ✅ SPA chrome navigates between Home / Search / Favorites / History / Blacklist / Settings
 - ✅ Design tokens wired (dark theme live, light reserved); responsive grid
 - ✅ CSP hardened (image hosts allowlisted, IPC only, devCsp for Vite HMR)
+- ✅ Background service: enqueued downloads/prefetch/maintenance/sync/auto-refresh + live job events
+- ✅ Single-instance: second launch focuses the running window
+- ✅ Images verified loading from API v2 relative paths; disk image cache backing `proxy_image`
+- ⬜ M7 polish: Download button, CBZ/other formats, downloads storage management
+- ⬜ M8: light theme, accent picker, image quality, reader preload distance, installer E2E smoke test
 
 ## 🔁 Recurring themes (applies to every milestone)
 

@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 NH Desktop Wiki
+    url: https://github.com/HELIX-Origin/nhentai-desktop/wiki
+    about: Read the user guide, architecture notes, and troubleshooting page in the wiki.
+  - name: 💬 GitHub Discussions
+    url: https://github.com/HELIX-Origin/nhentai-desktop/discussions
+    about: Ask general questions, share feature ideas, or engage with the community.
+  - name: 🔒 Security & Privacy Policy
+    url: https://github.com/HELIX-Origin/nhentai-desktop/blob/main/SECURITY.md
+    about: Guidelines on secret storage, webview security, CORS/CSP, and responsible disclosure.

@@ -1,13 +1,17 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
+	import { base } from '$app/paths';
 	import { onMount } from 'svelte';
 	import { invoke } from '@tauri-apps/api/core';
+	import { getCurrentWindow } from '@tauri-apps/api/window';
 	import Icon from '$lib/components/Icon.svelte';
+	import { avatarUrl } from '$lib/image';
 	import { loadSettings, getSettings } from '$lib/stores/settings.svelte';
 	import { loadLibrary } from '$lib/stores/library.svelte';
 	import { loadBlacklist, getBlacklist } from '$lib/stores/blacklist.svelte';
 	import { initAccount, getAccountState } from '$lib/stores/account.svelte';
+	import { initServiceStore } from '$lib/stores/service.svelte';
 	import { cacheInit } from '$lib/cache';
 	import '../lib/design/base.css';
 
@@ -28,10 +32,16 @@
 
 	const settings = getSettings();
 	const blacklist = $derived(getBlacklist());
-	const account = getAccountState();
+	const account = $derived(getAccountState());
 
 	let quickQuery = $state('');
 	let ready = $state(false);
+	let avatarBroken = $state(false);
+
+	$effect(() => {
+		account.user;
+		avatarBroken = false;
+	});
 
 	function onQuickSearch(event: Event) {
 		event.preventDefault();
@@ -42,6 +52,28 @@
 
 	function onModifyInstallation() {
 		invoke('open_maintenance_window');
+	}
+
+	const compact = () => getCurrentWindow().minimize();
+	const zoom = () => getCurrentWindow().toggleMaximize();
+	const quit = () => getCurrentWindow().close();
+
+	const isMac = $derived(
+		typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.userAgent),
+	);
+
+	function onBarPointerDown(e: PointerEvent) {
+		if (e.button !== 0) return;
+		const t = e.target as HTMLElement | null;
+		if (t?.closest('button, select, input, a, [role="menuitem"]')) return;
+		e.preventDefault();
+		getCurrentWindow().startDragging();
+	}
+
+	function onBarDoubleClick(e: MouseEvent) {
+		const t = e.target as HTMLElement | null;
+		if (t?.closest('button, select, input, a')) return;
+		getCurrentWindow().toggleMaximize();
 	}
 
 	onMount(() => {
@@ -55,6 +87,7 @@
 			loadLibrary(),
 			loadBlacklist(),
 			initAccount(),
+			initServiceStore(),
 		]).finally(() => {
 			ready = true;
 		});
@@ -69,10 +102,68 @@
 {#if isChildWindow}
 	{@render children()}
 {:else}
-<div class="shell">
+<div class="app">
+	<header
+		class="titlebar"
+		class:mac={isMac}
+		role="presentation"
+		onpointerdown={onBarPointerDown}
+		ondblclick={onBarDoubleClick}
+	>
+		<div class="traffic" aria-label="Window controls">
+			<button class="dot close" aria-label="Close window (to tray)" onclick={quit}></button>
+			<button class="dot min" aria-label="Minimize window" onclick={compact}></button>
+			<button class="dot max" aria-label="Maximize window" onclick={zoom}></button>
+		</div>
+		<span class="tb-title">NH Desktop</span>
+		<form class="quick-search" onsubmit={onQuickSearch} role="search">
+			<Icon name="search" size={16} />
+			<input
+				class="quick-input"
+				placeholder="Search galleries…"
+				bind:value={quickQuery}
+				aria-label="Quick search"
+			/>
+			<kbd>Enter</kbd>
+		</form>
+		<div class="bar-actions">
+			<a class="chip-btn" href="/blacklist" title="Blacklisted tags" aria-label="Blacklisted tags">
+				<Icon name="shield" size={16} />
+				{#if blacklist.length > 0}
+					<span class="badge" class:off={!settings.blacklistEnabled}>
+						{blacklist.length}
+					</span>
+				{/if}
+			</a>
+
+			<a class="account-chip" href="/settings" title="Account & settings">
+				{#if account.keyStatus.configured}
+					{#if account.user && !avatarBroken}
+						<img
+							class="avatar"
+							src={avatarUrl(account.user.avatar_url)}
+							alt=""
+							onerror={() => (avatarBroken = true)}
+						/>
+					{:else if account.user}
+						<span class="avatar">{account.user.username[0]?.toUpperCase()}</span>
+					{:else}
+						<Icon name="user" size={16} />
+					{/if}
+					<span class="account-name">{account.user?.username ?? 'Connected'}</span>
+				{:else}
+					<Icon name="user" size={16} />
+					<span class="account-name">Sign in</span>
+				{/if}
+			</a>
+		</div>
+		<div class="spacer"></div>
+	</header>
+
+	<div class="shell">
 	<aside class="sidebar">
 		<div class="brand">
-			<span class="brand-mark">n</span>
+			<img class="brand-mark" src={`${base}/favicon.png`} alt="NH Desktop logo" />
 			<span class="brand-name">NH Desktop</span>
 		</div>
 
@@ -99,40 +190,6 @@
 	</aside>
 
 	<div class="main">
-		<header class="topbar">
-			<form class="quick-search" onsubmit={onQuickSearch} role="search">
-				<Icon name="search" size={16} />
-				<input
-					class="quick-input"
-					placeholder="Search galleries…  (or open Search)"
-					bind:value={quickQuery}
-					aria-label="Quick search"
-				/>
-				<kbd>Enter</kbd>
-			</form>
-
-			<div class="topbar-actions">
-				<a class="chip-btn" href="/blacklist" title="Blacklisted tags" aria-label="Blacklisted tags">
-					<Icon name="shield" size={16} />
-					{#if blacklist.length > 0}
-						<span class="badge" class:off={!settings.blacklistEnabled}>
-							{blacklist.length}
-						</span>
-					{/if}
-				</a>
-
-				<a class="account-chip" href="/settings" title="Account & settings">
-					{#if account.user}
-						<span class="avatar">{account.user.username[0]?.toUpperCase()}</span>
-						<span class="account-name">{account.user.username}</span>
-					{:else}
-						<Icon name="user" size={16} />
-						<span class="account-name">Sign in</span>
-					{/if}
-				</a>
-			</div>
-		</header>
-
 		<main class="content">
 			{#if ready}
 				{@render children()}
@@ -144,12 +201,86 @@
 		</main>
 	</div>
 </div>
+</div>
 {/if}
 
 <style>
+	.app {
+		display: flex;
+		flex-direction: column;
+		height: 100vh;
+	}
+
+	.titlebar {
+		position: relative;
+		z-index: 10;
+		flex: 0 0 auto;
+		height: 36px;
+		display: flex;
+		align-items: center;
+		gap: 14px;
+		padding: 0 12px;
+		background: var(--bg-elevated);
+		border-bottom: 1px solid var(--border);
+		user-select: none;
+		cursor: grab;
+	}
+
+	.titlebar:active {
+		cursor: grabbing;
+	}
+
+	.traffic {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.dot {
+		width: 13px;
+		height: 13px;
+		border-radius: 50%;
+		border: none;
+		padding: 0;
+		cursor: pointer;
+		position: relative;
+	}
+
+	.dot.close {
+		background: #ff5f57;
+	}
+
+	.dot.min {
+		background: #febc2e;
+	}
+
+	.dot.max {
+		background: #28c840;
+	}
+
+	.dot:hover::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		border-radius: 50%;
+		background: rgba(0, 0, 0, 0.25);
+	}
+
+	.tb-title {
+		font-size: 13px;
+		font-weight: 600;
+		letter-spacing: -0.01em;
+		color: var(--text-secondary);
+	}
+
+	.spacer {
+		flex: 1;
+	}
+
 	.shell {
 		display: flex;
-		height: 100vh;
+		flex: 1;
+		min-height: 0;
 	}
 
 	.sidebar {
@@ -170,17 +301,11 @@
 	}
 
 	.brand-mark {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
+		display: block;
 		width: 30px;
 		height: 30px;
 		border-radius: 8px;
-		background: var(--accent);
-		color: #fff;
-		font-weight: 700;
-		font-size: 14px;
-		letter-spacing: 0.02em;
+		object-fit: contain;
 	}
 
 	.brand-name {
@@ -268,16 +393,25 @@
 		min-width: 0;
 	}
 
-	.topbar {
-		display: flex;
-		align-items: center;
-		gap: 16px;
-		height: var(--topbar-h);
-		padding: 0 20px;
-		border-bottom: 1px solid var(--border);
-		background: var(--bg);
-		flex-shrink: 0;
-	}
+	/* Default (Windows/Linux): title + search on the left, traffic right. */
+	.titlebar .tb-title { order: 1; }
+	.titlebar .quick-search { order: 2; }
+	.titlebar .bar-actions { order: 3; }
+	.titlebar .spacer { order: 4; }
+	.titlebar .traffic { order: 5; }
+	.titlebar .traffic .dot.min { order: 1; }
+	.titlebar .traffic .dot.max { order: 2; }
+	.titlebar .traffic .dot.close { order: 3; }
+
+	/* macOS: traffic lights on the left. */
+	.titlebar.mac .traffic { order: 0; margin-right: 2px; }
+	.titlebar.mac .traffic .dot.close { order: 1; }
+	.titlebar.mac .traffic .dot.min { order: 2; }
+	.titlebar.mac .traffic .dot.max { order: 3; }
+	.titlebar.mac .tb-title { order: 2; }
+	.titlebar.mac .quick-search { order: 3; }
+	.titlebar.mac .bar-actions { order: 4; }
+	.titlebar.mac .spacer { order: 5; }
 
 	.quick-search {
 		position: relative;
@@ -285,10 +419,10 @@
 		align-items: center;
 		gap: 8px;
 		width: min(480px, 100%);
-		padding: 7px 12px;
+		padding: 5px 12px;
 		border-radius: var(--radius-sm);
 		border: 1px solid var(--border);
-		background: var(--bg-elevated);
+		background: var(--bg);
 		color: var(--text-faint);
 		transition: border-color 0.12s ease;
 	}
@@ -304,7 +438,7 @@
 		background: none;
 		outline: none;
 		color: var(--text);
-		font-size: 13.5px;
+		font-size: 13px;
 		min-width: 0;
 	}
 
@@ -322,8 +456,7 @@
 		white-space: nowrap;
 	}
 
-	.topbar-actions {
-		margin-left: auto;
+	.bar-actions {
 		display: flex;
 		align-items: center;
 		gap: 8px;
@@ -334,8 +467,8 @@
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		width: 34px;
-		height: 34px;
+		width: 32px;
+		height: 28px;
 		border-radius: var(--radius-sm);
 		border: 1px solid var(--border);
 		color: var(--text-secondary);
@@ -380,13 +513,14 @@
 		display: inline-flex;
 		align-items: center;
 		gap: 8px;
-		padding: 5px 12px 5px 6px;
+		height: 28px;
+		padding: 0 12px 0 5px;
 		border-radius: 999px;
 		border: 1px solid var(--border);
-		background: var(--bg-elevated);
+		background: var(--bg);
 		color: var(--text-secondary);
 		font-weight: 520;
-		font-size: 13px;
+		font-size: 12.5px;
 		transition: border-color 0.12s ease, color 0.12s ease;
 	}
 
@@ -399,13 +533,14 @@
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		width: 24px;
-		height: 24px;
+		width: 20px;
+		height: 20px;
 		border-radius: 50%;
 		background: var(--accent-soft);
 		color: var(--accent-hover);
-		font-size: 12px;
+		font-size: 11px;
 		font-weight: 650;
+		object-fit: cover;
 	}
 
 	.content {
@@ -451,8 +586,15 @@
 			justify-content: center;
 		}
 
-		.account-name {
+		.account-name,
+		.tb-title,
+		.titlebar kbd {
 			display: none;
+		}
+
+		.titlebar .quick-search {
+			width: 100%;
+			flex: 1;
 		}
 	}
 </style>

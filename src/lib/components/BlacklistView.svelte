@@ -2,8 +2,9 @@
 	import { getSettings, updateSettings } from '$lib/stores/settings.svelte';
 	import {
 		getBlacklist,
-		addTagByName,
+		addTag,
 		removeEntry,
+		removeByRef,
 		clearBlacklist,
 	} from '$lib/stores/blacklist.svelte';
 	import {
@@ -11,24 +12,71 @@
 		addAccountBlacklist,
 		removeAccountBlacklist,
 	} from '$lib/stores/account.svelte';
+	import { api } from '$lib/api';
 	import Icon from './Icon.svelte';
 	import EmptyState from './EmptyState.svelte';
+	import type { Paginated, Tag } from '$lib/types';
 
 	const s = getSettings();
 	const entries = $derived(getBlacklist());
-	const account = getAccountState();
+	const account = $derived(getAccountState());
 
-	let newName = $state('');
-	let newType = $state('tag');
+	const TYPES = [
+		{ value: 'tag', label: 'Tag' },
+		{ value: 'artist', label: 'Artist' },
+		{ value: 'character', label: 'Character' },
+		{ value: 'parody', label: 'Parody' },
+		{ value: 'group', label: 'Group' },
+		{ value: 'language', label: 'Language' },
+		{ value: 'category', label: 'Category' },
+	];
+
+	let pickerType = $state('tag');
+	let pickerPage = $state(1);
+	let options = $state<Paginated<Tag> | null>(null);
+	let pickerLoading = $state(false);
+	let pickerError = $state<string | null>(null);
 	let syncing = $state(false);
 	let syncMessage = $state<string | null>(null);
 
-	function onAdd(event: Event) {
-		event.preventDefault();
-		const name = newName.trim();
-		if (!name) return;
-		addTagByName(name, newType);
-		newName = '';
+	$effect(() => {
+		const type = pickerType;
+		const page = pickerPage;
+		let cancelled = false;
+		pickerLoading = true;
+		pickerError = null;
+		options = null;
+		api
+			.tagsByType(type, 'popular', page, 24)
+			.then((res) => {
+				if (!cancelled) options = res;
+			})
+			.catch((e) => {
+				if (!cancelled) pickerError = String(e);
+			})
+			.finally(() => {
+				if (!cancelled) pickerLoading = false;
+			});
+		return () => {
+			cancelled = true;
+		};
+	});
+
+	function changeType(type: string) {
+		pickerType = type;
+		pickerPage = 1;
+	}
+
+	function isBlocked(tag: Tag): boolean {
+		return entries.some((e) => e.name === tag.name && e.type === tag.type);
+	}
+
+	function onToggle(tag: Tag) {
+		if (isBlocked(tag)) {
+			removeByRef({ id: tag.id, name: tag.name, type: tag.type, slug: tag.slug });
+		} else {
+			addTag(tag);
+		}
 	}
 
 	async function onSyncToAccount() {
@@ -95,28 +143,71 @@
 	</section>
 
 	<section class="panel">
-		<form class="add-form" onsubmit={onAdd}>
-			<input class="input" placeholder="Tag name…" bind:value={newName} aria-label="Tag name to block" />
-			<select class="select type" bind:value={newType} aria-label="Tag type">
-				<option value="tag">Tag</option>
-				<option value="artist">Artist</option>
-				<option value="character">Character</option>
-				<option value="parody">Parody</option>
-				<option value="group">Group</option>
-				<option value="language">Language</option>
-				<option value="category">Category</option>
-			</select>
-			<button class="btn btn-primary" type="submit" disabled={!newName.trim()}>
-				<Icon name="plus" size={14} />
-				Block
-			</button>
-		</form>
+		<div class="row-title">Pick tags to block</div>
+		<p class="faint">Choose from popular {pickerType}s — tap + to add, − to remove.</p>
 
+		<div class="type-tabs" role="tablist" aria-label="Tag type">
+			{#each TYPES as t (t.value)}
+				<button
+					class="type-tab"
+					class:on={pickerType === t.value}
+					role="tab"
+					aria-selected={pickerType === t.value}
+					onclick={() => changeType(t.value)}
+				>
+					{t.label}
+				</button>
+			{/each}
+		</div>
+
+		{#if pickerError}
+			<p class="picker-error">{pickerError}</p>
+		{:else if pickerLoading}
+			<p class="faint picker-loading">Loading options…</p>
+		{:else if options}
+			<ul class="options">
+				{#each options.result as tag (tag.id)}
+					<button
+						class="option-pill"
+						class:blocked={isBlocked(tag)}
+						onclick={() => onToggle(tag)}
+						aria-pressed={isBlocked(tag)}
+					>
+						<span class="dot" data-type={pickerType}></span>
+						<span class="opt-name">{tag.name}</span>
+						<span class="opt-count">{tag.count.toLocaleString()}</span>
+						<span class="opt-action">
+							{#if isBlocked(tag)}
+								<Icon name="minus" size={13} />
+							{:else}
+								<Icon name="plus" size={13} />
+							{/if}
+						</span>
+					</button>
+				{/each}
+			</ul>
+
+			<div class="pager">
+				<button class="btn" onclick={() => (pickerPage -= 1)} disabled={pickerPage <= 1}>
+					<Icon name="chevron-left" size={14} />
+					Prev
+				</button>
+				<span class="faint">Page {pickerPage} of {options.num_pages}</span>
+				<button class="btn" onclick={() => (pickerPage += 1)} disabled={pickerPage >= options.num_pages}>
+					Next
+					<Icon name="chevron-right" size={14} />
+				</button>
+			</div>
+		{/if}
+	</section>
+
+	<section class="panel">
+		<div class="row-title">Blocked</div>
 		{#if entries.length === 0}
 			<EmptyState
 				icon="shield"
 				title="Nothing blocked yet"
-				description="Add tags you never want to see — they'll be excluded from results and hidden or blurred in grids."
+				description="Pick tags above — they'll be excluded from results and hidden or blurred in grids."
 			/>
 		{:else}
 			<ul class="list">
@@ -257,18 +348,135 @@
 		transform: translateX(18px);
 	}
 
-	.add-form {
+	.type-tabs {
 		display: flex;
-		gap: 8px;
+		flex-wrap: wrap;
+		gap: 6px;
 	}
 
-	.add-form .input {
-		flex: 1;
+	.type-tab {
+		padding: 5px 12px;
+		border-radius: 999px;
+		border: 1px solid var(--border);
+		background: var(--surface);
+		color: var(--text);
+		font-size: 12.5px;
+		font-weight: 550;
+		transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
 	}
 
-	.add-form .select.type {
-		width: auto;
-		min-width: 110px;
+	.type-tab:hover {
+		background: var(--surface-hover);
+	}
+
+	.type-tab.on {
+		background: var(--accent-soft);
+		border-color: var(--accent);
+		color: var(--accent-hover);
+	}
+
+	.options {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px;
+	}
+
+	.option-pill {
+		display: inline-flex;
+		align-items: center;
+		gap: 7px;
+		padding: 5px 9px;
+		border-radius: 999px;
+		border: 1px solid var(--border);
+		background: var(--surface);
+		color: var(--text);
+		font-size: 13px;
+		transition: background 0.12s ease, border-color 0.12s ease;
+		max-width: 100%;
+	}
+
+	.option-pill:hover {
+		background: var(--surface-hover);
+		border-color: var(--border-strong);
+	}
+
+	.option-pill.blocked {
+		background: var(--accent-soft);
+		border-color: var(--accent);
+	}
+
+	.dot {
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		flex-shrink: 0;
+	}
+
+	.dot[data-type='artist'] {
+		background: #f6b545;
+	}
+	.dot[data-type='character'] {
+		background: #3ecf8e;
+	}
+	.dot[data-type='parody'] {
+		background: #7c5cff;
+	}
+	.dot[data-type='group'] {
+		background: #35c9d4;
+	}
+	.dot[data-type='language'] {
+		background: #9d9daa;
+	}
+	.dot[data-type='category'] {
+		background: #f4576b;
+	}
+	.dot[data-type='tag'] {
+		background: var(--text-faint);
+	}
+
+	.opt-name {
+		font-weight: 550;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.opt-count {
+		font-size: 11.5px;
+		color: var(--text-faint);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.opt-action {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 18px;
+		height: 18px;
+		border-radius: 50%;
+		background: var(--surface-active);
+		color: var(--text-soft);
+		flex-shrink: 0;
+	}
+
+	.option-pill.blocked .opt-action {
+		background: var(--accent);
+		color: #fff;
+	}
+
+	.picker-error {
+		color: var(--danger);
+		font-size: 12.5px;
+	}
+
+	.pager {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 10px;
 	}
 
 	.list {

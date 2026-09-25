@@ -24,12 +24,15 @@ Rust backend for metadata and direct image loading with a Rust-side fallback.
 
 **Route:** `/gallery/[id]/reader`
 
-Two modes, switchable in the reader toolbar:
+One page at a time; arrow keys, click zones (page back when clicking in the left ~28%, forward
+in the right ~72%), and the thumbnail strip change pages. The toolbar's **fit mode** cycles how
+a single page is sized:
 
-| Mode | Behavior |
+| Fit mode | Behavior |
 | --- | --- |
-| **Paged** | One page at a time; arrow keys / click zones / toolbar change pages. |
-| **Strip (long-strip)** | Continuous vertical scroll through all pages. |
+| **Width** | Page fills the stage width; scroll vertically (stage overflow) when taller than the stage. |
+| **Height** | Page fills the stage height; scroll horizontally when wider than the stage. |
+| **Contain** | Whole page fit inside both axes (letterboxed; nothing is cropped). |
 
 Other reader features:
 
@@ -39,15 +42,18 @@ Other reader features:
 - **Progress** remembered — the reader resumes where you left off (local persistence; part of
   history tracking).
 - **Image fallback** — each page tries the CDN directly; on a 404/failure it re-fetches via
-  the Rust `proxy_image` command and renders a `blob:` URL. Legacy galleries whose CDN re-encoded
-  images (a known quirk) are handled gracefully with a placeholder + retry.
+  the Rust `proxy_image` command (served from the disk image cache `cache/images` when present)
+  and renders a `blob:` URL. Legacy galleries whose CDN re-encoded images (a known quirk) are
+  handled gracefully with a placeholder + retry.
 
 ### 🖼️ Reader data
 
-- 🖼️ Page URLs are built from gallery metadata: cover thumb at `https://t.nhentai.net`,
-  page images at `https://i.nhentai.net`.
-- Both hosts are always loadable because of the [CSP](../README.md) allow-list
-  (`img-src 'self' data: blob: https://t.nhentai.net https://i.nhentai.net`).
+- 🖼️ Image URLs are derived from the API's relative path fragments — the API returns paths
+  like `galleries/<id>/thumb.webp` *without* a leading slash, and `image.ts` joins them onto
+  the right host (`https://i.nhentai.net` pages, `https://t.nhentai.net` thumbs,
+  `https://static.nhentai.net` avatars).
+- Hosts are always loadable because of the [CSP](../README.md) allow-list
+  (`img-src 'self' data: blob: https://nhentai.net https://*.nhentai.net`).
 
 ## 🖼️ Image loading pipeline
 
@@ -63,7 +69,8 @@ flowchart TD
 
 1. 🖼️ **Direct load** — `<img src="https://t.nhentai.net/...">` or `https://i.nhentai.net/...`.
 2. **Proxy fallback** — `CoverImage`/`ReaderImage` (`src/lib/image.ts`) catch load errors and
-   call `backend.proxyImage(url)` → Rust `proxy_image` command → returns bytes → `Blob` URL.
+   call `backend.proxyImage(url)` → Rust `proxy_image` command → bytes (served from the disk
+   image cache first, else fetched and cached) → `Blob` URL.
 3. **Placeholder** — a quiet placeholder keeps layout stable while a card/reader image loads.
 
 ## 🤝 Related

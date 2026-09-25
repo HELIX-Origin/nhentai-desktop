@@ -43,7 +43,20 @@ Only if you add an API key and enable it. By default the blacklist is fully loca
 
 ## ⬜ Can I download galleries for offline reading?
 
-Planned (stretch milestone). See [Roadmap](Roadmap.md).
+Yes — gallery **zip** downloads run in the background service and stream progress to the
+Settings panel. They need an API key. There's no in-app **Download** button yet (the queue and
+commands are wired; the UI is in the M7 backlog). CBZ/other formats and downloads-folder
+management are planned. See [Roadmap](Roadmap.md).
+
+## 📱 Is there a mobile version?
+
+No. NH Desktop is desktop-only (Windows, macOS, Linux), **by design**:
+
+- **Android** already has a good third-party client: [`NClientV3`](https://github.com/maxwai/NClientV3).
+- **iOS** rejects adult/NSFW apps, and an Apple developer license is prohibitively expensive
+  for an app that wouldn't be allowed anyway.
+
+Use NClientV3 on Android or the nhentai.net site in a mobile browser.
 
 ## 🤝 I found a bug / want a feature.
 

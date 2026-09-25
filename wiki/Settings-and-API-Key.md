@@ -17,7 +17,7 @@ The only "online" setting. Get a key from nhentai.net → *Settings → API Key*
 | Control | Behavior |
 | --- | --- |
 | **Add API key** | Stores the key locally in `nh-desktop.db` (the `api_key` table). The UI shows only a 4-character prefix after saving. |
-| **Verify** | Calls nhentai.net's `/api/users/me` with the stored key and shows your username if valid. |
+| **Verify** | Calls nhentai.net's `/api/v2/user` with the stored key (`Authorization: Key <key>`) and shows your username if valid. |
 | **Clear** | Removes the stored key from the local DB immediately. |
 
 The **Verify** control's decision tree:
@@ -26,7 +26,7 @@ The **Verify** control's decision tree:
 flowchart TD
     A[Verify clicked] --> B{Key stored?}
     B -->|"no"| C[Friendly no-key error]
-    B -->|"yes"| D[Call /users/me]
+    B -->|"yes"| D[Call /api/v2/user]
     D -->|"valid"| E[Show username]
     D -->|"invalid"| F[Show error]
 ```
@@ -36,12 +36,14 @@ flowchart TD
 - 🔑 Account favorites sync (`check_favorite`, `add_favorite`, `remove_favorite`,
   `fetch_favorites`).
 - Account blacklist sync (`fetch_account_blacklist`, `update_account_blacklist`).
-- Downloading galleries with your account's privileges (`download_gallery`).
+- Background gallery downloads (`service_enqueue_download` — zip to disk via the background
+  service; key required).
 
 ### 🔒 Security notes
 
 - 🔒 Keys are stored **only locally** (SQLite), never logged, never sent anywhere except
-  nhentai.net over HTTPS (as the standard `Authorization: Bearer <key>` header).
+  nhentai.net over HTTPS (as the `Authorization` header — the user endpoint uses
+  `Key <key>`).
 - The Rust commands `require_key`/`optional_key` (`commands.rs`) ensure commands that need a
   key fail with a friendly error when missing — the UI never silently passes an empty key.
 - Clearing the key is immediate; future command calls then fall back to anonymous mode or
@@ -55,6 +57,22 @@ flowchart TD
 - The cache stores recent gallery/list payloads under the `nh-desktop:` prefix and rehydrates on
   launch (`cacheInit()`), keeping repeat navigation instant and reducing load on the site.
 
+## 🔄 Background services
+
+Settings → **Background services** (backed by `src-tauri/src/service.rs` + the runes store
+`src/lib/stores/service.svelte.ts`):
+
+| Control | Behavior |
+| --- | --- |
+| **Auto-refresh Popular** | Toggle periodic Popular-list refreshes; when on, pick **15 min / 1 hour / Daily** (persisted via `service_set_auto_refresh`). |
+| **Sync account** | Pulls account favorites + blacklist into the local mirror (`service_enqueue_sync`). |
+| **Run maintenance** | Prunes the disk image cache (30-day images) and cached lists (7 days) (`service_enqueue_maintenance`). |
+| **Recent jobs** | Live list of background jobs with progress, streamed over the `service://job` / `service://refresh` events (download, prefetch, maintenance, refresh, sync). |
+
+The service processes jobs one at a time from a throttled queue. Downloads land in the
+`downloads/` folder of the app data dir. See [Backend (Rust)](Backend-Rust.md) for the
+`service_*` commands.
+
 ## ⚙️ Other settings surfaces
 
 Beyond the Settings page, related persistent state lives in:
@@ -63,6 +81,7 @@ Beyond the Settings page, related persistent state lives in:
 - `src/lib/stores/library.svelte.ts` — favorites/history persistence
 - `src/lib/stores/blacklist.svelte.ts` — the global blacklist + master toggle
 - `src/lib/stores/account.svelte.ts` — account/API-key state
+- `src/lib/stores/service.svelte.ts` — background-service jobs + auto-refresh config
 
 ## 🤝 Related
 

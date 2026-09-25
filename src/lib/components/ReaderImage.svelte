@@ -51,10 +51,23 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		min-height: 0;
-		min-width: 0;
 		max-width: 100%;
 		max-height: 100%;
+	}
+
+	.slot[data-fit='width'] {
+		width: 100%;
+		max-height: none;
+	}
+
+	.slot[data-fit='height'] {
+		height: 100%;
+		max-width: none;
+	}
+
+	.slot[data-fit='contain'] {
+		width: 100%;
+		height: 100%;
 	}
 
 	.slot.off {
@@ -67,16 +80,13 @@
 	}
 
 	.slot[data-fit='width'] img {
-		max-width: 100%;
-		max-height: 100%;
-		width: auto;
+		width: 100%;
 		height: auto;
 	}
 
 	.slot[data-fit='height'] img {
 		height: 100%;
 		width: auto;
-		max-width: 100%;
 	}
 
 	.slot[data-fit='contain'] img {

@@ -50,9 +50,9 @@ BUGS.md                 # known issues & quirks
 src/                    # frontend (SvelteKit SPA)
 src/lib/api/            # nhentai API types + client wrapper
 src/lib/components/     # UI components
-src/lib/stores/         # favorites, history, blacklist, settings (runes-based)
+src/lib/stores/         # favorites, history, blacklist, settings, account, service (runes-based)
 src-tauri/              # Rust backend
-src-tauri/src/          # main.rs, lib.rs, nh_desktop.rs (API client), commands.rs
+src-tauri/src/          # main.rs, lib.rs, nh_desktop.rs (API client), commands.rs, service.rs, image_cache.rs, db.rs
 ```
 
 ## 🚀 Commands
@@ -60,7 +60,7 @@ src-tauri/src/          # main.rs, lib.rs, nh_desktop.rs (API client), commands.
 | Action | Command |
 | --- | --- |
 | Install deps | `npm install` |
-| Run app (dev) | `npm run tauri dev` |
+| Run app (dev) | `npm run dev:tauri` (runs `tauri dev`; Vite dev server uses the fixed port 14440 configured in `vite.config.js`/`tauri.conf.json` — no port auto-incrementing, no `scripts/dev.mjs`) |
 | Frontend type/lint check | `npm run check` (svelte-kit sync + svelte-check) |
 | Frontend build | `npm run build` |
 | Rust type check | `cargo check` (run in `src-tauri/`) |
@@ -78,6 +78,7 @@ frontend changes → `npm run check`; Rust changes → `cargo check` + `cargo te
 - Backend: snake_case, small focused modules (`nh_desktop.rs`, `commands.rs`, `error.rs`),
   no panics across the command boundary — return `Result`.
 - Respect nhentai's public API; throttle requests; never hammer the site. See `.agents/rules/git-workflow.md` and `security.md`.
+- Commit/issue/release conventions live in `.agents/rules/issue-protocol.md`, `.agents/rules/release-standards.md`, and `.agents/templates/commit-message.md`; `gh` flows are non-interactive (`--body-file`).
 - **Keep tracking docs honest:** updating `TODO.md`, `BUGS.md`, or scope changes requires
   updating the doc in the same change.
 - **Never commit, push, or open PRs unless the user explicitly asks.** This is non-negotiable.
@@ -117,10 +118,31 @@ Agents run commands without a TTY. Follow these rules:
   - Gallery/search/lists → Rust commands (`reqwest`) → JSON back to frontend.
   - Images → direct `<img>` loading from `t.nhentai.net` / `i.nhentai.net`; fallback to a
     Rust image-proxy command returning bytes when a direct load fails (blocked/CSP/404).
+  - Image URLs are **derived from the API's relative path fragments** (`image.ts`
+    `pagePath`/`thumbPath`/`avatarUrl` via `joinUrl`) — nhentai API v2 returns paths like
+    `galleries/<id>/thumb.webp` without a leading slash; never concatenate the host blindly.
+  - Accepted image hosts are any `*.nhentai.net` (incl. `static.nhentai.net` avatars) +
+    matching CSP `img-src`; `NH_` client validation is `is_allowlisted_image_host`.
+- **Background service:** `service.rs` runs a throttled worker queue (gallery download-to-disk,
+  image prefetch, cache/image maintenance, account sync, periodic Popular refresh) surfaced via
+  `service_*` commands and `service://job`/`service://refresh` events; the Settings panel shows
+  a live recent-jobs list.
+- **Image cache:** `image_cache.rs` is a disk cache at `cache/images` (atomic tmp+rename
+  writes), cache-first backing for `proxy_image`; pruned by service maintenance (30d images,
+  7d cached lists).
+- **Single instance:** `tauri-plugin-single-instance` — a second launch shows/unminimizes/
+  focuses the `main` window. Installer/maintenance mode builds its own Tauri app and is
+  deliberately outside the plugin.
+- **Dev port is fixed:** Vite dev server uses **14440** (HMR 14441) configured in
+  `vite.config.js`/`tauri.conf.json`; no auto-incrementing, no `scripts/dev.mjs`.
 - **Blacklist:** global, persistent, applied **server-side** (query `-tag:` excludes) *and*
   **client-side** (hiding/blurring in grids), with a master toggle. Never breaks the grid.
 - **Persistence:** `localStorage` for favorites/history/blacklist/settings (no server).
-- **Context management:** DCP plugin (`@tarquinen/opencode-dcp`) drives the `compress` tool.
+- **No mobile support:** desktop-only, deliberately. Android already has a good third-party
+  client ([NClientV3](https://github.com/maxwai/NClientV3)); iOS rejects NSFW apps and its
+  developer license is prohibitively expensive. Scope stays Windows/macOS/Linux.
+- **Context management:** DCP is an **opencode plugin** (`@tarquinen/opencode-dcp`) that
+  drives the `compress` tool — tooling for the agent, NOT part of the NH Desktop product.
   Contract and size limits in `.agents/rules/context-management.md`; pass routine in
   `.agents/skills/manage-context.md`. Config stays at the global `~/.config/opencode/dcp.jsonc`.
 

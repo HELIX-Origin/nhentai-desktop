@@ -11,11 +11,15 @@
 1. `git status` and `git --no-pager diff` first; stage **only intended files**; never
    commit secrets, temp files, `node_modules/`, `target/`, or build output.
 2. Commit message: conventional, imperative, ≤ ~72 chars subject, body explains *why*.
-   Match repo style (see `git --no-pager log --oneline -10`).
+   Match repo style (see `git --no-pager log --oneline -10`). Full type/scope/emoji
+   guide in `templates/commit-message.md`.
 3. Small logical commits per change (feature atomically, fix atomically, docs atomically).
 4. Branch naming: `feat/`, `fix/`, `docs/`, `chore/` + short slug (`feat/blacklist-ui`).
-5. A change that moves `TODO.md`/`BUGS.md`/`ROADMAP.md` state should carry that doc update
-   in the same commit when practical.
+5. Issue/PR tracking and release flow follow `rules/issue-protocol.md` and
+   `rules/release-standards.md` (roadmap-first, `gh` non-interactive with
+   `--body-file`, SemVer + verification gate).
+6. A change that moves `TODO.md`/`BUGS.md`/`ROADMAP.md`/`CHANGELOG.md` state should
+   carry that doc update in the same commit when practical.
 
 ## 🖥️ Headless (non-interactive) shell rules
 

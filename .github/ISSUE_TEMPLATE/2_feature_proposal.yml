@@ -1,0 +1,77 @@
+name: "✨ Feature Proposal"
+description: "Suggest a new idea or capability for NH Desktop"
+title: "✨ [Feature]: "
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have an idea to make **NH Desktop** even better? We welcome feature proposals!
+        Please review our [Roadmap](https://github.com/HELIX-Origin/nhentai-desktop/blob/main/ROADMAP.md) and [Wiki](https://github.com/HELIX-Origin/nhentai-desktop/wiki) first.
+  - type: dropdown
+    id: scope
+    attributes:
+      label: "Component Scope"
+      description: "Which domain does this proposal affect?"
+      options:
+        - "Gallery Grid / Home / Popular (listings & cards)"
+        - "Search & Filters (query builder, filter drawer, results)"
+        - "Blacklist (hide/blur modes, manager, toggle)"
+        - "Reader (gallery detail, paging, strip mode, fullscreen)"
+        - "Favorites / History (local storage, import/export)"
+        - "Account & Sign-in (nhentai.net key, profile)"
+        - "Downloads & Background Service (queue, cache maintenance, prefetch)"
+        - "Image Loading / Proxy / Cache"
+        - "Installer / Uninstaller / Maintenance"
+        - "System Tray & Window Management"
+        - "Settings / Theming / Styling"
+        - "General / Cross-Cutting"
+    validations:
+      required: true
+  - type: textarea
+    id: problem_statement
+    attributes:
+      label: "Problem or Need"
+      description: "What problem are you trying to solve or what user need is currently unmet?"
+      placeholder: "I'm always frustrated when..."
+    validations:
+      required: true
+  - type: textarea
+    id: proposed_solution
+    attributes:
+      label: "Proposed Solution"
+      description: "Describe the desired capability or workflow you would like to see."
+      placeholder: "Add an option to..."
+    validations:
+      required: true
+  - type: textarea
+    id: backend_impact
+    attributes:
+      label: "Backend / API Impact (if any)"
+      description: "Does this touch the nhentai API, add a Tauri command, or change types.ts ↔ serde? How should it respect nhentai's public API and rate limits?"
+      placeholder: "New `service_*` command for..., no new endpoints needed..."
+    validations:
+      required: false
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: "Alternative Solutions Considered"
+      description: "Did you consider any alternative approaches or workarounds?"
+    validations:
+      required: false
+  - type: textarea
+    id: context
+    attributes:
+      label: "Additional Context / Mockups"
+      description: "Add any other context, UI wireframes, screenshots, or code snippets."
+    validations:
+      required: false
+  - type: checkboxes
+    id: agreement
+    attributes:
+      label: "Design Principles Agreement"
+      options:
+        - label: "I understand that networking lives in the Rust backend, not the webview (see .agents/rules/security.md)."
+          required: true
+        - label: "I have checked the current ROADMAP.md and open issues to ensure this is not already planned."
+          required: true

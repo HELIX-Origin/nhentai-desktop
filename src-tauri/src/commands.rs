@@ -1,10 +1,13 @@
 use crate::db::Db;
+use crate::image_cache::ImageCache;
 use crate::nh_desktop::{
-    DownloadResponse, FavoriteResponse, GalleryDetail, GalleryList, NhDesktopClient, RelatedGalleries,
+    DownloadResponse, FavoriteResponse, GalleryDetail, GalleryList, NhDesktopClient, Paginated, RelatedGalleries,
     TagResponse, UserMeResponse, GalleryListItem,
 };
+use crate::service::{get_auto_refresh, set_auto_refresh, AutoRefreshConfig, BackgroundService, ServiceStatus};
 use serde::Serialize;
-use tauri::State;
+use std::sync::Arc;
+use tauri::{Manager, State};
 
 #[derive(Serialize)]
 pub struct ApiKeyStatus {
@@ -23,9 +26,17 @@ fn require_key(db: &Db) -> Result<String, String> {
 }
 
 #[tauri::command]
+pub fn app_quit(app: tauri::AppHandle) {
+    if let Some(window) = app.get_webview_window("main") {
+        let _ = window.destroy();
+    }
+    app.exit(0);
+}
+
+#[tauri::command]
 pub async fn fetch_new(client: State<'_, NhDesktopClient>, db: State<'_, Db>, page: Option<u32>, per_page: Option<u32>) -> Result<GalleryList, String> {
     client
-        .list_galleries(optional_key(&db).as_deref(), page.unwrap_or(1), per_page.unwrap_or(25))
+        .list_galleries(optional_key(&db).as_deref(), page.unwrap_or(1), per_page.unwrap_or(28))
         .await
         .map_err(|e| e.to_string())
 }
@@ -38,7 +49,7 @@ pub async fn fetch_popular(client: State<'_, NhDesktopClient>, db: State<'_, Db>
 #[tauri::command]
 pub async fn fetch_tagged(client: State<'_, NhDesktopClient>, db: State<'_, Db>, tag_id: u64, sort: Option<String>, page: Option<u32>, per_page: Option<u32>) -> Result<GalleryList, String> {
     client
-        .tagged(optional_key(&db).as_deref(), tag_id, sort.as_deref().unwrap_or("date"), page.unwrap_or(1), per_page.unwrap_or(25))
+        .tagged(optional_key(&db).as_deref(), tag_id, sort.as_deref().unwrap_or("date"), page.unwrap_or(1), per_page.unwrap_or(28))
         .await
         .map_err(|e| e.to_string())
 }
@@ -73,8 +84,34 @@ pub async fn fetch_tag_info(client: State<'_, NhDesktopClient>, tag_type: String
 }
 
 #[tauri::command]
-pub async fn proxy_image(client: State<'_, NhDesktopClient>, url: String) -> Result<Vec<u8>, String> {
-    client.image_bytes(&url).await.map_err(|e| e.to_string())
+pub async fn fetch_tags_by_type(
+    client: State<'_, NhDesktopClient>,
+    db: State<'_, Db>,
+    tag_type: String,
+    sort: Option<String>,
+    page: Option<u32>,
+    per_page: Option<u32>,
+) -> Result<Paginated<TagResponse>, String> {
+    client
+        .tags_by_type(
+            optional_key(&db).as_deref(),
+            &tag_type,
+            sort.as_deref().unwrap_or("popular"),
+            page.unwrap_or(1),
+            per_page.unwrap_or(24),
+        )
+        .await
+        .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub async fn proxy_image(client: State<'_, NhDesktopClient>, cache: State<'_, Arc<ImageCache>>, url: String) -> Result<Vec<u8>, String> {
+    if let Some(bytes) = cache.get(&url) {
+        return Ok(bytes);
+    }
+    let bytes = client.image_bytes(&url).await.map_err(|e| e.to_string())?;
+    let _ = cache.put(&url, &bytes);
+    Ok(bytes)
 }
 
 #[tauri::command]
@@ -182,6 +219,45 @@ pub async fn download_gallery(client: State<'_, NhDesktopClient>, db: State<'_, 
 }
 
 #[tauri::command]
+pub async fn service_enqueue_download(service: State<'_, Arc<BackgroundService>>, id: u64, format: Option<String>) -> Result<u64, String> {
+    service.enqueue_download(id, format.unwrap_or_else(|| "zip".to_string())).await
+}
+
+#[tauri::command]
+pub async fn service_enqueue_prefetch(service: State<'_, Arc<BackgroundService>>, urls: Vec<String>) -> Result<u64, String> {
+    service.enqueue_prefetch(urls).await
+}
+
+#[tauri::command]
+pub async fn service_enqueue_maintenance(service: State<'_, Arc<BackgroundService>>) -> Result<u64, String> {
+    service.enqueue_maintenance().await
+}
+
+#[tauri::command]
+pub async fn service_enqueue_sync(service: State<'_, Arc<BackgroundService>>) -> Result<u64, String> {
+    service.enqueue_sync().await
+}
+
+#[tauri::command]
+pub fn service_status(service: State<'_, Arc<BackgroundService>>) -> ServiceStatus {
+    service.status()
+}
+
+#[tauri::command]
+pub fn service_set_auto_refresh(db: State<'_, Db>, enabled: bool, interval_minutes: u32) -> Result<(), String> {
+    let cfg = AutoRefreshConfig {
+        enabled,
+        interval_minutes: interval_minutes.max(15),
+    };
+    set_auto_refresh(&db, &cfg)
+}
+
+#[tauri::command]
+pub fn service_get_auto_refresh(db: State<'_, Db>) -> AutoRefreshConfig {
+    get_auto_refresh(&db)
+}
+
+#[tauri::command]
 pub fn installer_status() -> Result<crate::installer::InstallerStatus, String> {
     Ok(crate::installer::detect_status())
 }
@@ -214,12 +290,16 @@ pub fn open_maintenance_window(app: tauri::AppHandle) -> Result<(), String> {
     let is_uninstall = std::env::args().any(|a| a == "--uninstall" || a == "--maintenance");
     let mode = if is_uninstall { "uninstall" } else { "maintenance" };
     let url = WebviewUrl::App(format!("installer?mode={mode}").into());
-    WebviewWindowBuilder::new(&app, "installer", url)
+    let mut builder = WebviewWindowBuilder::new(&app, "installer", url)
         .title("NH Desktop Setup")
         .inner_size(820.0, 620.0)
         .min_inner_size(720.0, 560.0)
         .resizable(true)
-        .center()
+        .center();
+    if let Some(icon) = app.default_window_icon() {
+        builder = builder.icon(icon.clone()).map_err(|e| e.to_string())?;
+    }
+    builder
         .build()
         .map(|_| ())
         .map_err(|e| e.to_string())
