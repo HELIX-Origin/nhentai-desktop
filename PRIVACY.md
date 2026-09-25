@@ -1,6 +1,6 @@
 # Privacy Policy
 
-**Last updated:** 2026-09-24 · **Version 0.1.0**
+**Last updated:** 2026-09-25 · **Version 0.2.0**
 
 The NH Desktop client ("the App") is built around one principle: **your data stays on your
 machine**. This policy describes what the App collects, stores, and transmits in plain terms.
@@ -14,7 +14,7 @@ All persistent data is stored **on your own device**:
 
 | Data | Where | Storage type |
 | --- | --- | --- |
-| Favorites, reading history, blacklist entries, settings | Browser `localStorage` of the App's webview | Local only |
+| Favorites, reading history, blacklist entries, settings | SQLite `kv` table in `nh-desktop.db` via `src/lib/cache.ts` | Local only |
 | API key (if you add one) | `nh-desktop.db` via the App's Rust command (`db_set` / `set_api_key`) | Local SQLite |
 | Cache (search results, gallery lists, images) | In-memory cache + `nh-desktop.db` | Local, can be cleared in Settings |
 
@@ -55,11 +55,12 @@ on GitHub). The installer itself respects the same local-only principles; uninst
 
 ## 🗑️ 6. Deleting your data
 
-- 🗑️ **All localStorage data** (favorites, history, blacklist, settings): clear it in the App's
-  Settings, or delete the App's profile directory on your OS.
+- 🗑️ **All app data** (favorites, history, blacklist, settings): clear it in the App's
+   Settings, or delete the App's profile directory on your OS.
 - **Your API key:** remove it in Settings → "Clear API key", or delete `nh-desktop.db`.
 - **Everything:** uninstall with **Remove user data** checked, or delete the App data folder
-  (`%LOCALAPPDATA%\NH Desktop`, `~/Library/Application Support/NH Desktop`, `~/.local/share/NH Desktop`).
+  (`%APPDATA%\net.nh-desktop.client`, `~/Library/Application Support/net.nh-desktop.client`,
+  `~/.local/share/net.nh-desktop.client`).
 
 ## 📬 7. Contact
 

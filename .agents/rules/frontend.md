@@ -12,10 +12,16 @@
 
 ```
 src/lib/
-  api/          # types.ts (nhentai wire types) + client.ts (invoke wrapper)
-  components/   # UI components (kebab-case files, PascalCase names)
+  api.ts        # nhentai API wrappers (typed invoke)
+  client.ts     # typed invoke wrapper
+  types.ts      # nhentai wire types + frontend shapes
+  query.ts      # search query builder
+  image.ts      # image URL derivation + host allow-list
+  format.ts     # formatting helpers
+  cache.ts      # SQLite-backed KV cache interface (prefix `nh-desktop:`)
+  components/   # UI components (PascalCase files, PascalCase names)
+  design/       # CSS tokens and base styles
   stores/       # runes-based state; one module per domain
-  util/         # pure helpers (formatting, query building) — unit-testable
 ```
 
 - Views are SvelteKit routes under `src/routes/`.
@@ -25,20 +31,21 @@ src/lib/
 ## 🔄 State & data flow
 
 - All app state lives in `src/lib/stores/` as exported runes or small classes of runes:
-  `favorites`, `history`, `blacklist`, `settings`.
-- Persist via `localStorage` through a tiny helper in `src/lib/util/`; write-through on
-  mutation, hydrate on module load. Version the storage keys (`nh-desktop:favorites:v1`).
+  `favorites`, `history`, `blacklist`, `settings`, `account`, `service`.
+- Persist via `src/lib/cache.ts` → Tauri `db_*` commands → SQLite `kv` table in
+  `nh-desktop.db`; write-through on mutation, hydrate via `cacheInit()`. Cache keys use the
+  prefix `nh-desktop:`.
 - Components receive props downward; do not import stores deep inside leaf components
   unless the store *is* the natural contract (e.g. a `FavoritesButton`).
 - Data fetching happens in views/route modules, never inside presentational components.
 
 ## 🎨 Styling
 
-- **Plain CSS** with design tokens as CSS custom properties (see `src/lib/styles/tokens.css`).
-  No framework (no Tailwind), no CSS-in-JS.
-- Semantic tokens (`--color-bg`, `--color-surface`, `--color-accent`, `--radius-md`,
-  `--space-4`, `--fs-sm` …) — components reference tokens, never raw hex inside a
-  component style block, excepting one-off component accents that belong to its identity.
+- **Plain CSS** with design tokens as CSS custom properties (see `src/lib/design/tokens.css`
+  and `src/lib/design/base.css`). No framework (no Tailwind), no CSS-in-JS.
+- Semantic tokens (`--bg`, `--surface`, `--accent`, `--radius`, `--radius-sm`, `--text` …)
+  — components reference tokens, never raw hex inside a component style block, excepting
+  one-off component accents that belong to its identity.
 - Dark + light via `[data-theme]` on `<html>`; default follows `prefers-color-scheme`.
 - Scoped styles per component with BEM-lite class names (`gallery-card__title`).
 
@@ -51,7 +58,8 @@ src/lib/
 ## ✅ Verification (frontend)
 
 - Run `npm run check` (svelte-kit sync + svelte-check). Zero errors.
-- Pure logic (query building, blacklist matching) lives in `src/lib/util/` so it can be
-  tested in isolation; add tests where a regression would be painful and a test framework
+- Pure logic (query building in `src/lib/query.ts`, formatting in `src/lib/format.ts`,
+  image URL derivation in `src/lib/image.ts`) lives in flat `src/lib/` modules so it can be
+  audited in isolation; add tests where a regression would be painful and a test framework
   is present — otherwise keep the logic *so* pure it's trivially auditable.
 - Validate the non-happy paths: empty results, API error, image 404, offline.

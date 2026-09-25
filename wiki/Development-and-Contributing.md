@@ -12,7 +12,7 @@ BUGS.md          known issues
 wiki/            GitHub wiki source (copy to .wiki.git to publish)
 src/             SvelteKit static SPA
 src-tauri/       Rust backend (Tauri 2)
-  src/nh_desktop.rs (API client), commands.rs (37 commands),
+  src/nh_desktop.rs (API client), commands.rs (43 commands),
       service.rs (background queue), image_cache.rs (disk cache),
       db.rs (SQLite), installer.rs, platform/{mod,windows,macos,linux}.rs
 scripts/         build-installer.mjs

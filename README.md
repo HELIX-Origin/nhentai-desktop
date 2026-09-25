@@ -26,9 +26,10 @@ categories, artists, characters, parodies — and lets you slice it **locally, i
 - **Background jobs built in.** Gallery zip downloads, image prefetch, cache/account maintenance,
   and an optional Popular auto-refresh run in a throttled background service, with live progress
   in Settings. Launching the app again just focuses the running window (single instance).
-- **Private by default.** Favorites, history, blacklist, and settings live only on your device
-  (`localStorage` + a local SQLite database). No accounts, no servers, no telemetry. An
-  **optional** nhentai account API key unlocks account favorites/blacklist sync.
+- **Private by default.** Favorites, history, blacklist, settings, and your API key live only
+  on your device in a local SQLite database (`nh-desktop.db`) via `src/lib/cache.ts`. No
+  accounts, no servers, no telemetry. An **optional** nhentai account API key unlocks account
+  favorites/blacklist sync.
 - **A real installer/uninstaller.** Tauri-native unified setup wizard (no NSIS/WiX): install,
   uninstall, repair, PATH registration, Desktop & Start Menu shortcuts — all in one binary.
 
@@ -102,7 +103,7 @@ flowchart TD
 ```
 src/                  # SvelteKit SPA frontend (static, adapter-static)
   lib/api/            # typed API client + query builder (frontend)
-  lib/stores/         # settings, library, blacklist, account, service (runes + localStorage)
+  lib/stores/         # settings, library, blacklist, account, service (runes + SQLite cache)
   lib/components/     # GalleryCard, GalleryGrid, FilterPanel, BlacklistView, ...
   routes/             # latest, popular, search, favorites, history, blacklist, settings, gallery, reader, installer
 src-tauri/            # Rust backend (Tauri 2)

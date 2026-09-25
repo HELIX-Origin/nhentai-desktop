@@ -2,8 +2,9 @@
 
 **Route:** Settings · component `src/lib/components/SettingsView.svelte`
 
-Settings are kept deliberately small and local. All settings persist in `localStorage`
-(dark theme active; a light theme is reserved behind `[data-theme='light']`).
+Settings are kept deliberately small and local. All settings persist via the SQLite-backed
+KV cache (`src/lib/cache.ts` → `nh-desktop.db`; dark theme active; a light theme is reserved
+behind `[data-theme='light']`).
 
 ## ⚙️ Appearance
 

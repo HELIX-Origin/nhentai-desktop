@@ -70,7 +70,7 @@ periodic Popular refreshes.
 
 | Store | Location | Purpose |
 | --- | --- | --- |
-| Favorites / history / blacklist / settings | `localStorage` | user state, runes-backed |
+| Favorites / history / blacklist / settings | `nh-desktop.db` (SQLite `kv` table) | user state, runes-backed |
 | Cache mirror + API key | `nh-desktop.db` (SQLite) | fast startup, offline-ish lists, key at-rest |
 | Image cache | `cache/images` (data dir) | disk cache backing `proxy_image`, pruned by maintenance |
 | Downloads | `downloads/` (data dir) | zip archives from background-service downloads |

@@ -53,7 +53,7 @@ Initial release.
 
 - ✨ **Tauri 2 + SvelteKit static SPA shell**; Svelte 5 runes, strict TypeScript, plain CSS
   design tokens (dark theme, violet `#7c5cff` accent).
-- ✨ **Rust backend**: `nh_desktop.rs` API client (reqwest, throttled), `commands.rs` (39
+- ✨ **Rust backend**: `nh_desktop.rs` API client (reqwest, throttled), `commands.rs` (43
   Tauri commands), `db.rs` (local SQLite: key/value cache + API key), `error.rs`.
 - ✨ **Custom title bar**: macOS-style traffic lights (position/order per OS), window
   dragging/double-click maximize, quick search + account chip, minimize/maximize/close.
@@ -66,8 +66,8 @@ Initial release.
   include/exclude, page ranges, 6 sort modes) compiled to native nhentai syntax.
 - ✨ **Global blacklist**: server-side `-tag:` excludes + client-side hide/blur, master
   toggle, quick-add from any gallery, tag-picker management panel with type tabs.
-- ✨ **Library**: favorites + history (localStorage); account favorites/blacklist sync via
-  optional nhentai API key.
+- ✨ **Library**: favorites + history persisted via SQLite-backed KV cache (`src/lib/cache.ts`
+  → `nh-desktop.db`); account favorites/blacklist sync via optional nhentai API key.
 - ✨ **Reader**: gallery detail, paged thumbnails, strip/paged modes, preload, fullscreen,
   fit-mode fixes.
 - ✨ **Background service** (`src-tauri/src/service.rs`): throttled worker queue for gallery

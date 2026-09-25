@@ -7,9 +7,9 @@ agent, NOT part of the NH Desktop product). This is meta-infrastructure:
 > **Non-opencode agents: ignore this rule.** There is no `compress` tool outside opencode+dcp.
 > Do not try to run, replicate, or emulate a compression pass — just keep summaries or working
 > notes in `.agents/tracking/` and move on. This file's contract is only meaningful in sessions
-> that actually expose the `compress` tool and `dcp-system-reminder` blocks.
-get it wrong and sessions degrade, lose intent, or waste the user's time. **Read before doing
-anything context-related.**
+> that actually expose the `compress` tool and `dcp-system-reminder` blocks. **Get it wrong and
+> sessions degrade, lose intent, or waste the user's time. Read before doing anything
+> context-related.**
 
 ## 🧠 What DCP does
 

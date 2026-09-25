@@ -35,10 +35,12 @@ src/routes/
 
 ## ⚡ Conventions
 
-- ⚡ **Kebab-case filenames**, PascalCase component names.
+- ⚡ **Kebab-case** for TS/JS modules and route files; **PascalCase** for Svelte component
+  files (`GalleryCard.svelte`) and component names.
 - **Svelte 5 runes** (`$state`, `$derived`, `$effect`) — no legacy stores for UI state.
-- **localStorage** backs favorites/history/blacklist/settings; runes hydrate/serialize via
-  the `stores/` modules (`localStorage` namespaced keys).
+- The SQLite-backed KV cache (`src/lib/cache.ts` → `nh-desktop.db`) backs
+  favorites/history/blacklist/settings; runes hydrate/serialize via the `stores/` modules
+  (cache keys use the `nh-desktop:` prefix).
 - All async reads go through the typed `api`/`client` layer; never raw `invoke` in components.
 - Image URLs are derived from the API's relative path fragments via `image.ts`
   (`pagePath` / `thumbPath` / `avatarUrl`); images render direct from the `*.nhentai.net` CDNs

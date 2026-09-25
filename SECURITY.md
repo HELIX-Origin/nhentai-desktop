@@ -7,7 +7,8 @@ seriously — both for the app itself and for the privacy of your local data.
 
 | Version | Supported |
 | --- | --- |
-| 0.1.x | ✅ Active |
+| 0.2.x | ✅ Active |
+| 0.1.x | ⚠️ No longer supported; upgrade to latest |
 | < 0.1 | ❌ |
 
 Only the latest release receives security fixes. Check the
@@ -61,9 +62,10 @@ Out of scope:
 
 ## 🏗️ Security design notes (for auditors)
 
-- 🛡️ **CSP is set** in `src-tauri/tauri.conf.json`: images are allow-listed to `t.nhentai.net`,
-  `i.nhentai.net`, `data:`, `blob:`; IPC connects are limited to the app's local IPC endpoints.
-  A separate `devCsp` permits the Vite dev-server (HMR) endpoints.
+- 🛡️ **CSP is set** in `src-tauri/tauri.conf.json`: images are allow-listed to
+  `https://nhentai.net` and `https://*.nhentai.net` (covering `t.nhentai.net`, `i.nhentai.net`,
+  and `static.nhentai.net` avatars), plus `data:` and `blob:`; IPC connects are limited to the
+  app's local IPC endpoints. A separate `devCsp` permits the Vite dev-server (HMR) endpoints.
 - **No remote code paths**: the Rust backend fetches only from nhentai.net API + CDN hosts
   (`nh_desktop.rs`), rendering content is done in a WebView with the CSP above, and external links
   open in the system browser via the OS opener.
@@ -72,8 +74,8 @@ Out of scope:
 - **The installer runs a single binary** (the app itself is the installer, see `main.rs`
   argv routing). Uninstall strings, Start Menu/Desktop shortcuts, PATH, and the HKCU uninstall
   key are all managed through the `platform/` module with PowerShell/AppleScript desktop APIs.
-- **User data** (favorites, history, blacklist, settings, API key) is stored locally only
-  (SQLite + `localStorage`). See [PRIVACY.md](PRIVACY.md).
+- **User data** (favorites, history, blacklist, settings, API key) is stored locally only in
+  SQLite (`nh-desktop.db`). See [PRIVACY.md](PRIVACY.md).
 
 ## ⬜ Security hardening wishlist
 

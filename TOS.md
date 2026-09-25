@@ -1,6 +1,6 @@
 # NH Desktop (desktop client) — Terms of Service
 
-**Last updated:** 2026-09-24 · **Version 0.1.0**
+**Last updated:** 2026-09-25 · **Version 0.2.0**
 
 These Terms of Service ("Terms") govern your use of **NH Desktop**, a desktop application
 ("the App") published by the **helix-origin** organization. By downloading, installing, or

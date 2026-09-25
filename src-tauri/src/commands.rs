@@ -30,9 +30,6 @@ pub fn app_quit(app: tauri::AppHandle) {
     if let Some(window) = app.get_webview_window("main") {
         let _ = window.destroy();
     }
-    if let Some(window) = app.get_webview_window("installer") {
-        let _ = window.destroy();
-    }
     app.exit(0);
 }
 

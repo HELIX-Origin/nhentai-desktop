@@ -5,10 +5,15 @@
 ```
 main.rs        # bin entry, #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 lib.rs         # Builder::default() → plugins → invoke_handler → run()
-nh_desktop.rs  # nhentai API wire types (serde) + client functions (reqwest): get_gallery,
-               #   search, list_new, list_all, list_tagged, fetch_bytes
+nh_desktop.rs  # nhentai API wire types (serde) + client functions (reqwest): gallery,
+               #   search, list_galleries, popular, tagged, download, current_user, etc.
 commands.rs    # #[tauri::command] wrappers — thin, typed, call client, no business logic
 error.rs       # AppError enum -> String messages; no panics across the command boundary
+db.rs          # SQLite persistence (kv table + api_key table)
+image_cache.rs # disk image cache (atomic tmp+rename writes, cache-first proxy fallback)
+service.rs     # background worker queue (downloads, prefetch, maintenance, sync, auto-refresh)
+installer.rs   # unified installer/uninstaller engine + status detection
+platform/      # per-OS installer helpers (windows, macos, linux)
 ```
 
 ## 🦀 Conventions
@@ -30,7 +35,8 @@ error.rs       # AppError enum -> String messages; no panics across the command 
   (core + what plugins we actually use). Adding a plugin requires adding its permission.
 - The webview's CSP is defined in `tauri.conf.json` `app.security.csp`. Tighten, don't
   loosen: API access goes through `invoke`, so the CSP needs no `connect-src` to the
-  nhentai API; images need `img-src https://t.nhentai.net https://i.nhentai.net data:`.
+  nhentai API; images need `img-src 'self' data: blob: https://nhentai.net https://*.nhentai.net`
+  to cover `t.nhentai.net`, `i.nhentai.net`, and `static.nhentai.net` avatars.
 - `proxy_image` returns bytes (frontend builds a Blob URL) — keep an in-memory cap and
   cache in-flight lookups so the reader doesn't duplicate fetches.
 

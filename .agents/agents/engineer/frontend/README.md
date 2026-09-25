@@ -16,8 +16,8 @@ verifies: npm run check
 ## ⚡ Responsibility
 
 - Build the custom UI: views, gallery grid, filter/blacklist surfaces, reader, stores.
-- Own the client-side contract in `src/lib/api/types.ts` + `client.ts` (typed `invoke`).
-- Filter truth lives in `src/lib/util/` (query builder, blacklist matcher) — pure, tested.
+- Own the client-side contract in `src/lib/types.ts` + `client.ts` (typed `invoke`).
+- Filter truth lives in `src/lib/query.ts` (query builder) — pure, auditable.
 - Apply the design tokens everywhere; accessibility = non-negotiable.
 
 ## 🔄 Data flow (one view end-to-end)

@@ -55,37 +55,9 @@
 	let logDetails = $state<string[]>([]);
 	let showLogs = $state(false);
 
-	async function closeWindow() {
-		try {
-			await getCurrentWindow().close();
-		} catch {
-			try {
-				await invoke('app_quit');
-			} catch {
-				try {
-					await getCurrentWindow().destroy();
-				} catch {
-					window.close();
-				}
-			}
-		}
-	}
-
-	async function minimizeWindow() {
-		try {
-			await getCurrentWindow().minimize();
-		} catch (e) {
-			console.error('Failed to minimize window:', e);
-		}
-	}
-
-	async function maximizeWindow() {
-		try {
-			await getCurrentWindow().toggleMaximize();
-		} catch (e) {
-			console.error('Failed to toggle maximize:', e);
-		}
-	}
+	const closeWindow = () => getCurrentWindow().close();
+	const minimizeWindow = () => getCurrentWindow().minimize();
+	const maximizeWindow = () => getCurrentWindow().toggleMaximize();
 
 	const isMac = $derived(
 		typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.userAgent),
@@ -217,24 +189,17 @@
 	<header
 		class="titlebar"
 		class:mac={isMac}
-		data-tauri-drag-region
 		role="presentation"
 		onpointerdown={onBarPointerDown}
 		ondblclick={onBarDoubleClick}
 	>
 		<div class="traffic" aria-label="Window controls">
-			<button class="dot close" aria-label="Close window" title="Close" onclick={closeWindow}></button>
-			<button class="dot min" aria-label="Minimize window" title="Minimize" onclick={minimizeWindow}></button>
-			<button class="dot max" aria-label="Maximize window" title="Maximize" onclick={maximizeWindow}></button>
+			<button class="dot close" aria-label="Close" onclick={closeWindow}></button>
+			<button class="dot min" aria-label="Minimize" onclick={minimizeWindow}></button>
+			<button class="dot max" aria-label="Maximize" onclick={maximizeWindow}></button>
 		</div>
-		<div class="tb-brand" data-tauri-drag-region>
-			<img class="tb-icon" src={`${base}/favicon.png`} alt="NH Desktop logo" />
-			<span class="tb-title">NH Desktop Setup</span>
-			{#if info}
-				<span class="version-tag">v{info.current_version}</span>
-			{/if}
-		</div>
-		<div class="spacer" data-tauri-drag-region></div>
+		<span class="tb-title">NH Desktop Setup</span>
+		<div class="spacer"></div>
 	</header>
 
 	{#if statusLoading}
@@ -631,28 +596,6 @@
 		background: rgba(0, 0, 0, 0.25);
 	}
 
-	.dot:active::after {
-		content: '';
-		position: absolute;
-		inset: 0;
-		border-radius: 50%;
-		background: rgba(0, 0, 0, 0.4);
-	}
-
-	.tb-brand {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-	}
-
-	.tb-icon {
-		display: block;
-		width: 16px;
-		height: 16px;
-		border-radius: 4px;
-		object-fit: contain;
-	}
-
 	.tb-title {
 		font-size: 13px;
 		font-weight: 600;
@@ -660,20 +603,12 @@
 		color: var(--text-secondary);
 	}
 
-	.version-tag {
-		font-size: 11px;
-		color: var(--text-faint);
-		background: var(--surface);
-		padding: 1px 6px;
-		border-radius: 4px;
-	}
-
 	.spacer {
 		flex: 1;
 	}
 
 	/* Default (Windows/Linux): traffic lights on the right. */
-	.titlebar .tb-brand { order: 1; }
+	.titlebar .tb-title { order: 1; }
 	.titlebar .spacer { order: 2; }
 	.titlebar .traffic { order: 3; }
 	.titlebar .traffic .dot.min { order: 1; }
@@ -685,7 +620,7 @@
 	.titlebar.mac .traffic .dot.close { order: 1; }
 	.titlebar.mac .traffic .dot.min { order: 2; }
 	.titlebar.mac .traffic .dot.max { order: 3; }
-	.titlebar.mac .tb-brand { order: 2; }
+	.titlebar.mac .tb-title { order: 2; }
 	.titlebar.mac .spacer { order: 3; }
 
 	.wizard-body {

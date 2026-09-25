@@ -14,7 +14,8 @@
 - **Images are remote and untrusted.** We load bytes and render them in `<img>`; we never
   `innerHTML` remote content, never execute remote scripts, never `eval`.
 - **CSP:** keep it strict in `tauri.conf.json`. Allow only what the app needs:
-  `default-src 'self'`, `img-src 'self' https://t.nhentai.net https://i.nhentai.net data:`,
+  `default-src 'self'`, `img-src 'self' data: blob: https://nhentai.net https://*.nhentai.net`
+  (covers `t.nhentai.net`, `i.nhentai.net`, and `static.nhentai.net` avatars),
   `style-src 'self' 'unsafe-inline'` (Svelte injects scoped styles in dev), script stays
   `'self'` (Tauri injects its own bootstrap). Re-verify after any CSP change.
 - Window config: `navigate`/`open` always opens external links in the system browser via

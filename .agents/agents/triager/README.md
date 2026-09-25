@@ -49,7 +49,7 @@ flowchart TD
 | Image 404s on old galleries | External quirk — placeholder + proxy fallback |
 | Filters return wrong items | Open — query builder unit test required |
 | Blacklist leaks in grids | Open — highest severity; matcher regression |
-| Store desync after restart | Open — localStorage migration/shape issue |
+| Store desync after restart | Open — SQLite cache migration/shape issue |
 | Anything panics the window | Open — critical; command must return `Result` |
 
 ## 💡 Notes

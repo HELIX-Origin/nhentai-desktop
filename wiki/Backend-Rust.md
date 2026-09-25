@@ -21,7 +21,7 @@ flowchart TD
 | File | Responsibility |
 | --- | --- |
 | `src-tauri/src/nh_desktop.rs` | `NhDesktopClient` — typed nhentai.net API client (reqwest) + `THROTTLE` |
-| `src-tauri/src/commands.rs` | All `#[tauri::command]` handlers (37) |
+| `src-tauri/src/commands.rs` | All `#[tauri::command]` handlers (43) |
 | `src-tauri/src/db.rs` | SQLite persistence (`Db`, `nh-desktop.db`) |
 | `src-tauri/src/service.rs` | `BackgroundService` — throttled worker queue (downloads, prefetch, maintenance, sync, auto-refresh) |
 | `src-tauri/src/image_cache.rs` | `ImageCache` — disk image cache at `cache/images`, backing `proxy_image` |

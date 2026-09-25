@@ -23,7 +23,7 @@
 
 Download the installer for your platform from the Assets section below:
 
-- Windows: `{{Project Name}}-Setup-v{{ version }}-windows-x64.exe`
+- Windows: `{{Project Name}}-Setup-v{{ version }}-win-x64.exe`
 - macOS: `{{Project Name}}-Setup-v{{ version }}-macos-arm64` (or `macos-x64` if available)
 - Linux: `{{Project Name}}-Setup-v{{ version }}-linux-x64`
 

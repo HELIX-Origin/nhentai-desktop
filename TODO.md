@@ -7,13 +7,13 @@
 > When a task changes behavior or scope, update this file **in the same change**.
 > When a task is done, move it to the bottom under **Done** and link the PR/commit if any.
 
-## 🚧 Current milestone: M1 — Foundation
+## 🚧 Current focus: M1 closeout + M7/M8 polish
 
-Rust client, commands, throttle, frontend shell, stores, tokens, all views, the background
-service, image cache, and single-instance support are built and verified green
-(`npm run check` 0/0, `cargo check` clean, `cargo test` 9/9). One release item remains:
+M1 Foundation is shipped (core). Active work is finishing the clean-clone verification gate
+and polishing the downloads/background-service (M7) and release-hardening (M8) milestones.
 
-- ⬜ `npm install` + full green-baseline verified on a clean clone, then initial commit when the user asks
+- ⬜ `npm install` + full green-baseline verified on a clean clone (`npm run check`, `cargo check`,
+  `cargo test`) — blockers from this audit must land first
 
 ## ✅ M1 — Done
 
@@ -22,11 +22,13 @@ service, image cache, and single-instance support are built and verified green
 - ✅ Rust: `nh_desktop.rs` API client (`reqwest`): gallery, search, new/popular/tagged lists, related, tag info, image proxy
 - ✅ Rust: types (`Gallery`, `Tag`, `SearchResponse`, …) with serde + frontend-consistent shape (`src/lib/types.ts`)
 - ✅ Rust: `error.rs` — friendly error type, no panics across command boundary
-- ✅ Rust: `commands.rs` — 37 commands incl. `fetch_gallery`, `search_galleries`, `fetch_new`, `fetch_popular`, `fetch_tagged`, `fetch_tag_info`, `proxy_image`, `download_gallery`, favorites/blacklist/api-key/db, and the `service_*` background-service commands
+- ✅ Rust: `commands.rs` — 43 commands incl. `fetch_gallery`, `search_galleries`, `fetch_new`, `fetch_popular`, `fetch_tagged`, `fetch_tag_info`, `proxy_image`, `download_gallery`, favorites/blacklist/api-key/db, and the `service_*` background-service commands
 - ✅ Rust: throttle for API calls (`THROTTLE` + `tokio::time::sleep` in `nh_desktop.rs`) with ioredis-mock-style cache (frontend `cache.ts`)
 - ✅ Frontend: `src/lib/api.ts` + `client.ts` (typed invoke wrapper) + `query.ts` query builder
-- ✅ Frontend: stores — settings, library (favorites/history), blacklist, account (runes + localStorage)
-- ✅ Frontend: design tokens (CSS variables; dark theme live, `[data-theme='light']` reserved)
+- ✅ Frontend: stores — settings, library (favorites/history), blacklist, account (runes +
+  SQLite-backed cache via `src/lib/cache.ts`)
+- ✅ Frontend: design tokens (CSS variables; dark + light themes live, system-aware via
+  `settings.svelte.ts`)
 - ✅ Frontend: app shell — sidebar nav (Latest, Popular, Favorites, History, Blacklist, Settings) + frameless child-window handling
 - ✅ Frontend: `GalleryCard` + `GalleryGrid` with lazy images + image-proxy fallback
 - ✅ Frontend: Latest (Home) + Popular views with pagination
@@ -56,13 +58,15 @@ service, image cache, and single-instance support are built and verified green
 
 ## ⬜ Backlog
 
-- ⬜ Downloads UI (M7): wire a per-gallery Download button → `service_enqueue_download`; CBZ/other
-  formats; downloads-folder management (open folder, prune), queue resume/persist
+- ⬜ Downloads UI (M7): queue resume/persist, cache-consumer wiring, storage-management polish
+  (per-gallery Download button, ZIP/CBZ/torrent formats, configurable folder, and open-folder
+  are already shipped)
 - ⬜ Sync auto-refresh cache consumers: use the maintained `nh-desktop:cache:popular` /
   `nh-desktop:cache:account:*` mirrors in the Popular / account views
 - ⬜ Import/export favorites + blacklist as JSON (M5)
 - ⬜ Settings screen: theme accent, image quality, reader preload distance (M8)
-- ⬜ End-to-end installer verification: run `npm run build:installer` and smoke-test generated `dist/installer/nhentai-Setup-{version}.exe` (M8)
+- ⬜ End-to-end installer verification: run `npm run build:installer` and smoke-test generated
+  `dist/installer/NH Desktop-Setup-{version}-win-x64.exe` (M8)
 
 ## 🔁 Recurring
 

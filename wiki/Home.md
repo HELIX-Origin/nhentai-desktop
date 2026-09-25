@@ -53,8 +53,9 @@ characters, parodies).
 
 - Stack: **Tauri 2 (Rust `reqwest`)** backend + **SvelteKit static SPA** (Svelte 5 runes,
   strict TypeScript) + **plain CSS tokens** (no UI framework).
-- Persistence: browser `localStorage` + a local SQLite database (`nh-desktop.db`), plus an
-  on-disk image cache (`cache/images`) and a `downloads/` folder.
+- Persistence: SQLite-backed KV cache (`src/lib/cache.ts` → `nh-desktop.db`) for favorites,
+  history, blacklist, settings and the API key, plus an on-disk image cache (`cache/images`)
+  and a `downloads/` folder.
 - Rebranded/verified: this is the **NH Desktop** product — `NH Desktop.exe`, window title
   "NH Desktop", identifier `net.nh-desktop.client`. The old scaffold names are gone.
 

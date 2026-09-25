@@ -74,9 +74,9 @@ flowchart TD
 
 ### 🚨 "My favorites disappeared"
 
-- Favorites are stored in `localStorage`. Browser-data clears, app reinstalls with
-  "Remove user data", or storage eviction can wipe them. Export is planned; for now back up
-  early.
+- Favorites are stored in the SQLite-backed cache (`nh-desktop.db`). App reinstalls with
+  "Remove user data", or manually deleting the app data directory, can wipe them. Export is
+  planned; for now back up early.
 - If you use an API key, **in-app favorites** and **account favorites on nhentai.net** are
   separate — in-app favorites are local-only.
 

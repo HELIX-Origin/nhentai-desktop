@@ -8,8 +8,8 @@ Security posture, reporting, and hardening notes for NH Desktop.
 
 ## 🏗️ Design principles
 
-- **Local-first.** Favorites, history, blacklist, settings and the cache live on-device
-  (localStorage / `nh-desktop.db`). No app server, no telemetry.
+- **Local-first.** Favorites, history, blacklist, settings and the cache live on-device in
+  SQLite (`nh-desktop.db`). No app server, no telemetry.
 - **No remote code paths.** The WebView never executes remote scripts; CSP restricts
   connections to nhentai.net + its CDNs.
 - **One network path.** All API traffic goes through `NhDesktopClient` (reqwest), throttled
@@ -30,7 +30,7 @@ Security posture, reporting, and hardening notes for NH Desktop.
 
 ## 🚨 Supported versions / reporting
 
-- Supported: current 0.1.x.
+- Supported: current 0.2.x.
 - Report vulnerabilities via **GitHub private vulnerability reporting** on the repository, or
   to the maintainer directly (contacts in SECURITY.md).
 - Scope: the app code, installer, and build scripts. Out of scope: nhentai.net itself and

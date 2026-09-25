@@ -9,7 +9,7 @@ What NH Desktop stores, what it sends, and what it never does.
 
 | Data | Storage |
 | --- | --- |
-| Favorites, history, blacklist, settings | `localStorage` |
+| Favorites, history, blacklist, settings | SQLite `kv` table in `nh-desktop.db` |
 | API key + cache mirror (`nh-desktop:…` entries) | `nh-desktop.db` (SQLite in app data dir) |
 
 All of it is local. There is no app server; you are never "logged in" to anything except
@@ -33,8 +33,8 @@ nhentai.net itself (optional, via API key).
 
 - Clear the cache from **Settings → Cache**.
 - Clear favorites/history/blacklist from the corresponding views (or clear site data).
-- Full removal: uninstall with **Remove user data** checked — wipes localStorage and
-  `nh-desktop.db`.
+- Full removal: uninstall with **Remove user data** checked — wipes `nh-desktop.db` and the
+  on-disk image cache.
 
 ## 🧩 Third-party
 

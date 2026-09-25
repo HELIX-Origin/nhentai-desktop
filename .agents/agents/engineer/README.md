@@ -18,8 +18,8 @@ sub-agents: backend, frontend
 - Deliver planned work against `TODO.md` / requirement docs: the **single coordinating
   engineer** that reads the task, consults `project-context` for requirements, and routes
   the work to the right sub-agent (backend / frontend).
-- Own the frontend↔backend **contract** (types cross the boundary exactly): the `typess`
-  layer in `src/lib/api/types.ts` must match Rust serde types 1:1.
+- Own the frontend↔backend **contract** (types cross the boundary exactly): the types
+  layer in `src/lib/types.ts` must match Rust serde types 1:1.
 - Route sub-agents, review that their work satisfies the DoD, run the checks, and keep
   tracking docs honest in the same change.
 

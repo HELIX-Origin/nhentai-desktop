@@ -1,6 +1,6 @@
 # ROADMAP.md
 
-> Product direction and milestones for **nhentai**. This is the "what / why" doc —
+> Product direction and milestones for **NH Desktop**. This is the "what / why" doc —
 > pair it with `TODO.md` (executable tasks) and `BUGS.md` (known issues).
 
 ## 🔭 Vision
@@ -28,14 +28,14 @@ public API — we fetch data, we don't scrape aggressively.
 
 | # | Milestone | Status | Scope |
 | --- | --- | --- | --- |
-| M1 | Foundation | ✅ Shipped (core) | Scaffold, green toolchain, Rust client + 37 commands, CSP, app shell, tokens, stores, all views; remaining: clean-clone baseline + initial commit |
+| M1 | Foundation | ✅ Shipped (core); closeout pending | Scaffold, green toolchain, Rust client + 43 commands, CSP, app shell, tokens, stores, all views; remaining: clean-clone baseline verification |
 | M2 | Browse & discover | ✅ Shipped (core) | Home (new releases), popular, gallery grid/cards, pagination, lazy images with proxy fallback |
 | M3 | Search & filters | ✅ Shipped (core) | Query builder, filter drawer (text, language, category, per-type tag include/exclude, page ranges, sort), results + count |
 | M4 | Global blacklist | ✅ Shipped (core) | Manage panel, server-side `-tag:` excludes, client-side hide/blur, master toggle |
 | M5 | Library | ✅ Shipped (core) | Favorites, history, local persistence; import/export JSON still backlog |
 | M6 | Reader | ✅ Shipped (core) | Gallery detail, paged thumbnails, strip mode, preload, fullscreen |
-| M7 | Downloads & background services | 🚧 In progress | Background-service core shipped (zip downloads to disk with progress, image prefetch, cache/image maintenance, account sync, Popular auto-refresh with job events); still backlog: per-gallery Download button, CBZ/other formats, storage management, cache consumers |
-| M8 | Polish / release | 🚧 In progress | Release 0.1.0 shipped 2026-09-24 (installer + verified gates green); still backlog: light theme, accent picker, image quality, reader preload distance, installer E2E smoke via CI |
+| M7 | Downloads & background services | 🚧 In progress (core + UI shipped) | Background-service core shipped (zip/cbz/torrent downloads to disk with progress, image prefetch, cache/image maintenance, account sync, Popular auto-refresh with job events); per-gallery Download button + Downloads page shipped; still backlog: queue resume/persist, cache consumers, storage-management polish |
+| M8 | Polish / release | 🚧 In progress (0.2.0 shipped) | Release 0.2.0 shipped 2026-09-24 (installer + verified gates green, light theme, configurable downloads folder); still backlog: accent picker, image quality, reader preload distance, installer E2E smoke via CI |
 
 ## 🎯 Current focus
 
@@ -45,13 +45,14 @@ Foundation** closeout and **M8 hardening** remain:
 - ⬜ `npm install` + `npm run check` + `cargo check`/`test` all green on a clean clone
 - ✅ Rust client returns real nhentai data (search, newest, detail) through Tauri commands
 - ✅ SPA chrome navigates between Home / Search / Favorites / History / Blacklist / Settings
-- ✅ Design tokens wired (dark theme live, light reserved); responsive grid
+- ✅ Design tokens wired (dark theme live, light theme shipped); responsive grid
 - ✅ CSP hardened (image hosts allowlisted, IPC only, devCsp for Vite HMR)
 - ✅ Background service: enqueued downloads/prefetch/maintenance/sync/auto-refresh + live job events
 - ✅ Single-instance: second launch focuses the running window
 - ✅ Images verified loading from API v2 relative paths; disk image cache backing `proxy_image`
-- ⬜ M7 polish: Download button, CBZ/other formats, downloads storage management
-- ⬜ M8: light theme, accent picker, image quality, reader preload distance; installer E2E smoke now runs via CI packaging workflow on release tags
+- ✅ M7 polish: per-gallery Download button, ZIP/CBZ/torrent formats, configurable downloads folder, open-downloads-folder
+- ⬜ M7 remaining: queue resume/persist, cache consumers, storage-management polish
+- ⬜ M8 remaining: accent picker, image quality, reader preload distance; installer E2E smoke now runs via CI packaging workflow on release tags
 
 ## 🔁 Recurring themes (applies to every milestone)
 

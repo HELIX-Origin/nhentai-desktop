@@ -75,7 +75,7 @@ From the **Maintenance** page you can:
 
 The uninstaller asks whether to **delete all local user data**. Choose carefully:
 
-- ⚠️ Leave it off to keep your `localStorage` and `nh-desktop.db` (handy for reinstall or update).
+- ⚠️ Leave it off to keep your `nh-desktop.db` and settings (handy for reinstall or update).
 - Enable it to wipe everything — this is the "factory reset".
 
 ## ❓ Common questions

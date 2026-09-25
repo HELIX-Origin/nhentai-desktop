@@ -1,8 +1,8 @@
 # Favorites & History
 
 The client keeps two personal libraries locally: **Favorites** and **History**. Both persist
-in browser `localStorage` (with a mirrored copy in the SQLite-backed cache), so they survive
-restarts and live only on your machine — see [Privacy](Privacy.md).
+via the SQLite-backed KV cache (`src/lib/cache.ts` → `nh-desktop.db`), so they survive restarts
+and live only on your machine — see [Privacy](Privacy.md).
 
 ## ⭐ Favorites
 
@@ -10,7 +10,7 @@ restarts and live only on your machine — see [Privacy](Privacy.md).
 
 - From a gallery **detail page**: the **Favorite** toggle (heart) adds or removes the gallery.
   It works **with or without** an nhentai.net API key:
-  - **No API key:** the favorite is stored **locally only** in `localStorage`.
+  - **No API key:** the favorite is stored **locally only** in `nh-desktop.db`.
   - **API key configured:** the toggle also calls `check_favorite` / `add_favorite` /
     `remove_favorite` against your nhentai.net account (streaming sync).
 - From any grid card: the card's favorite badge/button.
@@ -50,9 +50,9 @@ roadmap — see [Roadmap](Roadmap.md).)
 
 ## 💾 Storage & privacy
 
-- `src/lib/stores/library.svelte.ts` — favorites + history (localStorage, runes-based store).
-- A mirrored copy reaches `nh-desktop.db` through the cache layer (`src/lib/cache.ts`) — still
-  local.
+- `src/lib/stores/library.svelte.ts` — favorites + history (SQLite-backed cache, runes-based
+  store).
+- The store writes through `src/lib/cache.ts` to `nh-desktop.db` — still local.
 - No favorites/history telemetry. Ever.
 
 ## 🔗 Related

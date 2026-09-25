@@ -30,16 +30,17 @@ small footprint. See [Installer Engine](Installer-Engine.md).
 
 ## 💾 Where is my data stored on disk?
 
-- Windows: `%APPDATA%\nhentai` (database), `%LOCALAPPDATA%\Programs\NH Desktop` (install dir).
-- macOS: `~/Library/Application Support/nhentai`.
-- Linux: `~/.local/share/nhentai`.
+- Windows: `%APPDATA%\net.nh-desktop.client` (database/cache), `%LOCALAPPDATA%\Programs\NH Desktop` (install dir).
+- macOS: `~/Library/Application Support/net.nh-desktop.client`.
+- Linux: `~/.local/share/net.nh-desktop.client`.
 
-Browser (localStorage) data lives in the WebView storage for the app origin.
+The app does not use browser `localStorage`; all persistent data is in the SQLite database or
+on-disk caches above.
 
 ## 🚫 Does the blacklist sync with my nhentai.net account?
 
 Only if you add an API key and enable it. By default the blacklist is fully local
-(localStorage, mirrored to `nh-desktop.db`). See [Blacklist](Blacklist.md).
+(`nh-desktop.db`). See [Blacklist](Blacklist.md).
 
 ## ⬜ Can I download galleries for offline reading?
 

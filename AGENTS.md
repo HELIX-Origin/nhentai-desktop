@@ -30,7 +30,7 @@ experience than the site provides.
 | Frontend | SvelteKit (static SPA), Svelte 5 runes, TypeScript `strict` |
 | Styling | Plain modern CSS with design tokens (CSS custom properties) — **no** framework |
 | Backend networking | Rust `reqwest` (nhentai API), exposed via Tauri commands |
-| Local persistence | Browser `localStorage` (favorites, history, blacklist, settings) |
+| Local persistence | SQLite-backed KV cache (`src/lib/cache.ts` → `db.rs` → `nh-desktop.db`) for favorites, history, blacklist, settings, and the API key |
 | Package manager | npm |
 
 ## 🏗️ Layout
@@ -48,11 +48,13 @@ BUGS.md                 # known issues & quirks
   templates/            # pull-request, bug, feature, todo, requirement, agent templates
   tracking/             # optional per-item detail files (BUG-001.md, TODO-007.md, REQ-###.md)
 src/                    # frontend (SvelteKit SPA)
-src/lib/api/            # nhentai API types + client wrapper
-src/lib/components/     # UI components
+src/lib/                # flat modules: api.ts, client.ts, types.ts, query.ts, image.ts, format.ts, cache.ts
+src/lib/components/     # UI components (PascalCase .svelte files)
+src/lib/design/         # CSS tokens and base styles
 src/lib/stores/         # favorites, history, blacklist, settings, account, service (runes-based)
 src-tauri/              # Rust backend
-src-tauri/src/          # main.rs, lib.rs, nh_desktop.rs (API client), commands.rs, service.rs, image_cache.rs, db.rs
+src-tauri/src/          # main.rs, lib.rs, nh_desktop.rs (API client), commands.rs, error.rs, db.rs,
+                        # service.rs, image_cache.rs, installer.rs, platform/
 ```
 
 ## 🚀 Commands
@@ -73,8 +75,9 @@ frontend changes → `npm run check`; Rust changes → `cargo check` + `cargo te
 ## ⚠️ Standing conventions (condensed — details in `.agents/rules/`)
 
 - **Do not add comments to code unless explicitly asked.** Prefer self-documenting names.
-- Frontend: kebab-case file/folder names (`gallery-card.svelte`), PascalCase component
-  names (`GalleryCard`), use Svelte 5 runes (`$state`, `$derived`), strict TS, `$lib/` alias.
+- Frontend: kebab-case for TS/JS modules and route files; PascalCase for Svelte component
+  files (`GalleryCard.svelte`) and component names (`GalleryCard`). Use Svelte 5 runes
+  (`$state`, `$derived`), strict TS, and the `$lib/` alias.
 - Backend: snake_case, small focused modules (`nh_desktop.rs`, `commands.rs`, `error.rs`),
   no panics across the command boundary — return `Result`.
 - Respect nhentai's public API; throttle requests; never hammer the site. See `.agents/rules/git-workflow.md` and `security.md`.
@@ -137,7 +140,8 @@ Agents run commands without a TTY. Follow these rules:
   `vite.config.js`/`tauri.conf.json`; no auto-incrementing, no `scripts/dev.mjs`.
 - **Blacklist:** global, persistent, applied **server-side** (query `-tag:` excludes) *and*
   **client-side** (hiding/blurring in grids), with a master toggle. Never breaks the grid.
-- **Persistence:** `localStorage` for favorites/history/blacklist/settings (no server).
+- **Persistence:** SQLite-backed KV cache (`src/lib/cache.ts` → `db.rs` → `nh-desktop.db`) for
+  favorites, history, blacklist, settings, and the API key. No server.
 - **No mobile support:** desktop-only, deliberately. Android already has a good third-party
   client ([NClientV3](https://github.com/maxwai/NClientV3)); iOS rejects NSFW apps and its
   developer license is prohibitively expensive. Scope stays Windows/macOS/Linux.

@@ -20,8 +20,9 @@ Applies to every file and every agent, everywhere.
 
 | Kind | Convention | Example |
 | --- | --- | --- |
-| Svelte component files | kebab-case `.svelte` | `gallery-card.svelte` |
+| Svelte component files | PascalCase `.svelte` | `GalleryCard.svelte` |
 | Svelte component names | PascalCase | `GalleryCard` |
+| TS/JS modules | kebab-case | `nhentai-client.ts` |
 | TS/JS modules | kebab-case | `nhentai-client.ts` |
 | Rust files | snake_case | `nh_desktop.rs`, `commands.rs`, `error.rs` |
 | Docs | `UPPER.md` for root, Title Case in `.agents/` | `BUGS.md`, `git-workflow.md` |
