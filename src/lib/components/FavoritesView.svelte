@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { getFavorites, clearFavorites, removeFavorite } from '$lib/stores/library.svelte';
+	import { titlebarQuery } from '$lib/stores/titlebarSearch.svelte';
 	import type { GalleryListItem } from '$lib/types';
 	import { formatCount } from '$lib/format';
 	import { thumbPath } from '$lib/image';
@@ -7,8 +8,15 @@
 	import CoverImage from './CoverImage.svelte';
 	import EmptyState from './EmptyState.svelte';
 
+	const query = $derived(titlebarQuery.value.trim().toLowerCase());
 	const sorted = $derived(
-		getFavorites().sort((a, b) => b.id - a.id),
+		getFavorites()
+			.filter((g) => {
+				if (!query) return true;
+				const text = `${g.english_title} ${g.japanese_title ?? ''}`.toLowerCase();
+				return text.includes(query);
+			})
+			.sort((a, b) => b.id - a.id),
 	);
 
 	function onRemove(id: number) {

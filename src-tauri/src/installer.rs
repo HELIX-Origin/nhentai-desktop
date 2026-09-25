@@ -28,7 +28,6 @@ pub struct InstallOptions {
     pub create_desktop_shortcut: bool,
     pub create_start_menu_shortcut: bool,
     pub add_to_path: bool,
-    pub launch_after: bool,
 }
 
 #[derive(Deserialize)]
@@ -146,13 +145,6 @@ pub fn perform_install(options: InstallOptions) -> OperationResult {
         }
     }
 
-    if options.launch_after {
-        match platform::launch(&dest) {
-            Ok(()) => details.push("Launching application.".to_string()),
-            Err(e) => warnings.push(format!("Launch after install failed: {e}")),
-        }
-    }
-
     details.extend(warnings.iter().cloned());
     OperationResult {
         success: warnings.is_empty(),
@@ -162,6 +154,37 @@ pub fn perform_install(options: InstallOptions) -> OperationResult {
             "Installation completed with warnings.".to_string()
         },
         details,
+    }
+}
+
+pub fn launch_installed_app(target_dir: Option<String>) -> OperationResult {
+    let exe = target_dir
+        .map(PathBuf::from)
+        .map(|d| d.join(platform::executable_name()))
+        .filter(|p| p.exists())
+        .or_else(platform::installed_exe_path);
+
+    let Some(exe) = exe else {
+        return OperationResult {
+            success: false,
+            message: "Could not find the installed application.".to_string(),
+            details: vec![
+                "The installed executable was not found in the expected location.".to_string(),
+            ],
+        };
+    };
+
+    match platform::launch(&exe) {
+        Ok(()) => OperationResult {
+            success: true,
+            message: format!("{PRODUCT_NAME} is launching."),
+            details: vec![format!("Launched: {}", exe.display())],
+        },
+        Err(e) => OperationResult {
+            success: false,
+            message: "Failed to launch the application.".to_string(),
+            details: vec![e],
+        },
     }
 }
 

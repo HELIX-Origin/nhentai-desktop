@@ -120,7 +120,6 @@
 					create_desktop_shortcut: createDesktop,
 					create_start_menu_shortcut: createStartMenu,
 					add_to_path: addToPath,
-					launch_after: launchAfter,
 				},
 			});
 
@@ -143,6 +142,17 @@
 		} finally {
 			inProgress = false;
 		}
+	}
+
+	async function finishInstallation() {
+		if (launchAfter) {
+			try {
+				await invoke<OperationResult>('installer_launch_app', { target_dir: targetDir });
+			} catch {
+				// Launch failure is non-fatal; still close the wizard.
+			}
+		}
+		closeWindow();
 	}
 
 	async function startUninstallation() {
@@ -397,7 +407,7 @@
 					<button class="btn" disabled>Installing…</button>
 				{:else if installTab === 'complete'}
 					<div class="spacer"></div>
-					<button class="btn primary" onclick={closeWindow}>Finish</button>
+					<button class="btn primary" onclick={finishInstallation}>Finish</button>
 				{/if}
 			</footer>
 		</div>

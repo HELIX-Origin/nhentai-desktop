@@ -12,6 +12,7 @@
 	import { initAccount, getAccountState } from '$lib/stores/account.svelte';
 	import { initServiceStore } from '$lib/stores/service.svelte';
 	import { cacheInit } from '$lib/cache';
+	import { setTitlebarQuery } from '$lib/stores/titlebarSearch.svelte';
 	import '../lib/design/base.css';
 
 	let { children } = $props();
@@ -46,8 +47,16 @@
 	function onQuickSearch(event: Event) {
 		event.preventDefault();
 		const q = quickQuery.trim();
-		if (!q) return;
-		goto(`/search?${new URLSearchParams({ q })}`);
+		const path = page.url.pathname;
+
+		if (path === '/search') {
+			goto(`/search?${new URLSearchParams({ q })}`);
+		} else if (path === '/favorites' || path === '/history') {
+			setTitlebarQuery(q);
+		} else {
+			if (!q) return;
+			goto(`/search?${new URLSearchParams({ q })}`);
+		}
 	}
 
 	const compact = () => getCurrentWindow().minimize();
@@ -153,7 +162,6 @@
 				{/if}
 			</a>
 		</div>
-		<div class="spacer"></div>
 	</header>
 
 	<div class="shell">
@@ -265,10 +273,6 @@
 		color: var(--text-secondary);
 	}
 
-	.spacer {
-		flex: 1;
-	}
-
 	.shell {
 		display: flex;
 		flex: 1;
@@ -361,25 +365,23 @@
 		min-width: 0;
 	}
 
-	/* Default (Windows/Linux): title + search on the left, traffic right. */
+	/* Default (Windows/Linux): title on the left, search centered, actions right before traffic. */
 	.titlebar .tb-title { order: 1; }
-	.titlebar .quick-search { order: 2; }
+	.titlebar .quick-search { order: 2; margin-left: auto; margin-right: auto; }
 	.titlebar .bar-actions { order: 3; }
-	.titlebar .spacer { order: 4; }
-	.titlebar .traffic { order: 5; }
+	.titlebar .traffic { order: 4; }
 	.titlebar .traffic .dot.min { order: 1; }
 	.titlebar .traffic .dot.max { order: 2; }
 	.titlebar .traffic .dot.close { order: 3; }
 
-	/* macOS: traffic lights on the left. */
+	/* macOS: traffic lights on the left, title next, search centered, actions on the right. */
 	.titlebar.mac .traffic { order: 0; margin-right: 2px; }
 	.titlebar.mac .traffic .dot.close { order: 1; }
 	.titlebar.mac .traffic .dot.min { order: 2; }
 	.titlebar.mac .traffic .dot.max { order: 3; }
 	.titlebar.mac .tb-title { order: 2; }
-	.titlebar.mac .quick-search { order: 3; }
+	.titlebar.mac .quick-search { order: 3; margin-left: auto; margin-right: auto; }
 	.titlebar.mac .bar-actions { order: 4; }
-	.titlebar.mac .spacer { order: 5; }
 
 	.quick-search {
 		position: relative;

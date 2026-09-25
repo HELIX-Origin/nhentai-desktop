@@ -193,6 +193,7 @@ pub fn run_installer() {
             commands::installer_disk_space,
             commands::installer_install,
             commands::installer_uninstall,
+            commands::installer_launch_app,
         ])
         .run(tauri::generate_context!())
         .expect("error while running installer");

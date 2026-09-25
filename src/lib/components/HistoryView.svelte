@@ -2,10 +2,19 @@
 	import type { HistoryEntry } from '$lib/types';
 	import { relativeDate } from '$lib/format';
 	import { clearHistory, isFavorite, toggleFavorite } from '$lib/stores/library.svelte';
+	import { titlebarQuery } from '$lib/stores/titlebarSearch.svelte';
 	import { thumbPath } from '$lib/image';
 	import Icon from './Icon.svelte';
 
 	let { entries }: { entries: HistoryEntry[] } = $props();
+
+	const query = $derived(titlebarQuery.value.trim().toLowerCase());
+	const filtered = $derived(
+		entries.filter((h) => {
+			if (!query) return true;
+			return h.englishTitle.toLowerCase().includes(query);
+		}),
+	);
 
 	function onClear() {
 		clearHistory();
@@ -15,7 +24,7 @@
 <div class="history">
 	<div class="head">
 		<h2>History</h2>
-		{#if entries.length > 0}
+		{#if filtered.length > 0}
 			<button class="btn btn-ghost faint" onclick={onClear}>
 				<Icon name="close" size={14} />
 				Clear all
@@ -23,11 +32,11 @@
 		{/if}
 	</div>
 
-	{#if entries.length === 0}
+	{#if filtered.length === 0}
 		<p class="faint">Galleries you open will appear here.</p>
 	{:else}
 		<ul class="list">
-			{#each entries as h (h.galleryId)}
+			{#each filtered as h (h.galleryId)}
 				<li>
 					<a class="row" href={`/gallery/${h.galleryId}`}>
 						<span class="thumb">

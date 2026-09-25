@@ -327,6 +327,11 @@ pub fn installer_uninstall(options: crate::installer::UninstallOptions) -> Resul
 }
 
 #[tauri::command]
+pub fn installer_launch_app(target_dir: Option<String>) -> Result<crate::installer::OperationResult, String> {
+    Ok(crate::installer::launch_installed_app(target_dir))
+}
+
+#[tauri::command]
 pub fn open_maintenance_window(app: tauri::AppHandle) -> Result<(), String> {
 	let is_uninstall = std::env::args().any(|a| a == "--uninstall");
 	let flag = if is_uninstall { "--uninstall" } else { "--maintenance" };
