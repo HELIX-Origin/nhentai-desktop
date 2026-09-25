@@ -1,4 +1,7 @@
-# NH Desktop Changelog
+# 📜 NH Desktop Changelog
+
+Historical record of every change to the NH Desktop client. Newer releases are added at the
+top; the current development state lives under `Unreleased`.
 
 ## Unreleased
 
@@ -6,64 +9,70 @@
 
 ## [v0.2.1](https://github.com/HELIX-Origin/nhentai-desktop/releases/tag/v0.2.1)
 
-### Added
+### ✨ Added
 
 * (No new features in this patch release.)
 
-### Changed
+### ✅ Changed
 
-* Audit and correct agent ecosystem + project docs [`1659d89`](https://github.com/HELIX-Origin/nhentai-desktop/commit/1659d89ec175736f0ba3960495f8abfe5856de9b)
-* Sync milestone status across TODO/ROADMAP/wiki [`1659d89`](https://github.com/HELIX-Origin/nhentai-desktop/commit/1659d89ec175736f0ba3960495f8abfe5856de9b)
-* Bump version metadata to 0.2.1 [`e0dbc29`](https://github.com/HELIX-Origin/nhentai-desktop/commit/e0dbc2966ee1fbb91d38ca573ec6b4d4a5b7727ade)
+* Audited and corrected the agent ecosystem and project documentation so AI agents have a single, non-contradictory source of truth. Fixes include the SQLite-backed KV cache persistence model, flat `src/lib/` frontend layout, PascalCase Svelte component files, CSP/image-host allowlist alignment, 43-command count, `win-x64` installer naming, and bundle-identifier data paths.
+* Synchronized milestone status across `TODO.md`, `ROADMAP.md`, and `wiki/Roadmap.md` to reflect shipped M7/M8 work and current focus.
+* Bumped version metadata to `0.2.1` across `package.json`, `Cargo.toml`, and `tauri.conf.json`.
 
-### Fixed
+### 🐛 Fixed
 
-* Simplify installer titlebar and window controls [`1659d89`](https://github.com/HELIX-Origin/nhentai-desktop/commit/1659d89ec175736f0ba3960495f8abfe5856de9b)
+* Simplified the installer titlebar and window controls: Finish/Close/Min/Max now use direct `getCurrentWindow()` calls, the header stays draggable via `startDragging()`, and the custom titlebar renders without duplicated native chrome.
 
 ## [v0.2.0](https://github.com/HELIX-Origin/nhentai-desktop/releases/tag/v0.2.0)
 
-### Added
+### ✨ Added
 
-* Ship custom UI shell, background service, and agent standards [`37182a6`](https://github.com/HELIX-Origin/nhentai-desktop/commit/37182a636d800244c83d4f0f8b6f5be15c3cf7ec)
-* Add SQLite-backed persistence, disk image cache, and unified installer [`37182a6`](https://github.com/HELIX-Origin/nhentai-desktop/commit/37182a636d800244c83d4f0f8b6f5be15c3cf7ec)
+* Shipped the full custom UI shell including sidebar navigation, frameless titlebar with macOS-style traffic lights, system tray integration, and single-instance support.
+* Implemented search and filters with a query builder compiling structured controls into native nhentai syntax.
+* Added a global blacklist with server-side `-tag:` excludes and client-side hide/blur, plus a master toggle.
+* Added Favorites and History library views with SQLite-backed persistence.
+* Added the gallery reader with paged thumbnails, strip mode, preload, fullscreen, and fit modes.
+* Added a background service for gallery downloads, image prefetch, cache maintenance, account sync, and Popular auto-refresh with live job events.
+* Added the unified installer/uninstaller wizard in a single binary with shortcuts and PATH registration.
+* Added a disk image cache backing `proxy_image` and pruned by background maintenance.
+* Introduced the `.agents/` agent ecosystem with rules, roles, skills, and templates.
 
-### Changed
+### ✅ Changed
 
-* Rebrand to NH Desktop, add CI packaging, polish docs [`c720798`](https://github.com/HELIX-Origin/nhentai-desktop/commit/c72079869933675a12e7e57c36b24805b7727ade)
-* Restructure agent ecosystem; unify identifiers as nh-desktop [`cbdcebe`](https://github.com/HELIX-Origin/nhentai-desktop/commit/cbdcebed642b83dcd164f376c1e82f4f7512958f)
-* Fold 0.1.0 into changelog and update roadmap [`4c6357b`](https://github.com/HELIX-Origin/nhentai-desktop/commit/4c6357ba02f749fe9888d5b11a051da1f12657a3)
-* Bump version to 0.2.0 and update release notes [`0fec259`](https://github.com/HELIX-Origin/nhentai-desktop/commit/0fec259b2502c4027aeb4edccfe4fdb1d5b86cfa)
+* Rebranded the product to NH Desktop with unified identifiers, bundle ID `net.nh-desktop.client`, and cache prefix `nh-desktop:`.
+* Added CI packaging workflow and polished project documentation.
+* Synchronized version metadata to `0.2.0` across all manifest files.
 
-### Fixed
+### 🐛 Fixed
 
 * (No explicit fixes in this milestone release.)
 
 ## [v0.1.1](https://github.com/HELIX-Origin/nhentai-desktop/releases/tag/v0.1.1)
 
-### Added
+### ✨ Added
 
 * (No new features in this patch release.)
 
-### Changed
+### ✅ Changed
 
 * (No changes in this patch release.)
 
-### Fixed
+### 🐛 Fixed
 
-* Platform-tag installer download names [`86e79ce`](https://github.com/HELIX-Origin/nhentai-desktop/commit/86e79cece91c3642e8169449956dac329cdff31c)
+* Added platform and architecture tags to installer download filenames so users can identify the correct download.
 
 ## [v0.1.0](https://github.com/HELIX-Origin/nhentai-desktop/releases/tag/v0.1.0)
 
-### Added
+### ✨ Added
 
-* Initial NH Desktop client scaffold for nhentai.net [`9b752eb`](https://github.com/HELIX-Origin/nhentai-desktop/commit/9b752ebd227c4334744d57d96f5b6fe4b1c94248)
-* Tauri 2 + SvelteKit SPA foundation [`9b752eb`](https://github.com/HELIX-Origin/nhentai-desktop/commit/9b752ebd227c4334744d57d96f5b6fe4b1c94248)
+* Initial NH Desktop client scaffold for nhentai.net.
+* Tauri 2 + SvelteKit static SPA foundation with a throttled nhentai.net API client.
 
-### Changed
+### ✅ Changed
 
 * (No changes in initial release.)
 
-### Fixed
+### 🐛 Fixed
 
 * (No fixes in initial release.)
 
