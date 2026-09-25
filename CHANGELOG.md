@@ -12,27 +12,27 @@
 
 ### Changed
 
-* Audit and correct agent ecosystem + project docs [(1659d89)](https://github.com/HELIX-Origin/nhentai-desktop/commit/1659d89ec175736f0ba3960495f8abfe5856de9b)
-* Sync milestone status across TODO/ROADMAP/wiki [(1659d89)](https://github.com/HELIX-Origin/nhentai-desktop/commit/1659d89ec175736f0ba3960495f8abfe5856de9b)
-* Bump version metadata to 0.2.1 [(e0dbc29)](https://github.com/HELIX-Origin/nhentai-desktop/commit/e0dbc2966ee1fbb91d38ca573ec6b4d4a5b7727ade)
+* Audit and correct agent ecosystem + project docs [`1659d89`](https://github.com/HELIX-Origin/nhentai-desktop/commit/1659d89ec175736f0ba3960495f8abfe5856de9b)
+* Sync milestone status across TODO/ROADMAP/wiki [`1659d89`](https://github.com/HELIX-Origin/nhentai-desktop/commit/1659d89ec175736f0ba3960495f8abfe5856de9b)
+* Bump version metadata to 0.2.1 [`e0dbc29`](https://github.com/HELIX-Origin/nhentai-desktop/commit/e0dbc2966ee1fbb91d38ca573ec6b4d4a5b7727ade)
 
 ### Fixed
 
-* Simplify installer titlebar and window controls [(1659d89)](https://github.com/HELIX-Origin/nhentai-desktop/commit/1659d89ec175736f0ba3960495f8abfe5856de9b)
+* Simplify installer titlebar and window controls [`1659d89`](https://github.com/HELIX-Origin/nhentai-desktop/commit/1659d89ec175736f0ba3960495f8abfe5856de9b)
 
 ## [v0.2.0](https://github.com/HELIX-Origin/nhentai-desktop/releases/tag/v0.2.0)
 
 ### Added
 
-* Ship custom UI shell, background service, and agent standards [(37182a6)](https://github.com/HELIX-Origin/nhentai-desktop/commit/37182a636d800244c83d4f0f8b6f5be15c3cf7ec)
-* Add SQLite-backed persistence, disk image cache, and unified installer [(37182a6)](https://github.com/HELIX-Origin/nhentai-desktop/commit/37182a636d800244c83d4f0f8b6f5be15c3cf7ec)
+* Ship custom UI shell, background service, and agent standards [`37182a6`](https://github.com/HELIX-Origin/nhentai-desktop/commit/37182a636d800244c83d4f0f8b6f5be15c3cf7ec)
+* Add SQLite-backed persistence, disk image cache, and unified installer [`37182a6`](https://github.com/HELIX-Origin/nhentai-desktop/commit/37182a636d800244c83d4f0f8b6f5be15c3cf7ec)
 
 ### Changed
 
-* Rebrand to NH Desktop, add CI packaging, polish docs [(c720798)](https://github.com/HELIX-Origin/nhentai-desktop/commit/c72079869933675a12e7e57c36b24805b7727ade)
-* Restructure agent ecosystem; unify identifiers as nh-desktop [(cbdcebe)](https://github.com/HELIX-Origin/nhentai-desktop/commit/cbdcebed642b83dcd164f376c1e82f4f7512958f)
-* Fold 0.1.0 into changelog and update roadmap [(4c6357b)](https://github.com/HELIX-Origin/nhentai-desktop/commit/4c6357ba02f749fe9888d5b11a051da1f12657a3)
-* Bump version to 0.2.0 and update release notes [(0fec259)](https://github.com/HELIX-Origin/nhentai-desktop/commit/0fec259b2502c4027aeb4edccfe4fdb1d5b86cfa)
+* Rebrand to NH Desktop, add CI packaging, polish docs [`c720798`](https://github.com/HELIX-Origin/nhentai-desktop/commit/c72079869933675a12e7e57c36b24805b7727ade)
+* Restructure agent ecosystem; unify identifiers as nh-desktop [`cbdcebe`](https://github.com/HELIX-Origin/nhentai-desktop/commit/cbdcebed642b83dcd164f376c1e82f4f7512958f)
+* Fold 0.1.0 into changelog and update roadmap [`4c6357b`](https://github.com/HELIX-Origin/nhentai-desktop/commit/4c6357ba02f749fe9888d5b11a051da1f12657a3)
+* Bump version to 0.2.0 and update release notes [`0fec259`](https://github.com/HELIX-Origin/nhentai-desktop/commit/0fec259b2502c4027aeb4edccfe4fdb1d5b86cfa)
 
 ### Fixed
 
@@ -50,14 +50,14 @@
 
 ### Fixed
 
-* Platform-tag installer download names [(86e79ce)](https://github.com/HELIX-Origin/nhentai-desktop/commit/86e79cece91c3642e8169449956dac329cdff31c)
+* Platform-tag installer download names [`86e79ce`](https://github.com/HELIX-Origin/nhentai-desktop/commit/86e79cece91c3642e8169449956dac329cdff31c)
 
 ## [v0.1.0](https://github.com/HELIX-Origin/nhentai-desktop/releases/tag/v0.1.0)
 
 ### Added
 
-* Initial NH Desktop client scaffold for nhentai.net [(9b752eb)](https://github.com/HELIX-Origin/nhentai-desktop/commit/9b752ebd227c4334744d57d96f5b6fe4b1c94248)
-* Tauri 2 + SvelteKit SPA foundation [(9b752eb)](https://github.com/HELIX-Origin/nhentai-desktop/commit/9b752ebd227c4334744d57d96f5b6fe4b1c94248)
+* Initial NH Desktop client scaffold for nhentai.net [`9b752eb`](https://github.com/HELIX-Origin/nhentai-desktop/commit/9b752ebd227c4334744d57d96f5b6fe4b1c94248)
+* Tauri 2 + SvelteKit SPA foundation [`9b752eb`](https://github.com/HELIX-Origin/nhentai-desktop/commit/9b752ebd227c4334744d57d96f5b6fe4b1c94248)
 
 ### Changed
 
