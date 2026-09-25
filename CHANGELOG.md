@@ -112,12 +112,12 @@ top; the current development state lives under `Unreleased`.
 
 ---
 
-| Version | Title | Description | Status |
-| :---: | :---: | :---: | :---: |
-| 0.2.1 | v0.2.1 — installer titlebar polish + agent/docs audit | Patch release fixing installer titlebar/window controls and auditing agent ecosystem + project docs | Released |
-| 0.2.0 | v0.2.0 — custom UI shell + background service | Milestone release with full SPA shell, search/filter, blacklist, reader, background service, unified installer, and agent ecosystem | Released |
-| 0.1.1 | v0.1.1 — platform-tag installer names | Patch release adding platform/arch tags to installer download filenames | Released |
-| 0.1.0 | v0.1.0 — initial release | Initial NH Desktop client scaffold for nhentai.net | Released |
+| Version | Title | Description |
+| :---: | :---: | :---: |
+| 0.2.1 | v0.2.1 — installer titlebar polish + agent/docs audit | Patch release fixing installer titlebar/window controls and auditing agent ecosystem + project docs |
+| 0.2.0 | v0.2.0 — custom UI shell + background service | Milestone release with full SPA shell, search/filter, blacklist, reader, background service, unified installer, and agent ecosystem |
+| 0.1.1 | v0.1.1 — platform-tag installer names | Patch release adding platform/arch tags to installer download filenames |
+| 0.1.0 | v0.1.0 — initial release | Initial NH Desktop client scaffold for nhentai.net |
 
 ---
 
