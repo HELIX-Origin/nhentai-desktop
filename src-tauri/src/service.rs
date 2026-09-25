@@ -14,6 +14,7 @@ use tokio::sync::mpsc;
 const EVENT_JOB: &str = "service://job";
 const EVENT_REFRESH: &str = "service://refresh";
 const REFRESH_SETTINGS_KEY: &str = "settings:auto-refresh";
+pub const DOWNLOADS_DIR_KEY: &str = "settings:downloads-dir";
 const MIN_REFRESH_INTERVAL: u32 = 15;
 const MAINTENANCE_IMAGE_AGE_DAYS: u64 = 30;
 const MAINTENANCE_CACHE_AGE_DAYS: u64 = 7;
@@ -94,7 +95,7 @@ struct Worker {
     client: NhDesktopClient,
     cache: Arc<ImageCache>,
     db: Db,
-    downloads_dir: PathBuf,
+    default_downloads_dir: PathBuf,
 }
 
 impl BackgroundService {
@@ -116,7 +117,7 @@ impl BackgroundService {
             client,
             cache,
             db: Db::new(db_path).expect("failed to open background db"),
-            downloads_dir,
+            default_downloads_dir: downloads_dir,
         };
         tauri::async_runtime::spawn(worker.run(rx));
 
@@ -225,6 +226,10 @@ impl Worker {
         }
     }
 
+    fn resolve_downloads_dir(&self) -> PathBuf {
+        get_downloads_dir(&self.db).unwrap_or_else(|| self.default_downloads_dir.clone())
+    }
+
     async fn download_gallery(&self, job_id: u64, id: u64, format: &str) -> Result<String, String> {
         let key = self
             .db
@@ -238,14 +243,15 @@ impl Worker {
             .await
             .map_err(|e| e.to_string())?;
 
+        let downloads_dir = self.resolve_downloads_dir();
         let ext = match format {
             "cbz" => "cbz",
             "torrent" => "torrent",
             _ => "zip",
         };
-        let tmp = self.downloads_dir.join(format!("gallery-{id}.{ext}.part"));
-        let dest = self.downloads_dir.join(format!("gallery-{id}.{ext}"));
-        std::fs::create_dir_all(&self.downloads_dir).map_err(|e| e.to_string())?;
+        let tmp = downloads_dir.join(format!("gallery-{id}.{ext}.part"));
+        let dest = downloads_dir.join(format!("gallery-{id}.{ext}"));
+        std::fs::create_dir_all(&downloads_dir).map_err(|e| e.to_string())?;
 
         let resp = self
             .client
@@ -404,4 +410,17 @@ pub fn get_auto_refresh(db: &Db) -> AutoRefreshConfig {
         .flatten()
         .and_then(|s| serde_json::from_str::<AutoRefreshConfig>(&s).ok())
         .unwrap_or_default()
+}
+
+pub fn set_downloads_dir(db: &Db, dir: &str) -> Result<(), String> {
+    db.set(DOWNLOADS_DIR_KEY, dir).map_err(|e| e.to_string())
+}
+
+pub fn get_downloads_dir(db: &Db) -> Option<PathBuf> {
+    db.get(DOWNLOADS_DIR_KEY)
+        .ok()
+        .flatten()
+        .map(|s| s.trim().to_string())
+        .filter(|s| !s.is_empty())
+        .map(PathBuf::from)
 }

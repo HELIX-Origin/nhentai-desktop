@@ -140,8 +140,10 @@ export interface HistoryEntry {
 	visitedAt: number;
 }
 
+export type ThemePreference = 'dark' | 'light' | 'system';
+
 export interface SettingsState {
-	theme: 'dark';
+	theme: ThemePreference;
 	density: 'cozy' | 'compact';
 	blacklistEnabled: boolean;
 	blacklistMode: BlacklistMode;

@@ -17,11 +17,14 @@ export interface ServiceJobView {
 	done?: number;
 	total?: number | null;
 	label?: string;
+	format?: 'zip' | 'cbz' | 'torrent';
+	galleryId?: number;
 }
 
 let jobs = $state<ServiceJobView[]>([]);
 let lastRefreshAt = $state<number | null>(null);
 let autoRefresh = $state<AutoRefreshConfig>({ enabled: false, intervalMinutes: 15 });
+const downloadMeta = new Map<number, { galleryId: number; format: 'zip' | 'cbz' | 'torrent' }>();
 
 const KIND_LABELS: Record<ServiceJobKind, string> = {
 	download: 'Download',
@@ -47,12 +50,25 @@ export function serviceKindLabel(kind: ServiceJobKind): string {
 	return KIND_LABELS[kind];
 }
 
+function enrichDownload(jobId: number, view: ServiceJobView): ServiceJobView {
+	const meta = downloadMeta.get(jobId);
+	if (!meta) return view;
+	return {
+		...view,
+		galleryId: meta.galleryId,
+		format: meta.format,
+		label: view.label ?? `Downloading gallery ${meta.galleryId}`,
+	};
+}
+
 function upsertJob(jobId: number, patch: Partial<ServiceJobView>): void {
+	const base = { jobId, ...patch } as ServiceJobView;
+	const enriched = enrichDownload(jobId, base);
 	const existing = jobs.findIndex((j) => j.jobId === jobId);
 	if (existing >= 0) {
-		jobs[existing] = { ...jobs[existing], ...patch };
+		jobs[existing] = { ...jobs[existing], ...enriched };
 	} else {
-		jobs = [patch as ServiceJobView, ...jobs];
+		jobs = [enriched, ...jobs];
 	}
 }
 
@@ -131,9 +147,36 @@ export async function enqueueSync(): Promise<number> {
 }
 
 export async function enqueueDownload(id: number, format: 'zip' | 'cbz' | 'torrent' = 'zip'): Promise<number> {
-	return backend.serviceEnqueueDownload(id, format);
+	const jobId = await backend.serviceEnqueueDownload(id, format);
+	downloadMeta.set(jobId, { galleryId: id, format });
+	upsertJob(jobId, { jobId, kind: 'download', state: 'queued' });
+	return jobId;
+}
+
+export function removeJobs(predicate: (job: ServiceJobView) => boolean): void {
+	jobs = jobs.filter((job) => !predicate(job));
+	for (const jobId of [...downloadMeta.keys()]) {
+		const job = jobs.find((j) => j.jobId === jobId);
+		if (!job) downloadMeta.delete(jobId);
+	}
 }
 
 export async function prefetchImages(urls: string[]): Promise<number> {
 	return backend.serviceEnqueuePrefetch(urls);
+}
+
+export async function getDownloadsDir(): Promise<string> {
+	return backend.serviceGetDownloadsDir();
+}
+
+export async function setDownloadsDir(dir: string): Promise<void> {
+	await backend.serviceSetDownloadsDir(dir);
+}
+
+export async function resetDownloadsDir(): Promise<void> {
+	await backend.serviceResetDownloadsDir();
+}
+
+export function openDownloadsFolder(): Promise<void> {
+	return backend.openDownloadsFolder();
 }

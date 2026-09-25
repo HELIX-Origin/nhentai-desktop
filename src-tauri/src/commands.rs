@@ -258,6 +258,55 @@ pub fn service_get_auto_refresh(db: State<'_, Db>) -> AutoRefreshConfig {
 }
 
 #[tauri::command]
+pub fn service_get_downloads_dir(app: tauri::AppHandle, db: State<'_, Db>) -> String {
+    let data_dir = app
+        .path()
+        .app_data_dir()
+        .unwrap_or_else(|_| std::env::temp_dir());
+    let default = app
+        .path()
+        .document_dir()
+        .unwrap_or(data_dir)
+        .join("NH Desktop")
+        .join("downloads");
+    crate::service::get_downloads_dir(&db)
+        .unwrap_or(default)
+        .to_string_lossy()
+        .into_owned()
+}
+
+#[tauri::command]
+pub fn service_set_downloads_dir(db: State<'_, Db>, dir: String) -> Result<(), String> {
+    crate::service::set_downloads_dir(&db, &dir)
+}
+
+#[tauri::command]
+pub fn service_reset_downloads_dir(db: State<'_, Db>) -> Result<(), String> {
+    db.del(crate::service::DOWNLOADS_DIR_KEY)
+        .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub fn open_downloads_folder(app: tauri::AppHandle, db: State<'_, Db>) -> Result<(), String> {
+    let dir = crate::service::get_downloads_dir(&db).unwrap_or_else(|| {
+        let data_dir = app
+            .path()
+            .app_data_dir()
+            .unwrap_or_else(|_| std::env::temp_dir());
+        app.path()
+            .document_dir()
+            .unwrap_or(data_dir)
+            .join("NH Desktop")
+            .join("downloads")
+    });
+    std::fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
+    let dir_str = dir.to_string_lossy();
+    tauri_plugin_opener::OpenerExt::opener(&app)
+        .open_path(dir_str.to_string(), None::<&str>)
+        .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
 pub fn installer_status() -> Result<crate::installer::InstallerStatus, String> {
     Ok(crate::installer::detect_status())
 }

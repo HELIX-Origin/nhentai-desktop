@@ -26,6 +26,7 @@
 		{ href: '/popular', label: 'Popular', icon: 'flame' },
 		{ href: '/favorites', label: 'Favorites', icon: 'heart' },
 		{ href: '/history', label: 'History', icon: 'clock' },
+		{ href: '/downloads', label: 'Downloads', icon: 'download' },
 		{ href: '/blacklist', label: 'Blacklist', icon: 'shield' },
 		{ href: '/settings', label: 'Settings', icon: 'settings' },
 	];
@@ -185,7 +186,7 @@
 				<Icon name="settings" size={14} />
 				<span class="nav-label">Modify installation</span>
 			</button>
-			<span class="faint">v0.1.0</span>
+			<span class="faint">v0.2.0</span>
 		</div>
 	</aside>
 

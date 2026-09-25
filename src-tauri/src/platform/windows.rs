@@ -196,3 +196,24 @@ pub fn launch(exe: &Path) -> Result<(), String> {
         .map(|_| ())
         .map_err(|e| format!("Launch failed: {e}"))
 }
+
+pub fn quit_running_app() -> Result<(), String> {
+    let Some(exe) = installed_exe_path() else {
+        return Ok(());
+    };
+    let self_pid = std::process::id();
+    let script = format!(
+        r#"$target = '{exe}'
+$self = {pid}
+$procs = Get-Process -ErrorAction SilentlyContinue | Where-Object {{
+    $_.Id -ne $self -and $_.Path -and $_.Path.ToLowerInvariant() -eq $target.ToLowerInvariant()
+}}
+if ($procs) {{
+    $procs | Stop-Process -Force -ErrorAction SilentlyContinue
+    Start-Sleep -Milliseconds 400
+}}"#,
+        exe = ps_q(&exe.to_string_lossy()),
+        pid = self_pid,
+    );
+    run_ps(&script)
+}

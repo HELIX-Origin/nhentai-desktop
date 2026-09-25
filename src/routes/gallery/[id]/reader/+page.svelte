@@ -203,7 +203,7 @@
 	.reader {
 		position: fixed;
 		inset: 0;
-		background: #060609;
+		background: var(--reader-bg);
 		display: flex;
 		flex-direction: column;
 		z-index: 200;
@@ -219,7 +219,7 @@
 		align-items: center;
 		gap: 12px;
 		padding: 0 16px;
-		background: linear-gradient(to bottom, rgba(6, 6, 9, 0.92), transparent);
+		background: linear-gradient(to bottom, color-mix(in srgb, var(--reader-bg) 92%, transparent), transparent);
 		z-index: 10;
 		pointer-events: auto;
 	}
@@ -324,7 +324,7 @@
 		height: 72px;
 		margin: 0 18px;
 		border-radius: var(--radius);
-		background: rgba(255, 255, 255, 0.08);
+		background: color-mix(in srgb, var(--text) 10%, transparent);
 		color: var(--text-secondary);
 		opacity: 0.9;
 		transition: background 0.12s ease, color 0.12s ease, opacity 0.12s ease;
@@ -336,7 +336,7 @@
 	}
 
 	.edge-btn:not(:disabled):hover {
-		background: rgba(255, 255, 255, 0.14);
+		background: color-mix(in srgb, var(--text) 16%, transparent);
 		color: var(--text);
 	}
 

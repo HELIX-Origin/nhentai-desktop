@@ -71,4 +71,9 @@ export const backend = {
 	serviceSetAutoRefresh: (enabled: boolean, intervalMinutes: number) =>
 		call<void>('service_set_auto_refresh', { enabled, intervalMinutes }),
 	serviceGetAutoRefresh: () => call<AutoRefreshConfig>('service_get_auto_refresh'),
+	serviceGetDownloadsDir: () => call<string>('service_get_downloads_dir'),
+	serviceSetDownloadsDir: (dir: string) =>
+		call<void>('service_set_downloads_dir', { dir }),
+	serviceResetDownloadsDir: () => call<void>('service_reset_downloads_dir'),
+	openDownloadsFolder: () => call<void>('open_downloads_folder'),
 };

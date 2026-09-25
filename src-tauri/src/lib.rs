@@ -27,6 +27,12 @@ pub fn run() {
         }))
         .setup(|app| {
             let data_dir = app.path().app_data_dir()?;
+            let default_downloads_dir = app
+                .path()
+                .document_dir()
+                .unwrap_or_else(|_| data_dir.clone())
+                .join("NH Desktop")
+                .join("downloads");
 
             let client = NhDesktopClient::new()?;
             app.manage(client.clone());
@@ -40,7 +46,7 @@ pub fn run() {
                 client,
                 cache,
                 &data_dir.join("nh-desktop.db"),
-                data_dir.join("downloads"),
+                default_downloads_dir,
             );
             app.manage(service);
 
@@ -151,6 +157,10 @@ pub fn run() {
             commands::service_status,
             commands::service_set_auto_refresh,
             commands::service_get_auto_refresh,
+            commands::service_get_downloads_dir,
+            commands::service_set_downloads_dir,
+            commands::service_reset_downloads_dir,
+            commands::open_downloads_folder,
             commands::app_quit,
             commands::installer_status,
             commands::installer_disk_space,

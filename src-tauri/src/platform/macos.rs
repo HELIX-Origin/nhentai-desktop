@@ -145,3 +145,22 @@ pub fn launch(exe: &Path) -> Result<(), String> {
         .map(|_| ())
         .map_err(|e| format!("Launch failed: {e}"))
 }
+
+pub fn quit_running_app() -> Result<(), String> {
+    let Some(bundle) = installed_exe_path() else {
+        return Ok(());
+    };
+    let bin = bundle.join("Contents").join("MacOS").join(PRODUCT_NAME);
+    if std::env::current_exe().ok().as_deref() == Some(bin.as_path()) {
+        return Ok(());
+    }
+    let out = std::process::Command::new("pkill")
+        .args(["-f", &bin.to_string_lossy()])
+        .output();
+    match out {
+        Ok(o) if o.status.success() => Ok(()),
+        Ok(_) => Ok(()),
+        Ok(o) => Err(String::from_utf8_lossy(&o.stderr).trim().to_string()),
+        Err(e) => Err(format!("Failed to run pkill: {e}")),
+    }
+}

@@ -8,8 +8,13 @@
 		enqueueMaintenance,
 		enqueueSync,
 		serviceKindLabel,
+		getDownloadsDir,
+		setDownloadsDir,
+		resetDownloadsDir,
+		openDownloadsFolder,
 	} from '$lib/stores/service.svelte';
 	import { cacheFlush } from '$lib/cache';
+	import { onMount } from 'svelte';
 	import Icon from './Icon.svelte';
 
 	const s = getSettings();
@@ -20,6 +25,37 @@
 	let keyInput = $state('');
 	let busy = $state(false);
 	let message = $state<{ ok: boolean; text: string } | null>(null);
+
+	let downloadsDir = $state('');
+
+	onMount(async () => {
+		downloadsDir = await getDownloadsDir();
+	});
+
+	async function onSaveDownloadsDir() {
+		const dir = downloadsDir.trim();
+		if (!dir) return;
+		try {
+			await setDownloadsDir(dir);
+			message = { ok: true, text: `Downloads folder set to ${dir}` };
+		} catch (e) {
+			message = { ok: false, text: String(e) };
+		}
+	}
+
+	async function onResetDownloadsDir() {
+		await resetDownloadsDir();
+		downloadsDir = await getDownloadsDir();
+		message = { ok: true, text: 'Downloads folder restored to the default.' };
+	}
+
+	async function onOpenDownloadsFolder() {
+		try {
+			await openDownloadsFolder();
+		} catch (e) {
+			message = { ok: false, text: String(e) };
+		}
+	}
 
 	async function onSetKey(event: Event) {
 		event.preventDefault();
@@ -55,6 +91,13 @@
 	async function onToggleAutoRefresh() {
 		const current = getServiceAutoRefresh();
 		await setServiceAutoRefresh({ ...current, enabled: !current.enabled });
+	}
+
+	const THEME_CYCLE: ('light' | 'dark' | 'system')[] = ['light', 'dark', 'system'];
+
+	function cycleTheme() {
+		const next = THEME_CYCLE[(THEME_CYCLE.indexOf(s.theme) + 1) % THEME_CYCLE.length];
+		updateSettings({ theme: next });
 	}
 </script>
 
@@ -113,6 +156,25 @@
 		</div>
 
 		<div class="row-label">
+			<span>Theme</span>
+			<button
+				class="btn cycle-btn"
+				onclick={cycleTheme}
+				title="Click to cycle: light, dark, system (follows OS)"
+				aria-label="Theme mode"
+			>
+				{#if s.theme === 'light'}
+					<Icon name="sun" size={14} />
+				{:else if s.theme === 'dark'}
+					<Icon name="moon" size={14} />
+				{:else}
+					<Icon name="auto" size={14} />
+				{/if}
+				{s.theme === 'system' ? 'System' : s.theme[0].toUpperCase() + s.theme.slice(1)}
+			</button>
+		</div>
+
+		<div class="row-label">
 			<span>Grid density</span>
 			<div class="seg">
 				<button class:on={s.density === 'cozy'} onclick={() => updateSettings({ density: 'cozy' })}>Cozy</button>
@@ -148,6 +210,33 @@
 			>
 				<span class="knob"></span>
 			</button>
+		</div>
+	</section>
+
+	<section class="panel">
+		<div class="section-title">
+			<Icon name="download" size={16} />
+			<h3>Downloads</h3>
+		</div>
+
+		<div class="row-label">
+			<div>
+				<span>Download folder</span>
+				<div class="faint">Galleries are saved here as ZIP / CBZ / torrent.</div>
+			</div>
+			<a class="btn" href="/downloads">Manage downloads</a>
+		</div>
+
+		<input
+			class="input dir-input"
+			bind:value={downloadsDir}
+			placeholder="Leave blank for the default (Documents/NH Desktop/downloads)"
+			aria-label="Downloads folder"
+		/>
+		<div class="btn-group">
+			<button class="btn" onclick={onSaveDownloadsDir}>Save folder</button>
+			<button class="btn" onclick={onResetDownloadsDir}>Use default</button>
+			<button class="btn" onclick={onOpenDownloadsFolder}>Open folder</button>
 		</div>
 	</section>
 
@@ -332,6 +421,11 @@
 		flex-wrap: wrap;
 	}
 
+	.dir-input {
+		margin-top: 10px;
+		width: 100%;
+	}
+
 	.jobs {
 		margin-top: 14px;
 		border-top: 1px solid var(--border);
@@ -435,6 +529,10 @@
 	.seg button.on {
 		background: var(--accent-soft);
 		color: var(--text);
+	}
+
+	.cycle-btn {
+		cursor: pointer;
 	}
 
 	.switch {

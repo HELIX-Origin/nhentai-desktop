@@ -7,6 +7,36 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-09-24
+
+### ✨ Added
+
+- ✨ **Light theme**: dimmed, easy-on-the-eyes light palette applied via a three-way
+  appearance toggle (Light / Dark / System) in Settings; System mode follows the OS
+  `prefers-color-scheme` live.
+- ✨ **Gallery downloads**: per-gallery Download button (ZIP / CBZ / torrent) feeding the
+  background service queue, plus a new **Downloads** page listing every download job with
+  live progress, retry, and clear controls.
+- ✨ **Configurable downloads folder**: defaults to
+  `Documents/NH Desktop/downloads`, overridable in Settings (Save / Use default / Open
+  folder).
+- ✨ **Download folder opener**: `open_downloads_folder` command reveals the folder in the
+  system file manager.
+
+### ✅ Changed
+
+- ✅ Reader page backgrounds now use theme tokens (`--reader-bg`) instead of hard-coded
+  `#060609`; edge-nav buttons adapt to theme text color.
+- ✅ Scrollbars use tokenized thumb colors for correct rendering in both themes.
+- ✅ Version metadata bumped to `0.2.0`.
+
+### 🐛 Fixed
+
+- 🐛 Install/uninstall could fail when the app was running — installs and uninstalls now
+  automatically terminate a running instance of **NH Desktop** first (OS-specific:
+  `Stop-Process` on Windows, `pkill` on macOS/Linux, with the installer process itself
+  excluded).
+
 ## [0.1.1] - 2026-09-24
 
 ### ✅ Changed
@@ -85,6 +115,7 @@ Initial release.
 - 🐛 Dev-mode close threw `Failed to unregister class Chrome_WidgetWin_0 (error 1412)`;
   quit paths now destroy the main window before `app.exit(0)`.
 
-[Unreleased]: https://github.com/HELIX-Origin/nhentai-desktop/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/HELIX-Origin/nhentai-desktop/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/HELIX-Origin/nhentai-desktop/releases/tag/v0.2.0
 [0.1.1]: https://github.com/HELIX-Origin/nhentai-desktop/releases/tag/v0.1.1
 [0.1.0]: https://github.com/HELIX-Origin/nhentai-desktop/releases/tag/v0.1.0

@@ -74,6 +74,11 @@ pub fn perform_install(options: InstallOptions) -> OperationResult {
     let mut details = Vec::new();
     let mut warnings = Vec::new();
 
+    match platform::quit_running_app() {
+        Ok(()) => details.push("Stopped a running instance of the app.".to_string()),
+        Err(e) => warnings.push(format!("Failed to stop a running instance: {e}")),
+    }
+
     let target = PathBuf::from(&options.target_dir);
     if target.as_os_str().is_empty() {
         return OperationResult {
@@ -163,6 +168,11 @@ pub fn perform_install(options: InstallOptions) -> OperationResult {
 pub fn perform_uninstall(options: UninstallOptions) -> OperationResult {
     let mut details = Vec::new();
     let mut warnings = Vec::new();
+
+    match platform::quit_running_app() {
+        Ok(()) => details.push("Stopped a running instance of the app.".to_string()),
+        Err(e) => warnings.push(format!("Failed to stop a running instance: {e}")),
+    }
 
     let install_dir = std::env::current_exe()
         .ok()

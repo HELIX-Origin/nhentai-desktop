@@ -25,6 +25,7 @@
 	import CoverImage from '$lib/components/CoverImage.svelte';
 	import GalleryGrid from '$lib/components/GalleryGrid.svelte';
 	import TagChip from '$lib/components/TagChip.svelte';
+	import DownloadButton from '$lib/components/DownloadButton.svelte';
 	import Icon from '$lib/components/Icon.svelte';
 	import { thumbPath } from '$lib/image';
 
@@ -172,6 +173,7 @@
 						<Icon name="book" size={15} />
 						Open reader
 					</a>
+					<DownloadButton galleryId={id} />
 					<button class="btn" class:on={localFav} onclick={onLocalFav} title="Save locally">
 						<Icon name="heart" size={15} />
 						{localFav ? 'Saved' : 'Favorite'}

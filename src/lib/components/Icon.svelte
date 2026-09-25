@@ -97,5 +97,20 @@
 		<circle cx="12" cy="19" r="1" />
 	{:else if name === 'sparkle'}
 		<path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" />
+	{:else if name === 'sun'}
+		<circle cx="12" cy="12" r="4" />
+		<path d="M12 2v2" />
+		<path d="M12 20v2" />
+		<path d="m4.93 4.93 1.41 1.41" />
+		<path d="m17.66 17.66 1.41 1.41" />
+		<path d="M2 12h2" />
+		<path d="M20 12h2" />
+		<path d="m6.34 17.66-1.41 1.41" />
+		<path d="m19.07 4.93-1.41 1.41" />
+	{:else if name === 'moon'}
+		<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+	{:else if name === 'auto'}
+		<circle cx="12" cy="12" r="10" />
+		<path d="M12 3a9 9 0 0 1 0 18 7 7 0 0 1 0-18Z" />
 	{/if}
 </svg>

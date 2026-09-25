@@ -42,4 +42,6 @@ existing installation (Tauri-native unified installer/uninstaller).
 
 ## 📄 Changes & Commits
 
-See the commit range and [CHANGELOG.md](../CHANGELOG.md).
+{{ List the concrete changes in this release. One bullet per user-visible change,
+with the Conventional Commit type/scope when helpful. Do not punt to
+CHANGELOG.md — put the summary here. }}
