@@ -51,9 +51,10 @@ categories, artists, characters, parodies — and lets you slice it **locally, i
 Download the latest installer from the [Releases](https://github.com/HELIX-Origin/nhentai-desktop/releases)
 page:
 
-- 🪟 **Windows:** `NH Desktop-Setup-X.Y.Z.exe` — double-click and follow the wizard.
-- **macOS:** `NH Desktop-X.Y.Z` (or the app bundle via your package manager of choice).
-- **Linux:** `NH Desktop-X.Y.Z` — mark executable and run, or install into `~/.local/share`.
+- 🪟 **Windows:** `NH Desktop-Setup-X.Y.Z-win-x64.exe` — double-click and follow the wizard
+  (filename includes the target platform/arch, e.g. `win-x64`).
+- **macOS:** `NH Desktop-Setup-X.Y.Z-macos-arm64` (or `-macos-x64`).
+- **Linux:** `NH Desktop-Setup-X.Y.Z-linux-x64` — mark executable and run.
 
 Run the binary again at any time to reach the **maintenance mode** (reinstall, repair shortcuts,
 uninstall) via the sidebar's ⚙ Maintenance entry, or from the registry/app-store uninstall entry.

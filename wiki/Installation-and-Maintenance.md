@@ -21,7 +21,8 @@ flowchart TD
 
 ### 📦 Windows
 
-1. 📦 Download `NH Desktop-Setup-<version>.exe` from the
+1. 📦 Download `NH Desktop-Setup-<version>-win-x64.exe` (filename includes the target
+   platform/arch) from the
    [Releases](https://github.com/HELIX-Origin/nhentai-desktop/releases) page.
 2. Run it. The wizard steps: **Welcome → Location → Options → Install**.
 3. Default install dir: `%LOCALAPPDATA%\Programs\NH Desktop` (falls back to

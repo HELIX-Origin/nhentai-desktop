@@ -93,8 +93,9 @@ flowchart TD
 
 `scripts/build-installer.mjs` (`npm run build:installer`): runs `tauri build --no-bundle`,
 then copies `src-tauri/target/release/nhentai(.exe)` to `dist/installer/` as
-`NH Desktop-Setup-{version}.exe` (and `NH Desktop-Setup.exe`). Because the binary routes on its
-own filename, the "Setup" name triggers the install wizard. See
+`NH Desktop-Setup-{version}-{platform}-{arch}(.exe)` (e.g. `NH Desktop-Setup-0.1.1-win-x64.exe`)
+with a non-versioned `NH Desktop-Setup-{platform}-{arch}(.exe)` alias. Because the binary
+routes on its own filename, the "Setup" name triggers the install wizard. See
 [Installation and Maintenance](Installation-and-Maintenance.md).
 
 ## 🤝 Related

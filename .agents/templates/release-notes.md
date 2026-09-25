@@ -27,9 +27,9 @@
 
 Download from the Assets section below:
 
-- Windows: `NH Desktop-Setup-{{ version }}.exe`
-- macOS: `NH Desktop_{{ version }}_x64.dmg` / `_aarch64.dmg` (Apple Silicon)
-- Linux: `nh-desktop_{{ version }}_amd64.deb` / `.AppImage` (or distro package)
+- Windows: `NH Desktop-Setup-{{ version }}-win-{{ arch }}.exe` (e.g. `win-x64`)
+- macOS: `NH Desktop-Setup-{{ version }}-macos-{{ arch }}` (e.g. `macos-arm64`)
+- Linux: `NH Desktop-Setup-{{ version }}-linux-{{ arch }}` (e.g. `linux-x64`)
 
 Upgrade in place: run the new installer — it repairs/reinstalls over the
 existing installation (Tauri-native unified installer/uninstaller).

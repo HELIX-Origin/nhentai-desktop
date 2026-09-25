@@ -7,6 +7,14 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-09-24
+
+### ✅ Changed
+
+- ✅ Installer binaries are now named with their target platform and architecture
+  (`NH Desktop-Setup-<version>-win-x64.exe`, `-macos-arm64`, `-linux-x64`, …) so users can
+  tell which platform a download is for.
+
 ## [0.1.0] - 2026-09-24
 
 Initial release.
@@ -42,7 +50,7 @@ Initial release.
 - ✨ **Native unified installer/uninstaller** (Tauri-native wizard — no NSIS/WiX): install,
   reinstall/update, repair shortcuts, and uninstall flows in one binary; platform split
   behind `src-tauri/src/platform/`; `scripts/build-installer.mjs` assembles
-  `dist/installer/NH Desktop-Setup-<version>.exe`.
+  `dist/installer/NH Desktop-Setup-<version>.<platform>-<arch>(.exe)`.
 - ✨ **App icon wired everywhere**: `static/favicon.png`, sidebar + installer brand marks,
   tray icon, and installer/maintenance window icons.
 - ✨ **Fixed dev port 14440** (Vite + `tauri.conf.json`, HMR 14441); removed
@@ -77,5 +85,6 @@ Initial release.
 - 🐛 Dev-mode close threw `Failed to unregister class Chrome_WidgetWin_0 (error 1412)`;
   quit paths now destroy the main window before `app.exit(0)`.
 
-[Unreleased]: https://github.com/HELIX-Origin/nhentai-desktop/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/HELIX-Origin/nhentai-desktop/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/HELIX-Origin/nhentai-desktop/releases/tag/v0.1.1
 [0.1.0]: https://github.com/HELIX-Origin/nhentai-desktop/releases/tag/v0.1.0

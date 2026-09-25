@@ -24,10 +24,15 @@ if (isWindows) {
   srcBin = join(srcBin, binName);
 }
 
-const versionedName = isWindows
-  ? `${product}-Setup-${version}.exe`
-  : `${product}-Setup-${version}`;
-const genericName = isWindows ? `${product}-Setup.exe` : `${product}-Setup`;
+const platformTag =
+  process.platform === 'win32'
+    ? `win-${process.arch}`
+    : process.platform === 'darwin'
+      ? `macos-${process.arch}`
+      : `linux-${process.arch}`;
+const ext = isWindows ? '.exe' : '';
+const versionedName = `${product}-Setup-${version}-${platformTag}${ext}`;
+const genericName = `${product}-Setup-${platformTag}${ext}`;
 
 copyFileSync(srcBin, join(outDir, versionedName));
 console.log(`Copied -> ${join(outDir, versionedName)}`);

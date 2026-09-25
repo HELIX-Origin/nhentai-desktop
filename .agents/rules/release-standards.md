@@ -36,7 +36,7 @@ flowchart TD
    - `npm run check` (svelte-check) zero errors
    - `npm run build` green (frontend production build)
    - Installer smoke: ensure `npm run tauri build` produces the expected bundles
-     (`NH Desktop-Setup-<version>.exe` etc.) without panics across the command
+     (`NH Desktop-Setup-<version>-<platform>-<arch>` etc.) without panics across the command
      boundary.
 3. **Tag format:** `vX.Y.Z` (e.g. `v1.4.2`), annotated, on the merge commit of
    the release branch.

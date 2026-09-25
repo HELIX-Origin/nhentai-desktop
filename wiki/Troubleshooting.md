@@ -15,7 +15,8 @@ with the steps you took and the relevant log/error text.
 
 ### 🚨 "Setup disappears after running"
 
-The installer binary is the app binary. If the file is named `NH Desktop-Setup.exe`, double
+The installer binary is the app binary. If the file is named `NH Desktop-Setup-*.exe`
+(any platform-tagged variant, e.g. `NH Desktop-Setup-0.1.1-win-x64.exe`), double
 clicking it opens the wizard. If it was renamed to just `NH Desktop.exe`, it starts the main
 app instead. Re-run via a correctly-suffixed copy, or pass `--installer`.
 
