@@ -44,7 +44,7 @@
 	let createDesktop = $state(true);
 	let createStartMenu = $state(true);
 	let addToPath = $state(true);
-	let launchAfter = $state(true);
+	let launchAfter = $state(false);
 
 	let removeUserData = $state(false);
 

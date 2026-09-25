@@ -213,6 +213,7 @@ fn open_installer_window(app: &tauri::App, mode: &str) -> tauri::Result<()> {
         .inner_size(820.0, 620.0)
         .min_inner_size(720.0, 560.0)
         .resizable(true)
+        .decorations(false)
         .center();
     if let Some(icon) = app.default_window_icon() {
         builder = builder.icon(icon.clone())?;

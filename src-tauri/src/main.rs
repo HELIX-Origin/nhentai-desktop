@@ -11,8 +11,9 @@ fn main() -> ExitCode {
         .unwrap_or_default();
 
     // Auto-launch unified installer wizard if named *installer* or *setup*, or passed flags
-    if exe_name.contains("installer")
-        || exe_name.contains("setup")
+    let lower = exe_name.to_lowercase();
+    if lower.contains("installer")
+        || lower.contains("setup")
         || args.iter().any(|a| a == "--installer" || a == "--setup" || a == "--uninstall" || a == "--maintenance")
     {
         nh_desktop_lib::run_installer();

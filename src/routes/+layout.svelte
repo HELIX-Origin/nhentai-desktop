@@ -3,7 +3,6 @@
 	import { goto } from '$app/navigation';
 	import { base } from '$app/paths';
 	import { onMount } from 'svelte';
-	import { invoke } from '@tauri-apps/api/core';
 	import { getCurrentWindow } from '@tauri-apps/api/window';
 	import Icon from '$lib/components/Icon.svelte';
 	import { avatarUrl } from '$lib/image';
@@ -49,10 +48,6 @@
 		const q = quickQuery.trim();
 		if (!q) return;
 		goto(`/search?${new URLSearchParams({ q })}`);
-	}
-
-	function onModifyInstallation() {
-		invoke('open_maintenance_window');
 	}
 
 	const compact = () => getCurrentWindow().minimize();
@@ -182,10 +177,6 @@
 		</nav>
 
 		<div class="sidebar-foot">
-			<button class="modify-btn" onclick={onModifyInstallation} title="Repair or uninstall NH Desktop">
-				<Icon name="settings" size={14} />
-				<span class="nav-label">Modify installation</span>
-			</button>
 			<span class="faint">v0.2.0</span>
 		</div>
 	</aside>
@@ -361,30 +352,6 @@
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
-	}
-
-	.modify-btn {
-		display: flex;
-		align-items: center;
-		gap: 10px;
-		padding: 6px 10px;
-		border-radius: var(--radius-sm);
-		border: 1px solid var(--border);
-		background: var(--surface);
-		color: var(--text-secondary);
-		font-size: 12px;
-		font-weight: 500;
-		cursor: pointer;
-		transition:
-			background 0.12s ease,
-			border-color 0.12s ease,
-			color 0.12s ease;
-	}
-
-	.modify-btn:hover {
-		background: var(--surface-hover);
-		border-color: var(--accent-border);
-		color: var(--text);
 	}
 
 	.main {

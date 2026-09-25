@@ -1,3 +1,4 @@
+use std::os::windows::process::CommandExt;
 use std::path::{Path, PathBuf};
 
 pub const PRODUCT_NAME: &str = "NH Desktop";
@@ -37,6 +38,7 @@ fn run_ps(script: &str) -> Result<(), String> {
     let dir = std::env::temp_dir();
     let path = dir.join(format!("nh_desktop_setup_{}.ps1", std::process::id()));
     std::fs::write(&path, script).map_err(|e| format!("Failed to write script: {e}"))?;
+    const CREATE_NO_WINDOW: u32 = 0x08000000;
     let out = std::process::Command::new("powershell.exe")
         .args([
             "-NoProfile",
@@ -46,6 +48,7 @@ fn run_ps(script: &str) -> Result<(), String> {
             "-File",
         ])
         .arg(&path)
+        .creation_flags(CREATE_NO_WINDOW)
         .output();
     let _ = std::fs::remove_file(&path);
     match out {
