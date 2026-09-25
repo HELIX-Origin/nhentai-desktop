@@ -173,17 +173,21 @@ pub fn run() {
 }
 
 pub fn run_installer() {
-    let is_uninstall = std::env::args().any(|a| a == "--uninstall" || a == "--maintenance");
-    let mode = if is_uninstall { "uninstall" } else { "install" };
-    tauri::Builder::default()
-        .plugin(tauri_plugin_opener::init())
-        .setup(move |app| {
-            let data_dir = app.path().app_data_dir()?;
-            app.manage(NhDesktopClient::new()?);
-            app.manage(Db::new(&data_dir.join("nh-desktop.db"))?);
-            open_installer_window(app, mode)?;
-            Ok(())
-        })
+	let _ = crate::platform::quit_running_app();
+	let is_uninstall = std::env::args().any(|a| a == "--uninstall" || a == "--maintenance");
+	let mode = if is_uninstall { "uninstall" } else { "install" };
+	tauri::Builder::default()
+		.plugin(tauri_plugin_opener::init())
+		.setup(move |app| {
+			let data_dir = app.path().app_data_dir()?;
+			app.manage(NhDesktopClient::new()?);
+			app.manage(Db::new(&data_dir.join("nh-desktop.db"))?);
+			if let Some(main) = app.get_webview_window("main") {
+				let _ = main.destroy();
+			}
+			open_installer_window(app, mode)?;
+			Ok(())
+		})
         .invoke_handler(tauri::generate_handler![
             commands::installer_status,
             commands::installer_disk_space,
