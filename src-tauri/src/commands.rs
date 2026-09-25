@@ -328,28 +328,13 @@ pub fn installer_uninstall(options: crate::installer::UninstallOptions) -> Resul
 
 #[tauri::command]
 pub fn open_maintenance_window(app: tauri::AppHandle) -> Result<(), String> {
-    use tauri::{Manager, WebviewUrl, WebviewWindowBuilder};
-
-    if let Some(window) = app.get_webview_window("installer") {
-        let _ = window.show();
-        let _ = window.set_focus();
-        return Ok(());
-    }
-
-    let is_uninstall = std::env::args().any(|a| a == "--uninstall" || a == "--maintenance");
-    let mode = if is_uninstall { "uninstall" } else { "maintenance" };
-    let url = WebviewUrl::App(format!("installer?mode={mode}").into());
-    let mut builder = WebviewWindowBuilder::new(&app, "installer", url)
-        .title("NH Desktop Setup")
-        .inner_size(820.0, 620.0)
-        .min_inner_size(720.0, 560.0)
-        .resizable(true)
-        .center();
-    if let Some(icon) = app.default_window_icon() {
-        builder = builder.icon(icon.clone()).map_err(|e| e.to_string())?;
-    }
-    builder
-        .build()
-        .map(|_| ())
-        .map_err(|e| e.to_string())
+	let is_uninstall = std::env::args().any(|a| a == "--uninstall");
+	let flag = if is_uninstall { "--uninstall" } else { "--maintenance" };
+	let exe = std::env::current_exe().map_err(|e| e.to_string())?;
+	std::process::Command::new(exe)
+		.arg(flag)
+		.spawn()
+		.map_err(|e| e.to_string())?;
+	app.exit(0);
+	Ok(())
 }
