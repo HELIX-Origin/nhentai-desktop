@@ -13,7 +13,8 @@
     "tauri": "tauri",
     "dev:tauri": "tauri dev",
     "build:installer": "node scripts/build-installer.mjs",
-    "installer:build": "npm run build:installer"
+    "installer:build": "npm run build:installer",
+    "i18n:check": "node scripts/check-i18n.mjs"
   },
   "license": "MIT",
   "dependencies": {

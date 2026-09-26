@@ -14,6 +14,8 @@
 		openDownloadsFolder,
 	} from '$lib/stores/service.svelte';
 	import { cacheFlush } from '$lib/cache';
+	import { locale } from '$lib/stores/locale.svelte';
+	import { locales } from '$lib/i18n';
 	import { onMount } from 'svelte';
 	import Icon from './Icon.svelte';
 
@@ -180,6 +182,23 @@
 				<button class:on={s.density === 'cozy'} onclick={() => updateSettings({ density: 'cozy' })}>Cozy</button>
 				<button class:on={s.density === 'compact'} onclick={() => updateSettings({ density: 'compact' })}>Compact</button>
 			</div>
+		</div>
+
+		<div class="row-label">
+			<div>
+				<span>{locale.t('settings.language')}</span>
+				<div class="faint">{locale.t('settings.languageDescription')}</div>
+			</div>
+			<select
+				class="input locale-select"
+				value={locale.value}
+				onchange={(e) => locale.set(e.currentTarget.value)}
+				aria-label={locale.t('settings.language')}
+			>
+				{#each locales as l}
+					<option value={l.code}>{l.nativeName} ({l.name})</option>
+				{/each}
+			</select>
 		</div>
 	</section>
 
@@ -533,6 +552,12 @@
 
 	.cycle-btn {
 		cursor: pointer;
+	}
+
+	.locale-select {
+		min-width: 180px;
+		padding: 6px 10px;
+		font-size: 13px;
 	}
 
 	.switch {

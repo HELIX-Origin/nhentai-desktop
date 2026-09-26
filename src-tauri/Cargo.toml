@@ -30,6 +30,7 @@ url = "2"
 rusqlite = { version = "0.40", features = ["bundled"] }
 dirs = "6"
 fs2 = "0.4"
+sys-locale = "0.3"
 
 
 # Read the optimization guideline for more details: https://tauri.app/concept/size/#cargo-configuration

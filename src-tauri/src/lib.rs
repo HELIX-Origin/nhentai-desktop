@@ -162,6 +162,7 @@ pub fn run() {
             commands::service_reset_downloads_dir,
             commands::open_downloads_folder,
             commands::app_quit,
+            commands::get_system_locale,
             commands::installer_status,
             commands::installer_disk_space,
             commands::installer_install,

@@ -28,6 +28,8 @@ flowchart TD
 3. Default install dir: `%LOCALAPPDATA%\Programs\NH Desktop` (falls back to
    `C:\Program Files\NH Desktop`).
 4. Options (all on by default):
+   - **Language** — the interface language; the installer is already translated into your
+     system language at this point. See [Localization](Localization.md).
    - Create a **Desktop shortcut**
    - Create a **Start Menu shortcut**
    - Enable **CLI access (PATH)** — the `NH Desktop` command becomes available in a terminal

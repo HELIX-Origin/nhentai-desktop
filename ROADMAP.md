@@ -36,6 +36,7 @@ public API — we fetch data, we don't scrape aggressively.
 | M6 | Reader | ✅ Shipped (core) | Gallery detail, paged thumbnails, strip mode, preload, fullscreen |
 | M7 | Downloads & background services | 🚧 In progress (core + UI shipped) | Background-service core shipped (zip/cbz/torrent downloads to disk with progress, image prefetch, cache/image maintenance, account sync, Popular auto-refresh with job events); per-gallery Download button + Downloads page shipped; still backlog: queue resume/persist, cache consumers, storage-management polish |
 | M8 | Polish / release | 🚧 In progress (0.2.0 shipped) | Release 0.2.0 shipped 2026-09-24 (installer + verified gates green, light theme, configurable downloads folder); still backlog: accent picker, image quality, reader preload distance, installer E2E smoke via CI |
+| M9 | Localization & language packs | 🚧 In progress (0.2.1+) | i18n infrastructure and locale-aware UI; support all nhentai.net content languages; default to system language; selectors in installer + settings; staged translation pass (core languages first, community review for remainder) |
 
 ## 🎯 Current focus
 
@@ -53,6 +54,7 @@ Foundation** closeout and **M8 hardening** remain:
 - ✅ M7 polish: per-gallery Download button, ZIP/CBZ/torrent formats, configurable downloads folder, open-downloads-folder
 - ⬜ M7 remaining: queue resume/persist, cache consumers, storage-management polish
 - ⬜ M8 remaining: accent picker, image quality, reader preload distance; installer E2E smoke now runs via CI packaging workflow on release tags
+- 🚧 M9 active: i18n infrastructure, system-language default, installer + settings language selectors, staged translation of language packs for all nhentai.net content languages
 
 ## 🔁 Recurring themes (applies to every milestone)
 
@@ -61,6 +63,20 @@ Foundation** closeout and **M8 hardening** remain:
 - Accessibility: keyboard navigation for filters, focus states, reduced motion.
 - Testing: svelte-check strictness + Rust unit tests on query building and URL mapping;
   filter-query round-trip is a permanent invariant.
+
+## 🌍 M9 — Localization & language packs
+
+Goal: full UI localization with language packs for every language nhentai.net tags on content.
+
+- **Phase 1 (infrastructure)**: locale store, `t()` helper, system-language detection,
+  language selector in installer options and Settings page.
+- **Phase 2 (core packs)**: complete, reviewed packs for English, Japanese, Chinese
+  (Simplified + Traditional), Korean, Spanish, French, German, Russian, Portuguese.
+- **Phase 3 (extended packs)**: Italian, Thai, Vietnamese, Indonesian, Polish, Dutch,
+  Turkish, Arabic — draft translations with community-review markers; English fallback
+  for any missing string.
+- **Phase 4 (polish)**: RTL layout support for Arabic, date/number formatting per locale,
+  translator contribution docs.
 
 ## 📅 Review cadence
 

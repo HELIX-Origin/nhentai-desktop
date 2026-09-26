@@ -17,6 +17,10 @@ characters, parodies).
   unlocks account favorites/blacklist sync.
 - **A real installer** — a Tauri-native unified setup/uninstall wizard (no NSIS/WiX MSI),
   single binary is both the app and the installer.
+- **Speaks your language** — the interface defaults to your system language and can be changed
+  in the installer or in Settings. English, Japanese, and Chinese (Simplified + Traditional)
+  ship complete; more are community-contributed. See
+  **[Localization](Localization.md)**.
 - **Background jobs built in** — a throttled worker queue handles gallery downloads (zip to
   disk), image prefetch, cache/image maintenance, account sync, and periodic Popular refreshes,
   with live progress in Settings. Launching the app twice just focuses the running window
@@ -46,7 +50,8 @@ characters, parodies).
   uninstalling, shortcuts/PATH.
 - **[Search & Filters](Search-and-Filters.md)** — the query engine, full reference.
 - **[Blacklist](Blacklist.md)** — the blacklist, in depth.
-- **[Readers & Galleries](Reader-and-Galleries.md)** — detail pages and the reader.
+- **[Reader & Galleries](Reader-and-Galleries.md)** — detail pages and the reader.
+- **[Localization](Localization.md)** — changing the app language, and adding a new one.
 - **[Architecture](Architecture.md)** — how the pieces fit together.
 
 ## 💡 Quick facts

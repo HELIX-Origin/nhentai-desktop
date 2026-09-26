@@ -13,6 +13,7 @@
 	import { initServiceStore } from '$lib/stores/service.svelte';
 	import { cacheInit } from '$lib/cache';
 	import { setTitlebarQuery } from '$lib/stores/titlebarSearch.svelte';
+	import { locale } from '$lib/stores/locale.svelte';
 	import '../lib/design/base.css';
 
 	let { children } = $props();
@@ -21,15 +22,15 @@
 		page.url.pathname.startsWith('/installer')
 	);
 
-	const nav = [
-		{ href: '/', label: 'Latest', icon: 'grid' },
-		{ href: '/popular', label: 'Popular', icon: 'flame' },
-		{ href: '/favorites', label: 'Favorites', icon: 'heart' },
-		{ href: '/history', label: 'History', icon: 'clock' },
-		{ href: '/downloads', label: 'Downloads', icon: 'download' },
-		{ href: '/blacklist', label: 'Blacklist', icon: 'shield' },
-		{ href: '/settings', label: 'Settings', icon: 'settings' },
-	];
+	const nav = $derived([
+		{ href: '/', label: locale.t('nav.latest'), icon: 'grid' },
+		{ href: '/popular', label: locale.t('nav.popular'), icon: 'flame' },
+		{ href: '/favorites', label: locale.t('nav.favorites'), icon: 'heart' },
+		{ href: '/history', label: locale.t('nav.history'), icon: 'clock' },
+		{ href: '/downloads', label: locale.t('nav.downloads'), icon: 'download' },
+		{ href: '/blacklist', label: locale.t('nav.blacklist'), icon: 'shield' },
+		{ href: '/settings', label: locale.t('nav.settings'), icon: 'settings' },
+	]);
 
 	const settings = getSettings();
 	const blacklist = $derived(getBlacklist());
@@ -83,11 +84,14 @@
 
 	onMount(() => {
 		if (isChildWindow) {
-			ready = true;
+			locale.init().finally(() => {
+				ready = true;
+			});
 			return;
 		}
 		Promise.all([
 			cacheInit(),
+			locale.init(),
 			loadSettings(),
 			loadLibrary(),
 			loadBlacklist(),
@@ -115,24 +119,24 @@
 		onpointerdown={onBarPointerDown}
 		ondblclick={onBarDoubleClick}
 	>
-		<div class="traffic" aria-label="Window controls">
-			<button class="dot close" aria-label="Close window (to tray)" onclick={quit}></button>
-			<button class="dot min" aria-label="Minimize window" onclick={compact}></button>
-			<button class="dot max" aria-label="Maximize window" onclick={zoom}></button>
+		<div class="traffic" aria-label={locale.t('titlebar.closeTooltip')}>
+			<button class="dot close" aria-label={locale.t('titlebar.closeTooltip')} onclick={quit}></button>
+			<button class="dot min" aria-label={locale.t('titlebar.minimizeTooltip')} onclick={compact}></button>
+			<button class="dot max" aria-label={locale.t('titlebar.maximizeTooltip')} onclick={zoom}></button>
 		</div>
 		<span class="tb-title">NH Desktop</span>
 		<form class="quick-search" onsubmit={onQuickSearch} role="search">
 			<Icon name="search" size={16} />
 			<input
 				class="quick-input"
-				placeholder="Search galleries…"
+				placeholder={locale.t('titlebar.searchPlaceholder')}
 				bind:value={quickQuery}
-				aria-label="Quick search"
+				aria-label={locale.t('titlebar.searchPlaceholder')}
 			/>
-			<kbd>Enter</kbd>
+			<kbd>{locale.t('titlebar.searchShortcut')}</kbd>
 		</form>
 		<div class="bar-actions">
-			<a class="chip-btn" href="/blacklist" title="Blacklisted tags" aria-label="Blacklisted tags">
+			<a class="chip-btn" href="/blacklist" title={locale.t('nav.blacklist')} aria-label={locale.t('nav.blacklist')}>
 				<Icon name="shield" size={16} />
 				{#if blacklist.length > 0}
 					<span class="badge" class:off={!settings.blacklistEnabled}>
@@ -141,7 +145,7 @@
 				{/if}
 			</a>
 
-			<a class="account-chip" href="/settings" title="Account & settings">
+			<a class="account-chip" href="/settings" title={locale.t('account.accountSettings')}>
 				{#if account.keyStatus.configured}
 					{#if account.user && !avatarBroken}
 						<img
@@ -155,10 +159,10 @@
 					{:else}
 						<Icon name="user" size={16} />
 					{/if}
-					<span class="account-name">{account.user?.username ?? 'Connected'}</span>
+					<span class="account-name">{account.user?.username ?? locale.t('account.connected')}</span>
 				{:else}
 					<Icon name="user" size={16} />
-					<span class="account-name">Sign in</span>
+					<span class="account-name">{locale.t('account.signIn')}</span>
 				{/if}
 			</a>
 		</div>

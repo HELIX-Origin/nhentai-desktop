@@ -8,7 +8,13 @@ behind `[data-theme='light']`).
 
 ## ⚙️ Appearance
 
-- ⚙️ **Theme:** dark (default), light (reserved, not yet shipped — see [Roadmap](Roadmap.md)).
+- 🎨 **Theme:** light, dark, or system (follows the OS). Cycle with the button, or set it in the
+  store directly.
+- 📐 **Grid density:** `Cozy` or `Compact`.
+- 🌍 **Language:** pick the interface language from the dropdown. Defaults to your system locale
+  on first launch; changes apply immediately and are shared with the installer. English,
+  Japanese, and Chinese (Simplified + Traditional) are complete — see
+  [Localization](Localization.md) to help add another.
 - Accent color and image-quality/reader-preference options are planned (Settings backlog).
 
 ## 🔑 API key (optional)
@@ -79,12 +85,14 @@ The service processes jobs one at a time from a throttled queue. Downloads land 
 Beyond the Settings page, related persistent state lives in:
 
 - ⚙️ `src/lib/stores/settings.svelte.ts` — user preferences
-- `src/lib/stores/library.svelte.ts` — favorites/history persistence
-- `src/lib/stores/blacklist.svelte.ts` — the global blacklist + master toggle
-- `src/lib/stores/account.svelte.ts` — account/API-key state
-- `src/lib/stores/service.svelte.ts` — background-service jobs + auto-refresh config
+- 🌍 `src/lib/stores/locale.svelte.ts` — interface language + system-locale detection
+- ⚙️ `src/lib/stores/library.svelte.ts` — favorites/history persistence
+- ⚙️ `src/lib/stores/blacklist.svelte.ts` — the global blacklist + master toggle
+- ⚙️ `src/lib/stores/account.svelte.ts` — account/API-key state
+- ⚙️ `src/lib/stores/service.svelte.ts` — background-service jobs + auto-refresh config
 
 ## 🤝 Related
 
 - [Search & Filters](Search-and-Filters.md) · [Blacklist](Blacklist.md)
+- [Localization](Localization.md) — language packs and how to contribute one
 - [Backend (Rust)](Backend-Rust.md) — the commands behind these toggles

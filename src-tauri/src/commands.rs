@@ -34,6 +34,11 @@ pub fn app_quit(app: tauri::AppHandle) {
 }
 
 #[tauri::command]
+pub fn get_system_locale() -> String {
+    sys_locale::get_locale().unwrap_or_else(|| "en".to_string())
+}
+
+#[tauri::command]
 pub async fn fetch_new(client: State<'_, NhDesktopClient>, db: State<'_, Db>, page: Option<u32>, per_page: Option<u32>) -> Result<GalleryList, String> {
     client
         .list_galleries(optional_key(&db).as_deref(), page.unwrap_or(1), per_page.unwrap_or(28))

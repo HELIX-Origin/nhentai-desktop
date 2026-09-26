@@ -11,6 +11,7 @@
 - [Favorites & History](Favorites-and-History)
 - [Reader & Galleries](Reader-and-Galleries)
 - [Settings & API Key](Settings-and-API-Key)
+- [Localization & Language Support](Localization)
 
 ## 🏗️ Development
 

@@ -7,13 +7,31 @@
 > When a task changes behavior or scope, update this file **in the same change**.
 > When a task is done, move it to the bottom under **Done** and link the PR/commit if any.
 
-## 🚧 Current focus: M1 closeout + M7/M8 polish
+## 🚧 Current focus: M9 localization + M7/M8 polish
 
-M1 Foundation is shipped (core). Active work is finishing the clean-clone verification gate
-and polishing the downloads/background-service (M7) and release-hardening (M8) milestones.
+M1 Foundation is shipped (core). Active work is the M9 localization milestone, plus finishing
+the clean-clone verification gate and polishing the downloads/background-service (M7) and
+release-hardening (M8) milestones.
 
 - ⬜ `npm install` + full green-baseline verified on a clean clone (`npm run check`, `cargo check`,
   `cargo test`) — blockers from this audit must land first
+
+## 🚧 M9 — Localization & language packs
+
+- ✅ i18n infrastructure: locale store, `t()` helper with English fallback, system-locale detection
+  (new `get_system_locale` command via `sys-locale`)
+- ✅ Language selector in the installer's *Options* step
+- ✅ Language selector in `Settings → Appearance → Language`
+- ✅ `t()` wired through the app shell (titlebar, sidebar, account chip) and the full installer
+- ✅ Validator `npm run i18n:check` (missing / untranslated / unknown keys), fully offline
+- ✅ Contributor documentation: `wiki/Localization.md` (improve existing pack + add new language,
+  with free terminology cross-reference resources), linked from Home / Settings / Installation
+- ✅ Core packs: `en` (source), `ja`, `zh-Hans`, `zh-Hant` — 78/78 keys each
+- ⬜ Next packs, one at a time: `ko`, `es`, `fr`, `de`, `ru`, `pt`, `it`, `th`, `vi`, `id`, `pl`,
+  `nl`, `tr`, `ar` (registered + selectable, English fallback until translated)
+- ⬜ `SettingsView.svelte` and remaining views still contain untranslated strings (Reader,
+  Downloads, Blacklist, Search) — extend `en.json` and wrap as each is touched
+- ⬜ RTL layout pass for Arabic (`dir="rtl"` + mirrored chrome)
 
 ## ✅ M1 — Done
 

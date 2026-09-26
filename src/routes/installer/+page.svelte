@@ -6,6 +6,8 @@
 	import { getCurrentWindow } from '@tauri-apps/api/window';
 	import { page } from '$app/state';
 	import { base } from '$app/paths';
+	import { locale } from '$lib/stores/locale.svelte';
+	import { locales } from '$lib/i18n';
 	import '../../lib/design/base.css';
 
 	interface InstallerStatus {
@@ -83,6 +85,7 @@
 	}
 
 	onMount(async () => {
+		await locale.init();
 		try {
 			const detected = await invoke<InstallerStatus>('installer_status');
 			info = detected;
@@ -203,19 +206,19 @@
 		onpointerdown={onBarPointerDown}
 		ondblclick={onBarDoubleClick}
 	>
-		<div class="traffic" aria-label="Window controls">
-			<button class="dot close" aria-label="Close" onclick={closeWindow}></button>
-			<button class="dot min" aria-label="Minimize" onclick={minimizeWindow}></button>
-			<button class="dot max" aria-label="Maximize" onclick={maximizeWindow}></button>
+		<div class="traffic" aria-label={locale.t('titlebar.closeTooltip')}>
+			<button class="dot close" aria-label={locale.t('titlebar.closeTooltip')} onclick={closeWindow}></button>
+			<button class="dot min" aria-label={locale.t('titlebar.minimizeTooltip')} onclick={minimizeWindow}></button>
+			<button class="dot max" aria-label={locale.t('titlebar.maximizeTooltip')} onclick={maximizeWindow}></button>
 		</div>
-		<span class="tb-title">NH Desktop Setup</span>
+		<span class="tb-title">{locale.t('app.setup')}</span>
 		<div class="spacer"></div>
 	</header>
 
 	{#if statusLoading}
 		<div class="loading-state">
 			<div class="spinner"></div>
-			<p>Initializing setup wizard…</p>
+			<p>{locale.t('common.loading')}</p>
 		</div>
 	{:else if mode === 'install'}
 		<div class="wizard-body">
@@ -228,7 +231,7 @@
 					}}
 				>
 					<span class="tab-num">1</span>
-					<span class="tab-text">Welcome</span>
+					<span class="tab-text">{locale.t('installer.welcome')}</span>
 				</button>
 				<button
 					class="tab-btn"
@@ -238,7 +241,7 @@
 					}}
 				>
 					<span class="tab-num">2</span>
-					<span class="tab-text">Location</span>
+					<span class="tab-text">{locale.t('installer.location')}</span>
 				</button>
 				<button
 					class="tab-btn"
@@ -248,7 +251,7 @@
 					}}
 				>
 					<span class="tab-num">3</span>
-					<span class="tab-text">Options</span>
+					<span class="tab-text">{locale.t('installer.options')}</span>
 				</button>
 				<button
 					class="tab-btn"
@@ -256,19 +259,15 @@
 					disabled={installTab !== 'installing' && installTab !== 'complete'}
 				>
 					<span class="tab-num">4</span>
-					<span class="tab-text">Install</span>
+					<span class="tab-text">{locale.t('installer.install')}</span>
 				</button>
 			</nav>
 
 			<main class="wizard-page">
 				{#if installTab === 'welcome'}
 					<div class="page-content hero-page">
-						<h2>Welcome to NH Desktop</h2>
-						<p class="hero-desc">
-							A lightweight, modern desktop client for nhentai.net. Browse the full
-							catalog with fast search, powerful filtering, and a global blacklist
-							that actually works.
-						</p>
+						<h2>{locale.t('installer.welcomeTitle')}</h2>
+						<p class="hero-desc">{locale.t('installer.welcomeDescription')}</p>
 						<div class="feature-list">
 							<div class="feat-item">
 								<span class="feat-dot">✦</span>
@@ -296,21 +295,21 @@
 
 				{:else if installTab === 'destination'}
 					<div class="page-content">
-						<h3>Choose Install Location</h3>
-						<p class="section-desc">Setup will install NH Desktop into the following directory:</p>
+						<h3>{locale.t('installer.destinationTitle')}</h3>
+						<p class="section-desc">{locale.t('installer.destinationDescription')}</p>
 
 						<div class="path-card">
-							<label class="path-label" for="target-path">Destination Folder:</label>
+							<label class="path-label" for="target-path">{locale.t('installer.destinationFolder')}</label>
 							<input id="target-path" type="text" class="path-input" bind:value={targetDir} />
 						</div>
 
 						<div class="space-info">
 							<div class="space-row">
-								<span>Space required:</span>
+								<span>{locale.t('installer.spaceRequired')}</span>
 								<strong>~128 MB</strong>
 							</div>
 							<div class="space-row">
-								<span>Space available:</span>
+								<span>{locale.t('installer.spaceAvailable')}</span>
 								<strong class="space-ok">Plenty available</strong>
 							</div>
 						</div>
@@ -318,14 +317,31 @@
 
 				{:else if installTab === 'options'}
 					<div class="page-content">
-						<h3>Select Additional Tasks</h3>
-						<p class="section-desc">Configure desktop integration and launch preferences:</p>
+						<h3>{locale.t('installer.optionsTitle')}</h3>
+						<p class="section-desc">{locale.t('installer.optionsDescription')}</p>
 
 						<div class="options-group">
+							<label class="check-option lang-option">
+								<div class="opt-desc">
+									<strong>{locale.t('installer.languageLabel')}</strong>
+									<span>{locale.t('installer.languageDescription')}</span>
+								</div>
+								<select
+									class="lang-select"
+									value={locale.value}
+									onchange={(e) => locale.set(e.currentTarget.value)}
+									aria-label={locale.t('installer.languageLabel')}
+								>
+									{#each locales as l}
+										<option value={l.code}>{l.nativeName} ({l.name})</option>
+									{/each}
+								</select>
+							</label>
+
 							<label class="check-option">
 								<input type="checkbox" bind:checked={createDesktop} />
 								<div class="opt-desc">
-									<strong>Create a Desktop Shortcut</strong>
+									<strong>{locale.t('installer.desktopShortcut')}</strong>
 									<span>Place a quick-launch shortcut on your desktop</span>
 								</div>
 							</label>
@@ -333,7 +349,7 @@
 							<label class="check-option">
 								<input type="checkbox" bind:checked={createStartMenu} />
 								<div class="opt-desc">
-									<strong>Create a Start Menu Shortcut</strong>
+									<strong>{locale.t('installer.startMenuShortcut')}</strong>
 									<span>Register in your application menu for quick search</span>
 								</div>
 							</label>
@@ -341,7 +357,7 @@
 							<label class="check-option">
 								<input type="checkbox" bind:checked={addToPath} />
 								<div class="opt-desc">
-									<strong>Enable CLI Access (PATH)</strong>
+									<strong>{locale.t('installer.addToPath')}</strong>
 									<span>Allows running the <code>NH Desktop</code> command in terminal</span>
 								</div>
 							</label>
@@ -349,7 +365,7 @@
 							<label class="check-option">
 								<input type="checkbox" bind:checked={launchAfter} />
 								<div class="opt-desc">
-									<strong>Launch after finish</strong>
+									<strong>{locale.t('installer.launchAfter')}</strong>
 									<span>Open NH Desktop immediately after setup completes</span>
 								</div>
 							</label>
@@ -358,7 +374,7 @@
 
 				{:else if installTab === 'installing'}
 					<div class="page-content progress-page">
-						<h3>Installing NH Desktop…</h3>
+						<h3>{locale.t('installer.installingTitle')}</h3>
 						<p class="section-desc">{progressStep}</p>
 
 						<div class="progress-bar-bg">
@@ -383,31 +399,31 @@
 				{:else if installTab === 'complete'}
 					<div class="page-content complete-page">
 						<div class="success-icon">✓</div>
-						<h3>Installation Completed</h3>
+						<h3>{locale.t('installer.completeTitle')}</h3>
 						<p class="complete-desc">
-							{result?.message ?? 'NH Desktop has been successfully installed on your computer.'}
+							{result?.message ?? locale.t('installer.completeDescription')}
 						</p>
-						<p class="launch-hint">Click Finish to exit setup and begin browsing the catalog.</p>
+						<p class="launch-hint">{locale.t('installer.launchHint')}</p>
 					</div>
 				{/if}
 			</main>
 
 			<footer class="wizard-footer">
 				{#if installTab === 'welcome'}
-					<button class="btn secondary" onclick={closeWindow}>Cancel</button>
-					<button class="btn primary" onclick={() => (installTab = 'destination')}>Next ›</button>
+					<button class="btn secondary" onclick={closeWindow}>{locale.t('installer.cancel')}</button>
+					<button class="btn primary" onclick={() => (installTab = 'destination')}>{locale.t('installer.next')} ›</button>
 				{:else if installTab === 'destination'}
-					<button class="btn secondary" onclick={() => (installTab = 'welcome')}>‹ Back</button>
-					<button class="btn primary" onclick={() => (installTab = 'options')}>Next ›</button>
+					<button class="btn secondary" onclick={() => (installTab = 'welcome')}>‹ {locale.t('installer.back')}</button>
+					<button class="btn primary" onclick={() => (installTab = 'options')}>{locale.t('installer.next')} ›</button>
 				{:else if installTab === 'options'}
-					<button class="btn secondary" onclick={() => (installTab = 'destination')}>‹ Back</button>
-					<button class="btn primary install" onclick={startInstallation}>Install</button>
+					<button class="btn secondary" onclick={() => (installTab = 'destination')}>‹ {locale.t('installer.back')}</button>
+					<button class="btn primary install" onclick={startInstallation}>{locale.t('installer.installBtn')}</button>
 				{:else if installTab === 'installing'}
 					<div class="spacer"></div>
-					<button class="btn" disabled>Installing…</button>
+					<button class="btn" disabled>{locale.t('installer.installingBtn')}</button>
 				{:else if installTab === 'complete'}
 					<div class="spacer"></div>
-					<button class="btn primary" onclick={finishInstallation}>Finish</button>
+					<button class="btn primary" onclick={finishInstallation}>{locale.t('installer.finish')}</button>
 				{/if}
 			</footer>
 		</div>
@@ -423,7 +439,7 @@
 					}}
 				>
 					<span class="tab-num">1</span>
-					<span class="tab-text">Maintenance</span>
+					<span class="tab-text">{locale.t('installer.maintenance')}</span>
 				</button>
 				<button
 					class="tab-btn"
@@ -433,7 +449,7 @@
 					}}
 				>
 					<span class="tab-num">2</span>
-					<span class="tab-text">Options</span>
+					<span class="tab-text">{locale.t('installer.uninstallOptions')}</span>
 				</button>
 				<button
 					class="tab-btn"
@@ -441,14 +457,14 @@
 					disabled={maintenanceTab !== 'removing' && maintenanceTab !== 'finished'}
 				>
 					<span class="tab-num">3</span>
-					<span class="tab-text">Complete</span>
+					<span class="tab-text">{locale.t('installer.complete')}</span>
 				</button>
 			</nav>
 
 			<main class="wizard-page">
 				{#if maintenanceTab === 'manage'}
 					<div class="page-content">
-						<h3>Manage Installation</h3>
+						<h3>{locale.t('installer.manageTitle')}</h3>
 						<p class="section-desc">
 							NH Desktop is currently installed at:
 							<code>{info?.default_install_dir}</code>
@@ -459,17 +475,17 @@
 								class="card-btn"
 								onclick={() => ((mode = 'install'), (installTab = 'destination'))}
 							>
-								<div class="card-title">Reinstall / Update</div>
+								<div class="card-title">{locale.t('installer.reinstall')}</div>
 								<div class="card-sub">Reinstall or upgrade the client to version {info?.current_version}</div>
 							</button>
 
 							<button class="card-btn" onclick={startInstallation}>
-								<div class="card-title">Repair Shortcuts</div>
+								<div class="card-title">{locale.t('installer.repairShortcuts')}</div>
 								<div class="card-sub">Recreate missing Desktop and Start Menu application links</div>
 							</button>
 
 							<button class="card-btn danger" onclick={() => (maintenanceTab = 'uninstall_options')}>
-								<div class="card-title">Uninstall NH Desktop</div>
+								<div class="card-title">{locale.t('installer.uninstall')}</div>
 								<div class="card-sub">Remove the application and registered system handlers</div>
 							</button>
 						</div>
@@ -477,14 +493,14 @@
 
 				{:else if maintenanceTab === 'uninstall_options'}
 					<div class="page-content">
-						<h3>Uninstall Options</h3>
+						<h3>{locale.t('installer.uninstallOptionsTitle')}</h3>
 						<p class="section-desc">Choose how your user data is handled:</p>
 
 						<div class="options-group">
 							<label class="check-option">
 								<input type="checkbox" bind:checked={removeUserData} />
 								<div class="opt-desc">
-									<strong>Delete all library and configuration data</strong>
+									<strong>{locale.t('installer.removeUserData')}</strong>
 									<span>Removes cached artwork, the local database, and configuration settings.</span>
 								</div>
 							</label>
@@ -498,7 +514,7 @@
 
 				{:else if maintenanceTab === 'removing'}
 					<div class="page-content progress-page">
-						<h3>Uninstalling NH Desktop…</h3>
+						<h3>{locale.t('installer.removingTitle')}</h3>
 						<p class="section-desc">{progressStep}</p>
 
 						<div class="progress-bar-bg">
@@ -509,9 +525,9 @@
 				{:else if maintenanceTab === 'finished'}
 					<div class="page-content complete-page">
 						<div class="success-icon">✓</div>
-						<h3>Uninstallation Completed</h3>
+						<h3>{locale.t('installer.uninstallCompleteTitle')}</h3>
 						<p class="complete-desc">
-							{result?.message ?? 'NH Desktop has been successfully removed from your computer.'}
+							{result?.message ?? locale.t('installer.uninstallCompleteDescription')}
 						</p>
 					</div>
 				{/if}
@@ -519,16 +535,16 @@
 
 			<footer class="wizard-footer">
 				{#if maintenanceTab === 'manage'}
-					<button class="btn secondary" onclick={closeWindow}>Cancel</button>
+					<button class="btn secondary" onclick={closeWindow}>{locale.t('installer.cancel')}</button>
 				{:else if maintenanceTab === 'uninstall_options'}
-					<button class="btn secondary" onclick={() => (maintenanceTab = 'manage')}>‹ Back</button>
-					<button class="btn danger" onclick={startUninstallation}>Uninstall Now</button>
+					<button class="btn secondary" onclick={() => (maintenanceTab = 'manage')}>‹ {locale.t('installer.back')}</button>
+					<button class="btn danger" onclick={startUninstallation}>{locale.t('installer.uninstallBtn')}</button>
 				{:else if maintenanceTab === 'removing'}
 					<div class="spacer"></div>
-					<button class="btn" disabled>Removing…</button>
+					<button class="btn" disabled>{locale.t('installer.removingBtn')}</button>
 				{:else if maintenanceTab === 'finished'}
 					<div class="spacer"></div>
-					<button class="btn primary" onclick={closeWindow}>Close</button>
+					<button class="btn primary" onclick={closeWindow}>{locale.t('installer.close')}</button>
 				{/if}
 			</footer>
 		</div>
@@ -825,6 +841,29 @@
 	.opt-desc span {
 		font-size: 11px;
 		color: var(--text-secondary);
+	}
+
+	.lang-option {
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.lang-select {
+		background: var(--bg);
+		border: 1px solid var(--border-strong);
+		color: var(--text);
+		padding: 7px 10px;
+		border-radius: var(--radius-sm);
+		font-size: 13px;
+		outline: none;
+		cursor: pointer;
+		flex-shrink: 0;
+		max-width: 260px;
+	}
+
+	.lang-select:focus {
+		border-color: var(--accent);
+		box-shadow: 0 0 0 3px var(--accent-soft);
 	}
 
 	.progress-page {

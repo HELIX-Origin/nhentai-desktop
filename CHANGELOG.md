@@ -5,7 +5,37 @@ top; the current development state lives under `Unreleased`.
 
 ## Unreleased
 
-(No unreleased changes.)
+### ✨ Added
+
+* **Localization & language packs (M9)**: The app interface can now be displayed in a language of
+  your choice, defaulting to the operating system locale.
+    * **Language packs**: Complete packs for **English** (source), **Japanese (`ja`)**, **Chinese
+      Simplified (`zh-Hans`)**, and **Chinese Traditional (`zh-Hant`)** — 78 keys each. Fifteen
+      further nhentai content languages are registered and selectable, falling back to English
+      per-key until their pack lands.
+    * **Installer language picker**: The setup wizard's *Options* step now includes a **Language**
+      dropdown; the installer itself renders in the system language so the options are readable
+      before you choose.
+    * **Settings language picker**: `Settings → Appearance → Language` changes the interface
+      immediately, with no restart.
+    * **System locale detection**: New `get_system_locale` Tauri command (`sys-locale`) resolves
+      the OS locale; regional variants map sensibly (`zh-*` → Simplified by default) and unknown
+      locales fall back to English.
+    * **Graceful fallback**: `t('key')` resolves against the active dictionary and falls back to
+      English for any missing key, so a partial pack degrades gracefully instead of rendering raw
+      keys.
+    * **Validator**: `npm run i18n:check` reports missing keys, untranslated leftovers, and
+      unknown keys for every pack. Fully offline and free.
+    * **Contributor documentation**: New `wiki/Localization.md` covering both improving existing
+      packs and adding new languages, including free cross-reference resources for verifying
+      terminology. Linked from `Home`, `Settings & API Key`, `Installation & Maintenance`, the
+      sidebar, and the wiki index.
+
+### 🔧 Changed
+
+* **Milestone tracking**: Added **M9 — Localization & language packs** to `ROADMAP.md` (with a
+  four-phase plan) and a matching M9 section in `TODO.md`; current focus now includes M9.
+
 
 ## [v0.2.1](https://github.com/HELIX-Origin/nhentai-desktop/releases/tag/v0.2.1)
 
