@@ -7,16 +7,18 @@
 > When a task changes behavior or scope, update this file **in the same change**.
 > When a task is done, move it to the bottom under **Done** and link the PR/commit if any.
 
-## 🚧 Current focus: M9 localization + M7/M8 polish
+## 🚧 Current focus: M1 closeout + M7/M8 polish
 
-M1 Foundation is shipped (core). Active work is the M9 localization milestone, plus finishing
-the clean-clone verification gate and polishing the downloads/background-service (M7) and
-release-hardening (M8) milestones.
+M1 Foundation is shipped (core). M9.1 localization core is shipped (English / Japanese / Chinese).
+Active work is finishing the clean-clone verification gate and polishing the
+downloads/background-service (M7) and release-hardening (M8) milestones. **M9.2 — the remaining
+14 language packs — is planned in this file but deliberately not started.**
 
-- ⬜ `npm install` + full green-baseline verified on a clean clone (`npm run check`, `cargo check`,
-  `cargo test`) — blockers from this audit must land first
+- ✅ **v0.3.0 released 2026-09-25** (M9.1 localization + installer launch fix + titlebar search) — gates
+  green: `cargo test` 9/9, `npm run check` 0/0, `npm run i18n:check` 3/3, `npm run build`,
+  `npm run build:installer` produced `NH Desktop-Setup-0.3.0-win-x64.exe`
 
-## 🚧 M9 — Localization & language packs
+## ✅ M9.1 — Localization core (shipped)
 
 - ✅ i18n infrastructure: locale store, `t()` helper with English fallback, system-locale detection
   (new `get_system_locale` command via `sys-locale`)
@@ -27,11 +29,43 @@ release-hardening (M8) milestones.
 - ✅ Contributor documentation: `wiki/Localization.md` (improve existing pack + add new language,
   with free terminology cross-reference resources), linked from Home / Settings / Installation
 - ✅ Core packs: `en` (source), `ja`, `zh-Hans`, `zh-Hant` — 78/78 keys each
-- ⬜ Next packs, one at a time: `ko`, `es`, `fr`, `de`, `ru`, `pt`, `it`, `th`, `vi`, `id`, `pl`,
-  `nl`, `tr`, `ar` (registered + selectable, English fallback until translated)
-- ⬜ `SettingsView.svelte` and remaining views still contain untranslated strings (Reader,
-  Downloads, Blacklist, Search) — extend `en.json` and wrap as each is touched
-- ⬜ RTL layout pass for Arabic (`dir="rtl"` + mirrored chrome)
+
+## ⬜ M9.2 — Remaining language packs (planned, not started)
+
+Deferred by decision — nothing here is scheduled or in progress. All 14 locales are already
+registered in `src/lib/i18n/locales.ts` and selectable in the app; each falls back to English
+per-key until its pack lands. Per the plan in `wiki/Localization.md`, each item is the same
+four steps: copy `en.json` → translate values → register the import in `src/lib/i18n/index.ts` →
+`npm run i18n:check` clean.
+
+| # | Pack | Code | Notes |
+| --- | --- | --- | --- |
+| 1 | Korean | `ko` | High-content language on nhentai; first candidate |
+| 2 | Spanish | `es` | Large reader base; `es-419` can be a follow-up split |
+| 3 | French | `fr` | Mind non-breaking space before `:` |
+| 4 | German | `de` | Straightforward |
+| 5 | Russian | `ru` | Straightforward |
+| 6 | Portuguese | `pt` | Decide `pt` vs `pt-BR` at registration |
+| 7 | Italian | `it` | Straightforward |
+| 8 | Thai | `th` | Straightforward |
+| 9 | Vietnamese | `vi` | Straightforward |
+| 10 | Indonesian | `id` | Straightforward |
+| 11 | Polish | `pl` | Straightforward |
+| 12 | Dutch | `nl` | Straightforward |
+| 13 | Turkish | `tr` | Straightforward |
+| 14 | Arabic | `ar` | **Requires an RTL pass first** (see below) |
+
+Dependency: Arabic (`ar`) needs an RTL layout pass — `dir="rtl"` on the app root, mirrored
+titlebar/window controls/sidebar, and flipped directional icons — before the pack is meaningful.
+Hebrew (`he`) is not currently registered; add it alongside Arabic if an RTL pack is taken.
+
+Also deferred, independent of the packs above:
+
+- ⬜ Extend `en.json` and wrap the remaining untranslated strings — `SettingsView.svelte`
+  (account panel, reader, downloads, background services, data), plus the Search, Blacklist,
+  Downloads, Reader, and Gallery-detail views. Done opportunistically as each view is touched.
+- ⬜ Per-locale date and number formatting (`relativeDate` / `formatCount` in `src/lib/format.ts`
+  currently assume English conventions).
 
 ## ✅ M1 — Done
 

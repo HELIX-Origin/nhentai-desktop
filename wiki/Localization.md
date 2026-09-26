@@ -32,24 +32,25 @@ system language has no pack yet, NH Desktop falls back to English until you choo
 | 日本語 Japanese | `ja` | ✅ Complete |
 | 简体中文 Chinese (Simplified) | `zh-Hans` | ✅ Complete |
 | 繁體中文 Chinese (Traditional) | `zh-Hant` | ✅ Complete |
-| 한국어 Korean | `ko` | 🧩 Community needed |
-| Español Spanish | `es` | 🧩 Community needed |
-| Français French | `fr` | 🧩 Community needed |
-| Deutsch German | `de` | 🧩 Community needed |
-| Русский Russian | `ru` | 🧩 Community needed |
-| Português Portuguese | `pt` | 🧩 Community needed |
-| Italiano Italian | `it` | 🧩 Community needed |
-| ไทย Thai | `th` | 🧩 Community needed |
-| Tiếng Việt Vietnamese | `vi` | 🧩 Community needed |
-| Bahasa Indonesia Indonesian | `id` | 🧩 Community needed |
-| Polski Polish | `pl` | 🧩 Community needed |
-| Nederlands Dutch | `nl` | 🧩 Community needed |
-| Türkçe Turkish | `tr` | 🧩 Community needed |
-| العربية Arabic | `ar` | 🧩 Community needed |
+| 한국어 Korean | `ko` | 🧩 Pluggable — pack not included yet |
+| Español Spanish | `es` | 🧩 Pluggable — pack not included yet |
+| Français French | `fr` | 🧩 Pluggable — pack not included yet |
+| Deutsch German | `de` | 🧩 Pluggable — pack not included yet |
+| Русский Russian | `ru` | 🧩 Pluggable — pack not included yet |
+| Português Portuguese | `pt` | 🧩 Pluggable — pack not included yet |
+| Italiano Italian | `it` | 🧩 Pluggable — pack not included yet |
+| ไทย Thai | `th` | 🧩 Pluggable — pack not included yet |
+| Tiếng Việt Vietnamese | `vi` | 🧩 Pluggable — pack not included yet |
+| Bahasa Indonesia Indonesian | `id` | 🧩 Pluggable — pack not included yet |
+| Polski Polish | `pl` | 🧩 Pluggable — pack not included yet |
+| Nederlands Dutch | `nl` | 🧩 Pluggable — pack not included yet |
+| Türkçe Turkish | `tr` | 🧩 Pluggable — pack not included yet |
+| العربية Arabic | `ar` | 🧩 Pluggable — pack not included yet |
 
-Languages marked **Community needed** are selectable in the app already; untranslated strings
-fall back to English until a pack lands. Adding one is a small, self-contained pull request —
-see below.
+Only **English, Japanese, and Chinese** are planned for official release at this time. The rest
+are wired up and selectable, but ship without a pack and fall back to English key-by-key. Adding
+one is a small, self-contained pull request — see below. Contributions are welcome whenever you
+have time; there is no schedule and no obligation.
 
 ---
 

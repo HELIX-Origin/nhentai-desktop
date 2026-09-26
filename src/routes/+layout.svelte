@@ -189,7 +189,7 @@
 		</nav>
 
 		<div class="sidebar-foot">
-			<span class="faint">v0.2.0</span>
+			<span class="faint">v0.3.0</span>
 		</div>
 	</aside>
 

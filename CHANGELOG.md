@@ -5,14 +5,20 @@ top; the current development state lives under `Unreleased`.
 
 ## Unreleased
 
+(No unreleased changes.)
+
+## [v0.3.0](https://github.com/HELIX-Origin/nhentai-desktop/releases/tag/v0.3.0)
+
+**Release date:** 2026-09-25
+
 ### ✨ Added
 
 * **Localization & language packs (M9)**: The app interface can now be displayed in a language of
   your choice, defaulting to the operating system locale.
     * **Language packs**: Complete packs for **English** (source), **Japanese (`ja`)**, **Chinese
-      Simplified (`zh-Hans`)**, and **Chinese Traditional (`zh-Hant`)** — 78 keys each. Fifteen
-      further nhentai content languages are registered and selectable, falling back to English
-      per-key until their pack lands.
+      Simplified (`zh-Hans`)**, and **Chinese Traditional (`zh-Hant`)** — 78 keys each. The other
+      nhentai content languages are registered and selectable, falling back to English per-key;
+      their packs are deferred to future work and community contributions.
     * **Installer language picker**: The setup wizard's *Options* step now includes a **Language**
       dropdown; the installer itself renders in the system language so the options are readable
       before you choose.
@@ -30,12 +36,35 @@ top; the current development state lives under `Unreleased`.
       packs and adding new languages, including free cross-reference resources for verifying
       terminology. Linked from `Home`, `Settings & API Key`, `Installation & Maintenance`, the
       sidebar, and the wiki index.
+* **Context-aware titlebar search**: The titlebar quick-search now acts on the page you are
+  actually on instead of always jumping to a global search.
+    * **Search page**: submitting updates the existing search query in place.
+    * **Favorites / History**: submitting filters the local list by title; clearing the box
+      restores it.
+    * **Every other page**: falls back to a global search.
+* **Titlebar layout**: The quick-search box is now centred, and the account chip sits adjacent to
+  the window controls (left of them on Windows/Linux, right of them on macOS) instead of at the
+  far edge.
 
 ### 🔧 Changed
 
 * **Milestone tracking**: Added **M9 — Localization & language packs** to `ROADMAP.md` (with a
-  four-phase plan) and a matching M9 section in `TODO.md`; current focus now includes M9.
+  three-phase plan) and split `TODO.md` into **M9.1** (shipped core) and **M9.2** (the 14
+  remaining language packs, itemised but deliberately not started).
+* **Version sync**: `package.json`, `src-tauri/Cargo.toml`, `src-tauri/tauri.conf.json`, and
+  `src-tauri/Cargo.lock` bumped to `0.3.0`; the sidebar version readout was corrected from the
+  stale `v0.2.0` to `v0.3.0`.
 
+### 🐛 Fixed
+
+* **Installer launched the app before you finished**: The setup wizard used to start NH Desktop
+  while `perform_install` was still running, so the app appeared to jump the queue on top of the
+  installer.
+    * **Deferred launch**: Removed `launch_after` from `InstallOptions` and the launch side effect
+      from `perform_install`.
+    * **Explicit launch step**: New `installer_launch_app` command, invoked only when the user
+      clicks **Finish** with "Launch after finish" checked. A launch failure is non-fatal — the
+      wizard still closes cleanly.
 
 ## [v0.2.1](https://github.com/HELIX-Origin/nhentai-desktop/releases/tag/v0.2.1)
 

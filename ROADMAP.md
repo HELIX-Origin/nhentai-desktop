@@ -35,8 +35,8 @@ public API — we fetch data, we don't scrape aggressively.
 | M5 | Library | ✅ Shipped (core) | Favorites, history, local persistence; import/export JSON still backlog |
 | M6 | Reader | ✅ Shipped (core) | Gallery detail, paged thumbnails, strip mode, preload, fullscreen |
 | M7 | Downloads & background services | 🚧 In progress (core + UI shipped) | Background-service core shipped (zip/cbz/torrent downloads to disk with progress, image prefetch, cache/image maintenance, account sync, Popular auto-refresh with job events); per-gallery Download button + Downloads page shipped; still backlog: queue resume/persist, cache consumers, storage-management polish |
-| M8 | Polish / release | 🚧 In progress (0.2.0 shipped) | Release 0.2.0 shipped 2026-09-24 (installer + verified gates green, light theme, configurable downloads folder); still backlog: accent picker, image quality, reader preload distance, installer E2E smoke via CI |
-| M9 | Localization & language packs | 🚧 In progress (0.2.1+) | i18n infrastructure and locale-aware UI; support all nhentai.net content languages; default to system language; selectors in installer + settings; staged translation pass (core languages first, community review for remainder) |
+| M8 | Polish / release | 🚧 In progress (0.3.0 shipped) | Release 0.3.0 shipped 2026-09-25 (localization, installer launch fix, centered titlebar search); still backlog: accent picker, image quality, reader preload distance |
+| M9 | Localization & language packs | ✅ Core shipped (M9.1) | System-locale default, installer + Settings language pickers, English fallback per key, `en`/`ja`/`zh-Hans`/`zh-Hant` packs complete. **M9.2** (14 remaining nhentai language packs + RTL pass for Arabic) is planned in `TODO.md`, not started |
 
 ## 🎯 Current focus
 
@@ -54,7 +54,7 @@ Foundation** closeout and **M8 hardening** remain:
 - ✅ M7 polish: per-gallery Download button, ZIP/CBZ/torrent formats, configurable downloads folder, open-downloads-folder
 - ⬜ M7 remaining: queue resume/persist, cache consumers, storage-management polish
 - ⬜ M8 remaining: accent picker, image quality, reader preload distance; installer E2E smoke now runs via CI packaging workflow on release tags
-- 🚧 M9 active: i18n infrastructure, system-language default, installer + settings language selectors, staged translation of language packs for all nhentai.net content languages
+- ✅ M9 shipped: system-locale default, installer + Settings language pickers, `en`/`ja`/`zh-Hans`/`zh-Hant` packs, English fallback, contributor guide (`wiki/Localization.md`); remaining packs deferred
 
 ## 🔁 Recurring themes (applies to every milestone)
 
@@ -68,15 +68,15 @@ Foundation** closeout and **M8 hardening** remain:
 
 Goal: full UI localization with language packs for every language nhentai.net tags on content.
 
-- **Phase 1 (infrastructure)**: locale store, `t()` helper, system-language detection,
-  language selector in installer options and Settings page.
-- **Phase 2 (core packs)**: complete, reviewed packs for English, Japanese, Chinese
-  (Simplified + Traditional), Korean, Spanish, French, German, Russian, Portuguese.
-- **Phase 3 (extended packs)**: Italian, Thai, Vietnamese, Indonesian, Polish, Dutch,
-  Turkish, Arabic — draft translations with community-review markers; English fallback
-  for any missing string.
-- **Phase 4 (polish)**: RTL layout support for Arabic, date/number formatting per locale,
-  translator contribution docs.
+- **Phase 1 — M9.1 core (shipped)**: locale store, `t()` helper, system-language detection,
+  language selector in installer options and Settings page, `npm run i18n:check` validator, and
+  complete packs for English (source), Japanese, Chinese (Simplified + Traditional).
+- **Phase 2 — M9.2 remaining packs (planned, not started)**: the other nhentai content languages
+  (`ko`, `es`, `fr`, `de`, `ru`, `pt`, `it`, `th`, `vi`, `id`, `pl`, `nl`, `tr`, `ar`). All are
+  already registered and selectable with per-key English fallback. Itemised in `TODO.md`;
+  contributed opportunistically or via community pull requests. See `wiki/Localization.md`.
+- **Phase 3 — M9.2 RTL (planned, not started)**: RTL layout for Arabic, date/number formatting
+  per locale, extension of `en.json` to the remaining views.
 
 ## 📅 Review cadence
 
